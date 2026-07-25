@@ -16,6 +16,8 @@ messaging, partner, analytics, database, or live-model integration.
 - Baseline source commit: `f8a4a05694585f38d520fb786a088b262ceed842`
 - Baseline deployed source: `bc6910ed3b622c72b64144b47d61215fabd2a876`
 - Baseline production version: 5
+- Final production version: 7
+- Final deployed source: `21ab3f000f72cc7c7691a13977cd52e715397a82`
 - Public URL: `https://bill-control-mvp.ahmdsomy.chatgpt.site`
 - Node/npm: 24.13.0 / 11.6.2
 - pnpm: not installed; lockfile-equivalent execution used `npm ci`
@@ -184,6 +186,9 @@ failures (`format:check`, `verify:pre-release`, `check`, `verify:release`);
 all functional, accessibility, visual, build, artifact, dependency, and deployed
 checks otherwise passed.
 
+The final full-gate output is preserved at
+`artifacts/final-audit/final/verify-final.log`.
+
 | Command                           | Baseline duration/result | Final result                              |
 | --------------------------------- | ------------------------ | ----------------------------------------- |
 | `npm ci`                          | 16s, pass                | Pass                                      |
@@ -202,7 +207,7 @@ checks otherwise passed.
 | `npm run build:sites`             | not baseline-run         | Pass                                      |
 | `npm audit --audit-level=low`     | pass, zero findings      | Pass                                      |
 | `npm run audit:final`             | new                      | Pass                                      |
-| `BASE_URL=… npm run verify:final` | new                      | Pass                                      |
+| `BASE_URL=… npm run verify:final` | new                      | Pass in 106s                              |
 
 No retries are configured for local runs. Deployed smoke runs with zero retries.
 The inherited color-variable warning is non-application output and no test

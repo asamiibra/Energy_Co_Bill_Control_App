@@ -1,0 +1,549 @@
+
+> bill-control@0.1.0 verify:final
+> npm audit --audit-level=low && npm run audit:final && npm run verify:release && npm run build:sites
+
+found 0 vulnerabilities
+
+> bill-control@0.1.0 audit:final
+> node scripts/final-canonical-audit.mjs
+
+Final canonical audit passed: 29 source files inspected.
+
+> bill-control@0.1.0 verify:release
+> npm run verify:pre-release && npm run generate:fallbacks && npm run validate:release-artifacts && if [ -n "$BASE_URL" ]; then npm run test:deployed; else echo 'BASE_URL not set; deployed smoke test skipped'; fi
+
+
+> bill-control@0.1.0 verify:pre-release
+> npm run check && npm run test:e2e && npm run test:a11y && npm run test:visual
+
+
+> bill-control@0.1.0 check
+> npm run typecheck && npm run lint && npm run format:check && npm run validate:fixtures && npm run test && npm run build
+
+
+> bill-control@0.1.0 typecheck
+> tsc --noEmit
+
+
+> bill-control@0.1.0 lint
+> eslint .
+
+
+> bill-control@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> bill-control@0.1.0 validate:fixtures
+> tsx lib/fixture-validation.ts
+
+
+> bill-control@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.10 /Users/ahmedsami/Library/Mobile Documents/com~apple~CloudDocs/My Documents/Dev/Bain&Co - Energy Co Case/bill-control
+
+
+ Test Files  9 passed (9)
+      Tests  61 passed (61)
+   Start at  17:43:35
+   Duration  2.13s (transform 1.39s, setup 1.15s, import 2.43s, tests 205ms, environment 11.40s)
+
+
+> bill-control@0.1.0 build
+> next build
+
+▲ Next.js 16.2.12 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1765ms
+  Running TypeScript ...
+  Finished TypeScript in 2.4s ...
+  Collecting page data using 4 workers ...
+  Generating static pages using 4 workers (0/3) ...
+✓ Generating static pages using 4 workers (3/3) in 175ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+└ ○ /_not-found
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+
+> bill-control@0.1.0 test:e2e
+> playwright test --grep-invert '@a11y|@visual'
+
+[WebServer] (node:90556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90556) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90563) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90565) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90564) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90566) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90630) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 194 tests using 2 workers
+
+(node:90633) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:90632) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓    2 [chromium] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario " baseline " fails closed (249ms)
+  ✓    1 [chromium] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "DOES-NOT-EXIST" fails closed (249ms)
+  ✓    3 [chromium] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "<script>window.__billControlXss=true</script>" fails closed (118ms)
+  ✓    4 [chromium] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "../../etc/passwd" fails closed (118ms)
+  ✓    5 [chromium] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "null" fails closed (127ms)
+  ✓    6 [chromium] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "undefined" fails closed (127ms)
+  ✓    8 [chromium] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "%00" fails closed (127ms)
+  ✓    7 [chromium] › tests/e2e/final-red-team.spec.ts:32:3 › final red-team routing and storage › empty and missing scenario values resolve deterministically (184ms)
+  ✓   10 [chromium] › tests/e2e/final-red-team.spec.ts:59:3 › final red-team routing and storage › rapid history transitions do not cross-contaminate states (185ms)
+  ✓    9 [chromium] › tests/e2e/final-red-team.spec.ts:43:3 › final red-team routing and storage › malformed prototype storage cannot break a route (411ms)
+  ✓   11 [chromium] › tests/e2e/final-red-team.spec.ts:80:3 › final red-team interaction truthfulness › baseline reminder, decline, and advisor controls are local-only (245ms)
+  ✓   12 [chromium] › tests/e2e/final-red-team.spec.ts:92:3 › final red-team interaction truthfulness › safety support never claims eligibility or execution (243ms)
+  ✓   14 [chromium] › tests/e2e/final-red-team.spec.ts:133:3 › final red-team interaction truthfulness › privacy and shell actions disclose prototype limits (323ms)
+  ✓   13 [chromium] › tests/e2e/final-red-team.spec.ts:109:3 › final red-team interaction truthfulness › cold-start and forecast-miss actions produce auditable feedback (523ms)
+  ✓   15 [chromium] › tests/e2e/final-red-team.spec.ts:155:3 › final red-team compact and preference rendering › 200% text scaling remains horizontally contained (130ms)
+  ✓   16 [chromium] › tests/e2e/final-red-team.spec.ts:181:3 › final red-team compact and preference rendering › reduced motion does not hide core content (148ms)
+  ✓   17 [chromium] › tests/e2e/final-red-team.spec.ts:187:3 › final red-team compact and preference rendering › focus rings appear only during keyboard focus (139ms)
+  ✓   18 [chromium] › tests/e2e/release-hardening.spec.ts:4:3 › release presentation controls › presentation mode is deterministic and keyboard-driven (175ms)
+  ✓   19 [chromium] › tests/e2e/release-hardening.spec.ts:45:3 › release presentation controls › reset clears only prototype state and returns to baseline (243ms)
+  ✓   20 [chromium] › tests/e2e/release-hardening.spec.ts:74:3 › offline-after-load P0 reliability › bundled P0 states and local actions remain usable offline (275ms)
+  ✓   21 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 1440x900 (199ms)
+  ✓   22 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 1280x720 (196ms)
+  ✓   23 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 1024x768 (181ms)
+  ✓   24 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 390x844 (189ms)
+  ✓   25 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 375x667 (180ms)
+  ✓   26 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 430x932 (187ms)
+  ✓   27 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 320x568 (181ms)
+  ✓   28 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 1440x900 (200ms)
+  ✓   29 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 1280x720 (202ms)
+  ✓   30 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 1024x768 (189ms)
+  ✓   31 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 390x844 (190ms)
+  ✓   32 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 375x667 (183ms)
+  ✓   33 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 430x932 (195ms)
+  ✓   34 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 320x568 (185ms)
+  ✓   35 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 1440x900 (229ms)
+  ✓   36 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 1280x720 (224ms)
+  ✓   37 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 1024x768 (247ms)
+  ✓   38 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 390x844 (213ms)
+  ✓   39 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 375x667 (213ms)
+  ✓   40 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 430x932 (200ms)
+  ✓   41 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 320x568 (270ms)
+  ✓   42 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 1440x900 (278ms)
+  ✓   43 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 1280x720 (226ms)
+  ✓   44 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 1024x768 (237ms)
+  ✓   45 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 390x844 (228ms)
+  ✓   46 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 375x667 (214ms)
+  ✓   47 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 430x932 (220ms)
+  ✓   48 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 320x568 (231ms)
+  ✓   49 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 1440x900 (230ms)
+  ✓   50 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 1280x720 (228ms)
+  ✓   51 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 1024x768 (225ms)
+  ✓   52 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 390x844 (211ms)
+  ✓   53 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 375x667 (211ms)
+  ✓   54 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 430x932 (186ms)
+  ✓   55 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 320x568 (216ms)
+  ✓   56 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1440x900 (229ms)
+  ✓   57 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1280x720 (246ms)
+  ✓   58 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1024x768 (237ms)
+  ✓   59 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 390x844 (209ms)
+  ✓   60 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 375x667 (185ms)
+  ✓   61 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 430x932 (202ms)
+  ✓   62 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 320x568 (218ms)
+  ✓   63 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 1440x900 (229ms)
+  ✓   64 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 1280x720 (238ms)
+  ✓   65 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 1024x768 (227ms)
+  ✓   66 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 390x844 (200ms)
+  ✓   67 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 375x667 (209ms)
+  ✓   68 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 430x932 (215ms)
+  ✓   69 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 320x568 (228ms)
+  ✓   70 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1440x900 (248ms)
+  ✓   71 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1280x720 (227ms)
+  ✓   72 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1024x768 (209ms)
+  ✓   73 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 390x844 (198ms)
+  ✓   74 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 375x667 (177ms)
+  ✓   75 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 430x932 (189ms)
+  ✓   76 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 320x568 (182ms)
+  ✓   77 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1440x900 (192ms)
+  ✓   78 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1280x720 (188ms)
+  ✓   79 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1024x768 (183ms)
+  ✓   80 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 390x844 (198ms)
+  ✓   81 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 375x667 (187ms)
+  ✓   82 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 430x932 (182ms)
+  ✓   83 [chromium] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 320x568 (190ms)
+  ✓   84 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › baseline supports direct navigation and refresh (232ms)
+  ✓   85 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › alert supports direct navigation and refresh (239ms)
+  ✓   86 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › safety supports direct navigation and refresh (236ms)
+  ✓   87 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › limited-data supports direct navigation and refresh (255ms)
+  ✓   88 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › cold-start supports direct navigation and refresh (243ms)
+  ✓   89 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › forecast-miss supports direct navigation and refresh (244ms)
+  ✓   90 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › consent supports direct navigation and refresh (229ms)
+  ✓   91 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › tariff-preview supports direct navigation and refresh (275ms)
+  ✓   92 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › connected-home-preview supports direct navigation and refresh (247ms)
+  ✓   93 [chromium] › tests/e2e/routes.spec.ts:58:3 › route and runtime quality › unknown scenario fails safely without a blank state (137ms)
+  ✓   94 [chromium] › tests/e2e/routes.spec.ts:70:3 › route and runtime quality › back and forward navigation stay synchronized (212ms)
+  ✓   95 [chromium] › tests/e2e/routes.spec.ts:81:3 › customer action boundaries › baseline saves local intent without execution (267ms)
+  ✓   96 [chromium] › tests/e2e/routes.spec.ts:99:3 › customer action boundaries › alert save, modify, decline, and advisor paths remain local (344ms)
+  ✓   97 [chromium] › tests/e2e/routes.spec.ts:123:3 › customer action boundaries › safety and previews expose no executable action (258ms)
+(node:90746) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:90747) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   99 [webkit] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario " baseline " fails closed (754ms)
+  ✓   98 [webkit] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "DOES-NOT-EXIST" fails closed (755ms)
+  ✓  101 [webkit] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "../../etc/passwd" fails closed (297ms)
+  ✓  100 [webkit] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "<script>window.__billControlXss=true</script>" fails closed (299ms)
+  ✓  103 [webkit] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "undefined" fails closed (287ms)
+  ✓  102 [webkit] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "null" fails closed (286ms)
+  ✓  104 [webkit] › tests/e2e/final-red-team.spec.ts:15:5 › final red-team routing and storage › hostile scenario "%00" fails closed (277ms)
+  ✓  105 [webkit] › tests/e2e/final-red-team.spec.ts:32:3 › final red-team routing and storage › empty and missing scenario values resolve deterministically (347ms)
+  ✓  106 [webkit] › tests/e2e/final-red-team.spec.ts:43:3 › final red-team routing and storage › malformed prototype storage cannot break a route (317ms)
+  ✓  107 [webkit] › tests/e2e/final-red-team.spec.ts:59:3 › final red-team routing and storage › rapid history transitions do not cross-contaminate states (478ms)
+  ✓  108 [webkit] › tests/e2e/final-red-team.spec.ts:80:3 › final red-team interaction truthfulness › baseline reminder, decline, and advisor controls are local-only (423ms)
+  ✓  109 [webkit] › tests/e2e/final-red-team.spec.ts:92:3 › final red-team interaction truthfulness › safety support never claims eligibility or execution (372ms)
+  ✓  110 [webkit] › tests/e2e/final-red-team.spec.ts:109:3 › final red-team interaction truthfulness › cold-start and forecast-miss actions produce auditable feedback (440ms)
+  ✓  111 [webkit] › tests/e2e/final-red-team.spec.ts:133:3 › final red-team interaction truthfulness › privacy and shell actions disclose prototype limits (507ms)
+  ✓  112 [webkit] › tests/e2e/final-red-team.spec.ts:155:3 › final red-team compact and preference rendering › 200% text scaling remains horizontally contained (311ms)
+  ✓  113 [webkit] › tests/e2e/final-red-team.spec.ts:181:3 › final red-team compact and preference rendering › reduced motion does not hide core content (321ms)
+  ✓  114 [webkit] › tests/e2e/final-red-team.spec.ts:187:3 › final red-team compact and preference rendering › focus rings appear only during keyboard focus (303ms)
+  ✓  115 [webkit] › tests/e2e/release-hardening.spec.ts:4:3 › release presentation controls › presentation mode is deterministic and keyboard-driven (353ms)
+  ✓  116 [webkit] › tests/e2e/release-hardening.spec.ts:45:3 › release presentation controls › reset clears only prototype state and returns to baseline (398ms)
+  -  118 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 1440x900
+  -  119 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 1280x720
+  -  120 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 1024x768
+  -  121 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 390x844
+  -  122 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 375x667
+  -  123 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 430x932
+  -  124 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › baseline has no horizontal overflow at 320x568
+  -  125 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 1440x900
+  -  126 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 1280x720
+  -  127 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 1024x768
+  -  128 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 390x844
+  -  129 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 375x667
+  -  130 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 430x932
+  -  131 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › alert has no horizontal overflow at 320x568
+  -  132 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 1440x900
+  -  133 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 1280x720
+  -  134 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 1024x768
+  -  135 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 390x844
+  -  136 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 375x667
+  -  137 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 430x932
+  -  138 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › safety has no horizontal overflow at 320x568
+  -  139 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 1440x900
+  -  140 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 1280x720
+  -  141 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 1024x768
+  -  142 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 390x844
+  -  143 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 375x667
+  -  144 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 430x932
+  -  145 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › limited-data has no horizontal overflow at 320x568
+  -  146 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 1440x900
+  -  147 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 1280x720
+  -  148 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 1024x768
+  -  149 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 390x844
+  -  150 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 375x667
+  -  151 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 430x932
+  -  152 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › cold-start has no horizontal overflow at 320x568
+  -  153 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1440x900
+  -  154 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1280x720
+  -  155 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1024x768
+  -  156 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 390x844
+  -  157 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 375x667
+  -  158 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 430x932
+  -  159 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › forecast-miss has no horizontal overflow at 320x568
+  -  160 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 1440x900
+  -  161 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 1280x720
+  -  162 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 1024x768
+  -  163 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 390x844
+  -  164 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 375x667
+  -  165 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 430x932
+  ✓  117 [webkit] › tests/e2e/release-hardening.spec.ts:74:3 › offline-after-load P0 reliability › bundled P0 states and local actions remain usable offline (441ms)
+  -  166 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › consent has no horizontal overflow at 320x568
+  -  167 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1280x720
+  -  168 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1440x900
+  -  169 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1024x768
+  -  170 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 390x844
+  -  171 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 375x667
+  -  172 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 430x932
+  -  173 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › tariff-preview has no horizontal overflow at 320x568
+  -  174 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1440x900
+  -  175 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1280x720
+  -  176 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1024x768
+  -  177 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 390x844
+  -  178 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 375x667
+  -  179 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 430x932
+  -  180 [webkit] › tests/e2e/responsive.spec.ts:30:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 320x568
+  ✓  181 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › baseline supports direct navigation and refresh (410ms)
+  ✓  182 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › alert supports direct navigation and refresh (428ms)
+  ✓  183 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › safety supports direct navigation and refresh (397ms)
+  ✓  184 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › limited-data supports direct navigation and refresh (391ms)
+  ✓  185 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › cold-start supports direct navigation and refresh (399ms)
+  ✓  186 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › forecast-miss supports direct navigation and refresh (393ms)
+  ✓  188 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › tariff-preview supports direct navigation and refresh (392ms)
+  ✓  187 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › consent supports direct navigation and refresh (406ms)
+  ✓  190 [webkit] › tests/e2e/routes.spec.ts:58:3 › route and runtime quality › unknown scenario fails safely without a blank state (293ms)
+  ✓  189 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › connected-home-preview supports direct navigation and refresh (401ms)
+  ✓  191 [webkit] › tests/e2e/routes.spec.ts:70:3 › route and runtime quality › back and forward navigation stay synchronized (443ms)
+  ✓  192 [webkit] › tests/e2e/routes.spec.ts:81:3 › customer action boundaries › baseline saves local intent without execution (459ms)
+  ✓  193 [webkit] › tests/e2e/routes.spec.ts:99:3 › customer action boundaries › alert save, modify, decline, and advisor paths remain local (518ms)
+  ✓  194 [webkit] › tests/e2e/routes.spec.ts:123:3 › customer action boundaries › safety and previews expose no executable action (417ms)
+
+  63 skipped
+  131 passed (25.5s)
+
+> bill-control@0.1.0 test:a11y
+> playwright test --grep @a11y
+
+[WebServer] (node:90922) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90922) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90930) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90929) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90931) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:90996) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 22 tests using 2 workers
+
+(node:91000) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:90999) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y alert has no automated accessibility violations (817ms)
+  ✓   2 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y baseline has no automated accessibility violations (827ms)
+  ✓   3 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y safety has no automated accessibility violations (631ms)
+  ✓   4 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y limited-data has no automated accessibility violations (626ms)
+  ✓   5 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y cold-start has no automated accessibility violations (591ms)
+  ✓   6 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y forecast-miss has no automated accessibility violations (598ms)
+  ✓   8 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y tariff-preview has no automated accessibility violations (566ms)
+  ✓   7 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y consent has no automated accessibility violations (610ms)
+  ✓   9 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y connected-home-preview has no automated accessibility violations (529ms)
+  ✓  11 [chromium] › tests/e2e/accessibility.spec.ts:45:1 › @a11y expanded consent state has no automated violations (685ms)
+  ✓  10 [chromium] › tests/e2e/accessibility.spec.ts:29:1 › @a11y interactive overlays have no automated violations (1.4s)
+(node:91033) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:91034) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  13 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y alert has no automated accessibility violations (1.2s)
+  ✓  12 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y baseline has no automated accessibility violations (1.3s)
+  ✓  14 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y safety has no automated accessibility violations (868ms)
+  ✓  15 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y limited-data has no automated accessibility violations (889ms)
+  ✓  16 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y cold-start has no automated accessibility violations (858ms)
+  ✓  17 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y forecast-miss has no automated accessibility violations (836ms)
+  ✓  19 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y tariff-preview has no automated accessibility violations (783ms)
+  ✓  18 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y consent has no automated accessibility violations (866ms)
+  ✓  20 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y connected-home-preview has no automated accessibility violations (790ms)
+  ✓  22 [webkit] › tests/e2e/accessibility.spec.ts:45:1 › @a11y expanded consent state has no automated violations (955ms)
+  ✓  21 [webkit] › tests/e2e/accessibility.spec.ts:29:1 › @a11y interactive overlays have no automated violations (1.9s)
+
+  22 passed (18.0s)
+
+> bill-control@0.1.0 test:visual
+> playwright test --grep @visual
+
+[WebServer] (node:91196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:91196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:91200) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:91201) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:91202) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:91203) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:91267) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 30 tests using 2 workers
+
+(node:91268) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:91269) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   2 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1280x720 (608ms)
+  ✓   1 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1440x900 (622ms)
+  ✓   4 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 390x844 (299ms)
+  ✓   3 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1024x768 (385ms)
+  ✓   5 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1440x900 (416ms)
+  ✓   6 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1280x720 (404ms)
+  ✓   8 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 390x844 (298ms)
+  ✓   7 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1024x768 (380ms)
+  ✓  10 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1280x720 (454ms)
+  ✓   9 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1440x900 (484ms)
+  ✓  12 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 390x844 (368ms)
+  ✓  11 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1024x768 (410ms)
+  ✓  13 [chromium] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › baseline deck frame (293ms)
+  ✓  14 [chromium] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › alert deck frame (285ms)
+  ✓  15 [chromium] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › safety deck frame (301ms)
+(node:91293) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -  16 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1440x900
+  -  17 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1024x768
+  -  18 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 390x844
+  -  19 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1440x900
+  -  20 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1280x720
+  -  21 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1024x768
+  -  22 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 390x844
+  -  23 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1440x900
+  -  24 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1280x720
+  -  25 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1024x768
+  -  26 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 390x844
+  -  27 [webkit] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › baseline deck frame
+  -  28 [webkit] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › alert deck frame
+  -  29 [webkit] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › safety deck frame
+(node:91294) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -  30 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1280x720
+
+  15 skipped
+  15 passed (11.1s)
+
+> bill-control@0.1.0 generate:fallbacks
+> npm run build && node scripts/generate-fallbacks.mjs
+
+
+> bill-control@0.1.0 build
+> next build
+
+▲ Next.js 16.2.12 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 1774ms
+  Running TypeScript ...
+  Finished TypeScript in 2.7s ...
+  Collecting page data using 4 workers ...
+  Generating static pages using 4 workers (0/3) ...
+✓ Generating static pages using 4 workers (3/3) in 188ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+└ ○ /_not-found
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+Generated canonical fallback and deck screenshots.
+
+> bill-control@0.1.0 validate:release-artifacts
+> node scripts/validate-release-artifacts.mjs
+
+Release artifacts and QR decode validation passed.
+
+> bill-control@0.1.0 test:deployed
+> playwright test --config playwright.deployed.config.ts
+
+
+Running 36 tests using 2 workers
+
+(node:91490) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:91489) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › tests/deployed/smoke.spec.ts:23:3 › baseline deployed route loads and refreshes (2.1s)
+  ✓   2 [chromium] › tests/deployed/smoke.spec.ts:23:3 › alert deployed route loads and refreshes (2.1s)
+  ✓   3 [chromium] › tests/deployed/smoke.spec.ts:23:3 › safety deployed route loads and refreshes (951ms)
+  ✓   4 [chromium] › tests/deployed/smoke.spec.ts:23:3 › limited-data deployed route loads and refreshes (1.1s)
+  ✓   5 [chromium] › tests/deployed/smoke.spec.ts:23:3 › cold-start deployed route loads and refreshes (707ms)
+  ✓   6 [chromium] › tests/deployed/smoke.spec.ts:23:3 › forecast-miss deployed route loads and refreshes (1.1s)
+  ✓   7 [chromium] › tests/deployed/smoke.spec.ts:23:3 › consent deployed route loads and refreshes (791ms)
+  ✓   8 [chromium] › tests/deployed/smoke.spec.ts:23:3 › tariff-preview deployed route loads and refreshes (766ms)
+  ✓   9 [chromium] › tests/deployed/smoke.spec.ts:23:3 › connected-home-preview deployed route loads and refreshes (676ms)
+  ✓  10 [chromium] › tests/deployed/smoke.spec.ts:58:1 › deployed P0 actions remain read-only and resettable (1.1s)
+  ✓  11 [chromium] › tests/deployed/smoke.spec.ts:81:1 › deployed resilience interactions work (1.4s)
+  ✓  12 [chromium] › tests/deployed/smoke.spec.ts:116:1 › deployed unknown state is controlled (479ms)
+(node:91515) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:91516) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  14 [webkit] › tests/deployed/smoke.spec.ts:23:3 › alert deployed route loads and refreshes (1.3s)
+  ✓  13 [webkit] › tests/deployed/smoke.spec.ts:23:3 › baseline deployed route loads and refreshes (1.5s)
+  ✓  15 [webkit] › tests/deployed/smoke.spec.ts:23:3 › safety deployed route loads and refreshes (1.0s)
+  ✓  16 [webkit] › tests/deployed/smoke.spec.ts:23:3 › limited-data deployed route loads and refreshes (1.1s)
+  ✓  17 [webkit] › tests/deployed/smoke.spec.ts:23:3 › cold-start deployed route loads and refreshes (1.0s)
+  ✓  18 [webkit] › tests/deployed/smoke.spec.ts:23:3 › forecast-miss deployed route loads and refreshes (1.2s)
+  ✓  19 [webkit] › tests/deployed/smoke.spec.ts:23:3 › consent deployed route loads and refreshes (985ms)
+  ✓  20 [webkit] › tests/deployed/smoke.spec.ts:23:3 › tariff-preview deployed route loads and refreshes (999ms)
+  ✓  21 [webkit] › tests/deployed/smoke.spec.ts:23:3 › connected-home-preview deployed route loads and refreshes (901ms)
+  ✓  22 [webkit] › tests/deployed/smoke.spec.ts:58:1 › deployed P0 actions remain read-only and resettable (1.4s)
+  ✓  23 [webkit] › tests/deployed/smoke.spec.ts:81:1 › deployed resilience interactions work (1.3s)
+  ✓  24 [webkit] › tests/deployed/smoke.spec.ts:116:1 › deployed unknown state is controlled (686ms)
+(node:91553) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:91554) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  26 [mobile-chromium] › tests/deployed/smoke.spec.ts:23:3 › alert deployed route loads and refreshes (2.1s)
+  ✓  25 [mobile-chromium] › tests/deployed/smoke.spec.ts:23:3 › baseline deployed route loads and refreshes (2.5s)
+  ✓  27 [mobile-chromium] › tests/deployed/smoke.spec.ts:23:3 › safety deployed route loads and refreshes (801ms)
+  ✓  28 [mobile-chromium] › tests/deployed/smoke.spec.ts:23:3 › limited-data deployed route loads and refreshes (726ms)
+  ✓  29 [mobile-chromium] › tests/deployed/smoke.spec.ts:23:3 › cold-start deployed route loads and refreshes (896ms)
+  ✓  30 [mobile-chromium] › tests/deployed/smoke.spec.ts:23:3 › forecast-miss deployed route loads and refreshes (776ms)
+  ✓  31 [mobile-chromium] › tests/deployed/smoke.spec.ts:23:3 › consent deployed route loads and refreshes (868ms)
+  ✓  32 [mobile-chromium] › tests/deployed/smoke.spec.ts:23:3 › tariff-preview deployed route loads and refreshes (846ms)
+  ✓  33 [mobile-chromium] › tests/deployed/smoke.spec.ts:23:3 › connected-home-preview deployed route loads and refreshes (787ms)
+  ✓  34 [mobile-chromium] › tests/deployed/smoke.spec.ts:58:1 › deployed P0 actions remain read-only and resettable (1.0s)
+  ✓  36 [mobile-chromium] › tests/deployed/smoke.spec.ts:116:1 › deployed unknown state is controlled (480ms)
+  ✓  35 [mobile-chromium] › tests/deployed/smoke.spec.ts:81:1 › deployed resilience interactions work (1.2s)
+
+  36 passed (21.7s)
+
+> bill-control@0.1.0 build:sites
+> WRANGLER_LOG_PATH=.wrangler/wrangler.log vinext build
+
+
+  vinext build  (Vite 8.1.5)
+
+[1/5] analyze client references...
+[2Ktransforming...✓ 133 modules transformed.
+rendering chunks...
+✓ built in 406ms
+[2/5] analyze server references...
+[2Ktransforming...✓ 136 modules transformed.
+rendering chunks...
+✓ built in 117ms
+[3/5] build rsc environment...
+[2Ktransforming...✓ 139 modules transformed.
+rendering chunks...
+computing gzip size...
+✓ built in 250ms
+[4/5] build client environment...
+[2Ktransforming...✓ 1588 modules transformed.
+rendering chunks...
+computing gzip size...
+✓ built in 437ms
+[5/5] build ssr environment...
+[2Ktransforming...✓ 142 modules transformed.
+rendering chunks...
+computing gzip size...
+✓ built in 242ms
+[0m
+  Route (app)
+  ─ ? /
+
+  ? Unknown
+
+  ? Some routes could not be classified. vinext currently uses static analysis
+    and cannot detect dynamic API usage (headers(), cookies(), etc.) at build time.
+    Automatic classification will be improved in a future release.
+
+  Build complete. Run `vinext start` to start the production server.
+

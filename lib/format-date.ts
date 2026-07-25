@@ -1,3 +1,33 @@
+const SHORT_MONTHS = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+] as const;
+
+const LONG_MONTHS = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+] as const;
+
 /**
  * Format an ISO date string to a human-readable format
  * @param isoDate - ISO 8601 date string
@@ -10,30 +40,19 @@ export function formatDate(
 ): string {
   const date = new Date(isoDate);
   const { format = 'medium' } = options || {};
+  const monthIndex = date.getUTCMonth();
+  const day = date.getUTCDate();
+  const year = date.getUTCFullYear();
 
   if (format === 'short') {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      timeZone: 'UTC',
-    }).format(date);
+    return `${SHORT_MONTHS[monthIndex]} ${day}`;
   }
 
   if (format === 'long') {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-      timeZone: 'UTC',
-    }).format(date);
+    return `${LONG_MONTHS[monthIndex]} ${day}, ${year}`;
   }
 
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    timeZone: 'UTC',
-  }).format(date);
+  return `${SHORT_MONTHS[monthIndex]} ${day}, ${year}`;
 }
 
 /**
@@ -43,15 +62,12 @@ export function formatDate(
  */
 export function formatDateTime(isoTimestamp: string): string {
   const date = new Date(isoTimestamp);
+  const hours = date.getUTCHours();
+  const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+  const period = hours >= 12 ? 'PM' : 'AM';
+  const displayHour = hours % 12 || 12;
 
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-    timeZone: 'UTC',
-  }).format(date);
+  return `${SHORT_MONTHS[date.getUTCMonth()]} ${date.getUTCDate()}, ${displayHour}:${minutes} ${period}`;
 }
 
 /**

@@ -15,11 +15,20 @@ const routes = [
   ['connected-home-preview', 'Connected-Home Preview'],
 ] as const;
 
+const browserEngineWarnings = [
+  'window.styleMedia is a deprecated draft version of window.matchMedia API',
+];
+
 for (const [scenario, expectedText] of routes) {
   test(`${scenario} deployed route loads and refreshes`, async ({ page }) => {
     const runtimeProblems: string[] = [];
     page.on('console', (message) => {
-      if (message.type() === 'error' || message.type() === 'warning') {
+      if (
+        (message.type() === 'error' || message.type() === 'warning') &&
+        !browserEngineWarnings.some((warning) =>
+          message.text().includes(warning)
+        )
+      ) {
         runtimeProblems.push(message.text());
       }
     });
@@ -71,10 +80,13 @@ test('deployed P0 actions remain read-only and resettable', async ({
 
 test('deployed resilience interactions work', async ({ page }) => {
   await page.goto('/?scenario=cold-start&presentation=true');
+  await page.getByRole('button', { name: 'Add details' }).click();
   await page
     .getByRole('button', { name: 'Refine estimate with sample answers' })
     .click();
-  await expect(page.getByText('Estimate Refined')).toBeVisible();
+  await expect(
+    page.getByText('Estimate Refined', { exact: true })
+  ).toBeVisible();
   await expect(page.getByText('$142–$205')).toBeVisible();
 
   await page.goto('/?scenario=forecast-miss&presentation=true');
@@ -85,6 +97,7 @@ test('deployed resilience interactions work', async ({ page }) => {
   await expect(page.getByText(/acknowledged/i).last()).toBeVisible();
 
   await page.goto('/?scenario=consent&presentation=true');
+  await page.getByRole('button', { name: 'Show more' }).first().click();
   await page.getByRole('button', { name: 'Revoke permission' }).first().click();
   await expect(page.getByRole('status')).toBeVisible();
 });

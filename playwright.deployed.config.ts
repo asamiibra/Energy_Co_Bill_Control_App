@@ -9,12 +9,12 @@ export default defineConfig({
   testDir: './tests/deployed',
   fullyParallel: true,
   forbidOnly: true,
-  retries: 1,
+  retries: 0,
   workers: 2,
   reporter: 'list',
   use: {
     baseURL,
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
   projects: [

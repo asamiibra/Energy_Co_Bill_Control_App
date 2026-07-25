@@ -16,6 +16,7 @@ import type { DemoScenario } from '@/domain/scenario';
 import type { ConsentPermission } from '@/domain/consent';
 import { mockConsentService } from '@/services/mock-consent-service';
 import { EVENT_NAMES } from '@/domain/event';
+import { formatDate } from '@/lib/format-date';
 
 interface ConsentPreferencesViewProps {
   scenario: DemoScenario;
@@ -233,21 +234,23 @@ export function ConsentPreferencesView({
                       permission.grantedAt && (
                         <span>
                           Granted on{' '}
-                          {new Date(permission.grantedAt).toLocaleDateString()}
+                          {formatDate(permission.grantedAt, { format: 'long' })}
                         </span>
                       )}
                     {permission.status === 'revoked' &&
                       permission.revokedAt && (
                         <span>
                           Revoked on{' '}
-                          {new Date(permission.revokedAt).toLocaleDateString()}
+                          {formatDate(permission.revokedAt, { format: 'long' })}
                         </span>
                       )}
                     {permission.status === 'declined' &&
                       permission.declinedAt && (
                         <span>
                           Declined on{' '}
-                          {new Date(permission.declinedAt).toLocaleDateString()}
+                          {formatDate(permission.declinedAt, {
+                            format: 'long',
+                          })}
                         </span>
                       )}
                     {permission.status === 'not_requested' && (

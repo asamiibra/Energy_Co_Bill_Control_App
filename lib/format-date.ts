@@ -15,6 +15,7 @@ export function formatDate(
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
+      timeZone: 'UTC',
     }).format(date);
   }
 
@@ -23,6 +24,7 @@ export function formatDate(
       month: 'long',
       day: 'numeric',
       year: 'numeric',
+      timeZone: 'UTC',
     }).format(date);
   }
 
@@ -30,6 +32,7 @@ export function formatDate(
     month: 'short',
     day: 'numeric',
     year: 'numeric',
+    timeZone: 'UTC',
   }).format(date);
 }
 
@@ -47,6 +50,7 @@ export function formatDateTime(isoTimestamp: string): string {
     hour: 'numeric',
     minute: '2-digit',
     hour12: true,
+    timeZone: 'UTC',
   }).format(date);
 }
 

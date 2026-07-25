@@ -41,7 +41,7 @@ for (const [scenario, expectedText] of routes) {
     await expect(page).toHaveTitle(/Bill Control/);
     await expect(
       page.getByText(
-        /Illustrative prototype for the 12-week MVP pilot using synthetic customer and energy data/
+        /Illustrative prototype using synthetic customer and energy data/
       )
     ).toBeVisible();
     await expect(
@@ -65,7 +65,11 @@ test('deployed P0 actions remain read-only and resettable', async ({
       { exact: false }
     )
   ).toBeVisible();
+  await page.waitForFunction(
+    () => localStorage.getItem('bill-control-audit-events') !== null
+  );
   await page.getByRole('button', { name: 'Save this action' }).click();
+  await expect(page.getByRole('dialog')).toBeVisible();
   await page.getByRole('button', { name: 'Save Action Plan' }).click();
   await expect(
     page.getByText('no automatic changes', { exact: false })

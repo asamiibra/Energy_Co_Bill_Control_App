@@ -1,10 +1,23 @@
-'use client';
-
 import { Suspense } from 'react';
 import { AppShell } from '@/components/app-shell';
 import { ScenarioErrorBoundary } from '@/components/scenario-error-boundary';
 
-export default function HomePage() {
+type HomePageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const resolvedSearchParams = await searchParams;
+  const scenarioParam = resolvedSearchParams.scenario;
+  const presentationParam = resolvedSearchParams.presentation;
+  const initialScenarioId = Array.isArray(scenarioParam)
+    ? scenarioParam[0]
+    : scenarioParam;
+  const initialPresentationMode =
+    (Array.isArray(presentationParam)
+      ? presentationParam[0]
+      : presentationParam) === 'true';
+
   return (
     <ScenarioErrorBoundary>
       <Suspense
@@ -14,7 +27,10 @@ export default function HomePage() {
           </div>
         }
       >
-        <AppShell />
+        <AppShell
+          initialScenarioId={initialScenarioId}
+          initialPresentationMode={initialPresentationMode}
+        />
       </Suspense>
     </ScenarioErrorBoundary>
   );

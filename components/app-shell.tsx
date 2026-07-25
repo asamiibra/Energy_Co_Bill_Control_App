@@ -1,7 +1,13 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react';
 import { HelpCircle, User, ChevronDown } from 'lucide-react';
 
 import {
@@ -18,10 +24,44 @@ import { auditLedger } from '@/services/audit-ledger';
 import { actionIntentService } from '@/services/action-intent-service';
 import { EVENT_NAMES } from '@/domain/event';
 
-export function AppShell() {
+type AppShellProps = {
+  initialScenarioId?: string;
+  initialPresentationMode?: boolean;
+};
+
+const subscribeToHydration = () => () => {};
+
+function getInitialSearchParams({
+  initialScenarioId,
+  initialPresentationMode,
+}: AppShellProps): URLSearchParams {
+  const params = new URLSearchParams();
+  if (initialScenarioId) {
+    params.set('scenario', initialScenarioId);
+  }
+  if (initialPresentationMode) {
+    params.set('presentation', 'true');
+  }
+  return params;
+}
+
+export function AppShell({
+  initialScenarioId,
+  initialPresentationMode = false,
+}: AppShellProps) {
   const searchParams = useSearchParams();
-  const scenario = getScenarioFromUrl(searchParams);
-  const presentationMode = searchParams.get('presentation') === 'true';
+  const hydrated = useSyncExternalStore(
+    subscribeToHydration,
+    () => true,
+    () => false
+  );
+  const initialSearchParams = getInitialSearchParams({
+    initialScenarioId,
+    initialPresentationMode,
+  });
+  const activeSearchParams = hydrated ? searchParams : initialSearchParams;
+  const scenario = getScenarioFromUrl(activeSearchParams);
+  const presentationMode = activeSearchParams.get('presentation') === 'true';
   const presentationPrepared = useRef(false);
   const [messagePreviewState, setMessagePreviewState] = useState({
     scenarioId: scenario?.scenarioId,

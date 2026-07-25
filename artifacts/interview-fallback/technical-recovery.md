@@ -15,6 +15,14 @@ BASE_URL=https://example.test npm run verify:release
 Local development defaults to `http://localhost:3000`. The final deployment and
 direct routes are recorded in `artifacts/prototype-url.txt`.
 
+## Production
+
+- Site: `https://bill-control-mvp.ahmdsomy.chatgpt.site`
+- Presentation entry:
+  `https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=baseline&presentation=true`
+- Hosting: OpenAI Sites on Cloudflare Workers
+- Access: public, no sign-in required
+
 ## Stable Routes
 
 - `/?scenario=baseline`
@@ -41,6 +49,10 @@ direct routes are recorded in `artifacts/prototype-url.txt`.
 | QR stale                      | Run `npm run generate:links -- https://public-url`                              |
 | QR validation needed          | Run `npm run validate:release-artifacts`                                        |
 | Deployed route concern        | Run `BASE_URL=https://public-url npm run test:deployed`                         |
+
+If a deployed request returns a Cloudflare Worker error, read the recent Sites
+Worker logs first. The release build avoids global-scope I/O and UUID generation;
+session identifiers are created only during browser runtime use.
 
 ## Local State
 

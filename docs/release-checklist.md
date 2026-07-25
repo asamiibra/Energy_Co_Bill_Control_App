@@ -21,26 +21,26 @@
 - [x] Accessibility tests pass.
 - [x] Visual regression passes.
 - [x] Production build passes.
-- [ ] Deployed smoke tests pass.
+- [x] Deployed smoke tests pass.
 
 ## Demo Integrity
 
 - [x] Scoped reset works.
 - [x] The 90-second path is technically rehearsed.
 - [x] Demo utilities are hidden in presentation mode.
-- [ ] Fallback and deck screenshots are generated.
-- [ ] QR code validates against the final URL.
-- [ ] Interview fallback package is complete.
+- [x] Fallback and deck screenshots are generated.
+- [x] QR code validates against the final URL.
+- [x] Interview fallback package is complete.
 - [x] Runbook is complete.
-- [ ] Direct production URLs are verified.
+- [x] Direct production URLs are verified.
 
 ## Submission Integrity
 
-- [ ] No stale screenshots remain.
+- [x] No stale screenshots remain.
 - [x] No old product name appears in active product UI.
 - [x] No stale alert values appear.
 - [x] No 24-day language appears.
 - [x] No Approve-action wording appears.
 - [x] No unsupported guarantee appears.
 - [x] No exposed debug control appears in presentation artifacts.
-- [ ] No local-only URL appears in deck artifacts.
+- [x] No local-only URL appears in deck artifacts.

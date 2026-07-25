@@ -87,19 +87,30 @@ test('deployed resilience interactions work', async ({ page }) => {
   await expect(
     page.getByText('Estimate Refined', { exact: true })
   ).toBeVisible();
-  await expect(page.getByText('$142–$205')).toBeVisible();
+  await expect(page.getByText('$142–$205', { exact: true })).toBeVisible();
 
   await page.goto('/?scenario=forecast-miss&presentation=true');
   await page
     .getByRole('button', { name: /acknowledge/i })
     .last()
     .click();
-  await expect(page.getByText(/acknowledged/i).last()).toBeVisible();
+  await expect(
+    page.getByText(
+      'Thank you. Your next forecast will reflect these improvements.'
+    )
+  ).toBeVisible();
 
   await page.goto('/?scenario=consent&presentation=true');
   await page.getByRole('button', { name: 'Show more' }).first().click();
   await page.getByRole('button', { name: 'Revoke permission' }).first().click();
-  await expect(page.getByRole('status')).toBeVisible();
+  await expect(
+    page.getByText('Revoked', { exact: true }).first()
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      /Bill Control will use billing history, weather, and tariff information instead/
+    )
+  ).toBeVisible();
 });
 
 test('deployed unknown state is controlled', async ({ page }) => {

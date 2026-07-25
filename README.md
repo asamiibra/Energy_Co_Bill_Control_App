@@ -24,6 +24,9 @@ Presentation mode is available at
 prototype-local state on entry, and supports `1`, `2`, and `3` for the P0 path.
 Press `Shift + D` to toggle interviewer utilities and `Escape` to close them.
 
+The public interview build is
+`https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=baseline&presentation=true`.
+
 ## Demo Scenarios
 
 | State                   | URL                                 |

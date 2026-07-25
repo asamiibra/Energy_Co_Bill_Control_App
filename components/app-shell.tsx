@@ -67,7 +67,9 @@ export function AppShell({
     scenarioId: scenario?.scenarioId,
     visible: true,
   });
-  const [shellStatus, setShellStatus] = useState<string | null>(null);
+  const [headerPanel, setHeaderPanel] = useState<'help' | 'account' | null>(
+    null
+  );
   const showMessagePreviews =
     !presentationMode &&
     (messagePreviewState.scenarioId === scenario?.scenarioId
@@ -183,6 +185,16 @@ export function AppShell({
         recommendationId: scenario.recommendations.find(
           (recommendation) => recommendation.status === 'suppressed'
         )?.recommendationId,
+        properties: {
+          policySource: 'customer_declared_essential_use',
+          suppressionReason: scenario.safetyDecision.reasonCode,
+          suppressedRecommendationTitle: scenario.recommendations.find(
+            (recommendation) => recommendation.status === 'suppressed'
+          )?.title,
+          safeAlternatives: scenario.recommendations
+            .filter((recommendation) => recommendation.status === 'available')
+            .map((recommendation) => recommendation.recommendationId),
+        },
       });
     } else if (scenario.scenarioId === 'forecast_miss_alex_closed_bill') {
       auditLedger.recordEventOnce(EVENT_NAMES.FORECAST_SURPRISE_RECORDED, {
@@ -225,18 +237,21 @@ export function AppShell({
     });
   };
 
-  const recordShellSupport = (option: string, message: string) => {
+  const handleBackToMessages = () => {
     if (!scenario) {
       return;
     }
 
-    auditLedger.recordEvent(EVENT_NAMES.SUPPORT_OPTION_SELECTED, {
+    setMessagePreviewState({
+      scenarioId: scenario.scenarioId,
+      visible: true,
+    });
+    auditLedger.recordEvent(EVENT_NAMES.MESSAGE_PREVIEW_OPENED, {
       scenarioId: scenario.scenarioId,
       householdId: scenario.household.customerId,
       forecastVersionId: scenario.forecast.forecastVersionId,
-      properties: { option, executionMode: 'local_intent_only' },
+      properties: { source: 'back_to_messages' },
     });
-    setShellStatus(message);
   };
 
   if (!scenario) {
@@ -256,6 +271,7 @@ export function AppShell({
                 url.searchParams.set('scenario', 'baseline');
                 window.location.href = url.toString();
               }}
+              data-interaction-id="error-return-baseline"
               className="rounded-md bg-navy px-4 py-2 text-white transition-colors hover:bg-navy-600"
             >
               Go to Baseline Forecast
@@ -322,13 +338,14 @@ export function AppShell({
 
                 <button
                   onClick={() =>
-                    recordShellSupport(
-                      'help',
-                      'Help interest recorded locally. This demo does not contact an external support service.'
+                    setHeaderPanel((current) =>
+                      current === 'help' ? null : 'help'
                     )
                   }
+                  data-interaction-id="header-help"
                   className="focus-visible hidden rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 sm:block"
                   aria-label="Help and Support"
+                  aria-expanded={headerPanel === 'help'}
                 >
                   <HelpCircle size={20} />
                 </button>
@@ -336,13 +353,14 @@ export function AppShell({
                 <div className="relative hidden sm:block">
                   <button
                     onClick={() =>
-                      recordShellSupport(
-                        'account_menu',
-                        'This is a synthetic demo account. No account controls are connected.'
+                      setHeaderPanel((current) =>
+                        current === 'account' ? null : 'account'
                       )
                     }
+                    data-interaction-id="header-account-menu"
                     className="focus-visible flex items-center space-x-1 rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                     aria-label="Account Menu"
+                    aria-expanded={headerPanel === 'account'}
                   >
                     <User size={20} />
                     <ChevronDown size={14} />
@@ -357,20 +375,74 @@ export function AppShell({
               </div>
             </div>
           </div>
+          {headerPanel && (
+            <div className="relative z-30">
+              <div
+                className="absolute right-0 top-1 w-[min(24rem,calc(100vw-2rem))] rounded-lg border bg-white p-4 shadow-xl"
+                role="region"
+                aria-label={
+                  headerPanel === 'help' ? 'Bill Control help' : 'Account menu'
+                }
+              >
+                {headerPanel === 'help' ? (
+                  <div className="space-y-3 text-sm text-gray-700">
+                    <h2 className="text-lg">Bill Control help</h2>
+                    <p>
+                      <strong>What it does:</strong> explains an illustrative
+                      bill forecast and safe next steps.
+                    </p>
+                    <p>
+                      <strong>Expected range:</strong> the lower and upper bill
+                      values currently supported by the available evidence.
+                    </p>
+                    <p>
+                      <strong>Data use:</strong> synthetic billing, weather,
+                      tariff, and consent fixtures stay inside this prototype.
+                    </p>
+                    <p>
+                      <strong>Support:</strong> advisor preferences can be saved
+                      locally; no external request is sent.
+                    </p>
+                    <p className="rounded bg-gray-100 p-2 text-xs">
+                      A synthetic, high-fidelity interactive prototype of the
+                      proposed Bill Control MVP.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="space-y-3 text-sm">
+                    <h2 className="text-lg">Account summary</h2>
+                    <p className="text-gray-700">
+                      {scenario.household.customerName} ·{' '}
+                      {scenario.household.address}
+                    </p>
+                    <button
+                      onClick={() => {
+                        setHeaderPanel(null);
+                        navigateToScenario('consent', presentationMode);
+                      }}
+                      data-interaction-id="account-consent-preferences"
+                      className="focus-visible w-full rounded-md border px-3 py-2 text-left text-blue-700"
+                    >
+                      Consent and preferences
+                    </button>
+                  </div>
+                )}
+                <button
+                  onClick={() => setHeaderPanel(null)}
+                  data-interaction-id="header-panel-close"
+                  className="focus-visible mt-4 w-full rounded-md bg-gray-100 px-3 py-2 text-sm font-medium"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </header>
 
       {/* Main Content */}
       <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <SyntheticDataNotice />
-        {shellStatus && (
-          <div
-            className="mb-4 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800"
-            role="status"
-          >
-            {shellStatus}
-          </div>
-        )}
 
         {/* Message-First Entry or Scenario Display */}
         {scenario && showMessagePreviews ? (
@@ -391,6 +463,7 @@ export function AppShell({
             <div className="text-center">
               <button
                 onClick={handleViewForecast}
+                data-interaction-id="message-skip-to-forecast"
                 className="focus-visible rounded-md bg-navy px-6 py-3 text-white transition-colors hover:bg-navy-600"
               >
                 Skip to Forecast Details
@@ -400,15 +473,11 @@ export function AppShell({
         ) : (
           scenario && (
             <div className="space-y-6">
-              {!showMessagePreviews && (
+              {!presentationMode && !showMessagePreviews && (
                 <div className="flex items-center justify-between">
                   <button
-                    onClick={() =>
-                      setMessagePreviewState({
-                        scenarioId: scenario.scenarioId,
-                        visible: true,
-                      })
-                    }
+                    onClick={handleBackToMessages}
+                    data-interaction-id="forecast-back-to-messages"
                     className="focus-visible text-sm text-blue-600 hover:text-blue-800"
                   >
                     ← Back to message previews
@@ -432,12 +501,8 @@ export function AppShell({
               </div>
               <span className="hidden sm:inline">•</span>
               <button
-                onClick={() =>
-                  recordShellSupport(
-                    'estimate_method',
-                    'This estimate is derived from the displayed billing, weather, tariff, and data-quality evidence.'
-                  )
-                }
+                onClick={() => setHeaderPanel('help')}
+                data-interaction-id="footer-estimate-method"
                 className="focus-visible underline hover:text-gray-700"
               >
                 How this estimate works
@@ -445,6 +510,7 @@ export function AppShell({
               <span className="hidden sm:inline">•</span>
               <button
                 onClick={() => navigateToScenario('consent', presentationMode)}
+                data-interaction-id="footer-consent-preferences"
                 className="focus-visible underline hover:text-gray-700"
               >
                 Consent and preferences

@@ -57,6 +57,7 @@ export function DemoSwitcher({
       {!presentationMode && (
         <button
           onClick={() => setIsOpen(!isOpen)}
+          data-interaction-id="demo-switcher-toggle"
           className="focus-visible no-print flex items-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
           aria-label="Demo scenario switcher"
         >
@@ -86,6 +87,7 @@ export function DemoSwitcher({
                   <button
                     key={scenario.id}
                     onClick={() => handleScenarioChange(scenario.id)}
+                    data-interaction-id={`demo-scenario-${scenario.id}`}
                     disabled={!scenario.available}
                     className={`w-full rounded-md px-3 py-2 text-left text-sm transition-colors ${
                       currentScenario === scenario.id
@@ -112,6 +114,7 @@ export function DemoSwitcher({
                   <button
                     key={scenario.id}
                     onClick={() => handleScenarioChange(scenario.id)}
+                    data-interaction-id={`demo-scenario-${scenario.id}`}
                     disabled={!scenario.available}
                     className={`w-full rounded-md px-3 py-2 text-left text-sm transition-colors ${
                       currentScenario === scenario.id
@@ -138,6 +141,7 @@ export function DemoSwitcher({
                   <button
                     key={scenario.id}
                     onClick={() => handleScenarioChange(scenario.id)}
+                    data-interaction-id={`demo-scenario-${scenario.id}`}
                     disabled={!scenario.available}
                     className={`w-full rounded-md px-3 py-2 text-left text-sm transition-colors ${
                       currentScenario === scenario.id
@@ -160,6 +164,7 @@ export function DemoSwitcher({
                   setIsOpen(false);
                   setIsAuditOpen(true);
                 }}
+                data-interaction-id="demo-audit-viewer-open"
                 className="min-h-11 w-full rounded-md px-2 py-2 text-left text-sm font-medium text-navy hover:bg-gray-50"
               >
                 Open interviewer audit viewer
@@ -176,6 +181,7 @@ export function DemoSwitcher({
                     onReset();
                   }
                 }}
+                data-interaction-id="demo-reset"
                 className="flex min-h-11 w-full items-center gap-2 rounded-md px-2 py-2 text-left text-sm font-medium text-navy hover:bg-gray-50"
               >
                 <RotateCcw size={16} aria-hidden="true" />

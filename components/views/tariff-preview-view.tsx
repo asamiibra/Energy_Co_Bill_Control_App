@@ -1,10 +1,18 @@
+'use client';
+
+import { useState } from 'react';
 import { ArrowRight, LockKeyhole } from 'lucide-react';
 
+import { EVENT_NAMES } from '@/domain/event';
+import { useLocalActionFeedback } from '@/hooks/use-local-action-feedback';
 import { formatCurrencyRange, formatCurrency } from '@/lib/format-currency';
+import { navigateToScenario } from '@/lib/scenario-router';
 import type { DemoScenario } from '@/domain/scenario';
 
 export function TariffPreviewView({ scenario }: { scenario: DemoScenario }) {
   const preview = scenario.futurePreview;
+  const [showTradeOffs, setShowTradeOffs] = useState(false);
+  const { actionStatus, recordLocalAction } = useLocalActionFeedback(scenario);
 
   if (!preview || preview.kind !== 'tariff') {
     return null;
@@ -83,7 +91,10 @@ export function TariffPreviewView({ scenario }: { scenario: DemoScenario }) {
         </div>
 
         <details className="mt-6 rounded-lg border p-4">
-          <summary className="cursor-pointer font-semibold">
+          <summary
+            data-interaction-id="tariff-assumptions"
+            className="focus-visible cursor-pointer font-semibold"
+          >
             Assumptions
           </summary>
           <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-gray-700">
@@ -92,6 +103,22 @@ export function TariffPreviewView({ scenario }: { scenario: DemoScenario }) {
             ))}
           </ul>
         </details>
+
+        <button
+          onClick={() => setShowTradeOffs((current) => !current)}
+          data-interaction-id="tariff-trade-offs"
+          className="focus-visible mt-4 w-full rounded-lg border p-4 text-left font-semibold"
+          aria-expanded={showTradeOffs}
+        >
+          Review trade-offs
+        </button>
+        {showTradeOffs && (
+          <div className="mt-2 rounded-lg bg-gray-50 p-4 text-sm text-gray-700">
+            Higher peak-period rates and the $75 exit fee may outweigh the
+            directional benefit if usage cannot shift. Savings are not
+            guaranteed.
+          </div>
+        )}
 
         <div className="mt-6 flex items-start gap-3 rounded-lg border p-4">
           <LockKeyhole className="mt-0.5 text-navy" aria-hidden="true" />
@@ -103,6 +130,33 @@ export function TariffPreviewView({ scenario }: { scenario: DemoScenario }) {
             </p>
           </div>
         </div>
+
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button
+            onClick={() => navigateToScenario('consent')}
+            data-interaction-id="tariff-manage-permissions"
+            className="btn-outline"
+          >
+            Manage permissions
+          </button>
+          <button
+            onClick={() =>
+              recordLocalAction(
+                EVENT_NAMES.ADVISOR_REQUESTED,
+                'Your tariff-advisor preference was saved in this prototype. No external request was sent.'
+              )
+            }
+            data-interaction-id="tariff-advisor-support"
+            className="btn-primary"
+          >
+            Ask an advisor
+          </button>
+        </div>
+        {actionStatus && (
+          <p className="mt-3 text-sm text-blue-800" role="status">
+            {actionStatus}
+          </p>
+        )}
       </div>
     </section>
   );

@@ -33,7 +33,7 @@ test.describe('release presentation controls', () => {
     await page.keyboard.press('3');
     await expect(page).toHaveURL(/scenario=safety.*presentation=true/);
     await expect(
-      page.getByText('Essential Use Protection Active')
+      page.getByText('Essential-use protection active')
     ).toBeVisible();
 
     await page.keyboard.press('Shift+D');
@@ -92,7 +92,7 @@ test.describe('offline-after-load P0 reliability', () => {
     await expect(page.getByText('Your estimate changed')).toBeVisible();
     await page.keyboard.press('3');
     await expect(
-      page.getByText('Essential Use Protection Active')
+      page.getByText('Essential-use protection active')
     ).toBeVisible();
 
     await page.keyboard.press('Shift+D');

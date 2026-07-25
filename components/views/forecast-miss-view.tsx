@@ -14,6 +14,7 @@ import { formatDateTime } from '@/lib/format-date';
 import { ForecastRangeVisualization } from '../forecast-range-visualization';
 import { EVENT_NAMES } from '@/domain/event';
 import { useLocalActionFeedback } from '@/hooks/use-local-action-feedback';
+import { auditLedger } from '@/services/audit-ledger';
 
 import type { DemoScenario } from '@/domain/scenario';
 
@@ -181,7 +182,15 @@ export function ForecastMissView({ scenario }: ForecastMissViewProps) {
       {/* What Changed */}
       <div className="card p-6">
         <button
-          onClick={() => setShowWhyChanged(!showWhyChanged)}
+          onClick={() => {
+            setShowWhyChanged(!showWhyChanged);
+            auditLedger.recordEvent(EVENT_NAMES.WHY_CHANGED_OPENED, {
+              scenarioId: scenario.scenarioId,
+              householdId: scenario.household.customerId,
+              forecastVersionId: previousForecast.forecastVersionId,
+            });
+          }}
+          data-interaction-id="forecast-miss-review-change"
           className="focus-visible flex w-full items-center justify-between text-left"
         >
           <h3 className="text-lg font-semibold text-gray-900">
@@ -243,6 +252,7 @@ export function ForecastMissView({ scenario }: ForecastMissViewProps) {
       <div className="card p-6">
         <button
           onClick={() => setShowImprovements(!showImprovements)}
+          data-interaction-id="forecast-miss-corrective-response"
           className="focus-visible flex w-full items-center justify-between text-left"
         >
           <h3 className="text-lg font-semibold text-gray-900">
@@ -331,6 +341,7 @@ export function ForecastMissView({ scenario }: ForecastMissViewProps) {
                 'Advisor interest recorded locally. No message or request was sent.'
               )
             }
+            data-interaction-id="forecast-miss-advisor"
             className="focus-visible flex w-full items-center space-x-3 rounded-lg border border-blue-200 p-4 text-left transition-colors hover:bg-blue-50"
           >
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
@@ -355,6 +366,7 @@ export function ForecastMissView({ scenario }: ForecastMissViewProps) {
                   'Acknowledgment recorded locally. No account or billing change was made.'
                 );
               }}
+              data-interaction-id="forecast-miss-acknowledge"
               className="btn-primary w-full"
             >
               Acknowledge and continue

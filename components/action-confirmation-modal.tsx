@@ -36,33 +36,56 @@ export function ActionConfirmationModal({
       }
     };
     document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      previouslyFocused?.focus();
-    };
-  }, [onClose]);
-
-  const handleSaveAction = () => {
-    // Save action intent (does NOT execute external action)
-    const savedPlan = actionIntentService.saveActionPlan(
-      scenario.scenarioId,
-      scenario.household.customerId,
-      [recommendation],
-      { reminderDate, notes }
-    );
-
-    // Record audit event
-    auditLedger.recordEvent(EVENT_NAMES.ACTION_PLAN_SAVED, {
+    auditLedger.recordEvent(EVENT_NAMES.RECOMMENDATION_SELECTED, {
       scenarioId: scenario.scenarioId,
       householdId: scenario.household.customerId,
       recommendationId: recommendation.recommendationId,
       forecastVersionId: scenario.forecast.forecastVersionId,
-      properties: {
-        planId: savedPlan.planId,
-        hasReminder: !!reminderDate,
-        hasNotes: !!notes,
-      },
     });
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      previouslyFocused?.focus();
+    };
+  }, [onClose, recommendation.recommendationId, scenario]);
+
+  const handleSaveAction = () => {
+    const existingPlan = actionIntentService
+      .getPlansForScenario(scenario.scenarioId)
+      .find((plan) => plan.status === 'saved' || plan.status === 'modified');
+    const savedPlan = existingPlan
+      ? actionIntentService.modifyActionPlan(existingPlan.planId, {
+          recommendationIds: [recommendation.recommendationId],
+          reminderDate,
+          notes,
+        })
+      : actionIntentService.saveActionPlan(
+          scenario.scenarioId,
+          scenario.household.customerId,
+          [recommendation],
+          { reminderDate, notes }
+        );
+
+    if (!savedPlan) {
+      return;
+    }
+
+    // Record audit event
+    auditLedger.recordEvent(
+      existingPlan
+        ? EVENT_NAMES.ACTION_PLAN_MODIFIED
+        : EVENT_NAMES.ACTION_PLAN_SAVED,
+      {
+        scenarioId: scenario.scenarioId,
+        householdId: scenario.household.customerId,
+        recommendationId: recommendation.recommendationId,
+        forecastVersionId: scenario.forecast.forecastVersionId,
+        properties: {
+          planId: savedPlan.planId,
+          hasReminder: !!reminderDate,
+          hasNotes: !!notes,
+        },
+      }
+    );
 
     setShowSuccess(true);
 
@@ -115,11 +138,14 @@ export function ActionConfirmationModal({
             id="save-action-title"
             className="text-lg font-semibold text-gray-900"
           >
-            Save Action Plan
+            {actionIntentService.hasActivePlans(scenario.household.customerId)
+              ? 'Update Action Plan'
+              : 'Save Action Plan'}
           </h3>
           <button
             ref={closeButtonRef}
             onClick={onClose}
+            data-interaction-id="action-dialog-close"
             className="text-gray-400 transition-colors hover:text-gray-600"
             aria-label="Close save action dialog"
           >
@@ -172,6 +198,7 @@ export function ActionConfirmationModal({
               <input
                 id="action-reminder-date"
                 type="date"
+                data-interaction-id="action-dialog-reminder-date"
                 value={reminderDate}
                 onChange={(e) => setReminderDate(e.target.value)}
                 className="w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
@@ -188,6 +215,7 @@ export function ActionConfirmationModal({
               </label>
               <textarea
                 id="action-notes"
+                data-interaction-id="action-dialog-notes"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Add any personal notes about this action..."
@@ -211,12 +239,14 @@ export function ActionConfirmationModal({
         <div className="flex space-x-3 border-t border-gray-200 p-6">
           <button
             onClick={handleSaveAction}
+            data-interaction-id="action-dialog-save"
             className="focus-visible flex-1 rounded-md bg-navy px-4 py-2 text-white transition-colors hover:bg-navy-600"
           >
             Save Action Plan
           </button>
           <button
             onClick={onClose}
+            data-interaction-id="action-dialog-cancel"
             className="flex-1 rounded-md border border-gray-300 px-4 py-2 text-gray-600 transition-colors hover:bg-gray-50"
           >
             Cancel

@@ -225,6 +225,7 @@ export function ColdStartView({
             </div>
             <button
               onClick={() => setShowQuestionnaire(!showQuestionnaire)}
+              data-interaction-id="cold-start-toggle-details"
               className="focus-visible flex items-center space-x-1 text-sm font-medium text-blue-600 hover:text-blue-800"
             >
               <span>{showQuestionnaire ? 'Hide' : 'Add details'}</span>
@@ -293,11 +294,16 @@ export function ColdStartView({
               </div>
 
               <div className="mt-4 flex space-x-2">
-                <button onClick={handleRefineEstimate} className="btn-primary">
+                <button
+                  onClick={handleRefineEstimate}
+                  data-interaction-id="cold-start-refine"
+                  className="btn-primary"
+                >
                   Refine estimate with sample answers
                 </button>
                 <button
                   onClick={() => setShowQuestionnaire(false)}
+                  data-interaction-id="cold-start-continue-without"
                   className="btn-outline"
                 >
                   Continue without answering
@@ -374,6 +380,7 @@ export function ColdStartView({
                     { reminder: true }
                   )
                 }
+                data-interaction-id="cold-start-save-alert"
                 className="btn-primary"
               >
                 Set alert preference
@@ -385,6 +392,7 @@ export function ColdStartView({
                     'No alert preference was saved.'
                   )
                 }
+                data-interaction-id="cold-start-decline-alert"
                 className="btn-secondary"
               >
                 Not now
@@ -396,6 +404,7 @@ export function ColdStartView({
                     'Advisor interest recorded locally. No message or request was sent.'
                   )
                 }
+                data-interaction-id="cold-start-advisor"
                 className="focus-visible px-4 py-2 text-blue-600 transition-colors hover:text-blue-800"
               >
                 Talk with an advisor
@@ -434,6 +443,7 @@ export function ColdStartView({
               'Advisor interest recorded locally. No message or request was sent.'
             )
           }
+          data-interaction-id="cold-start-support-advisor"
           className="btn-primary"
         >
           Talk with an advisor

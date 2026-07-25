@@ -29,9 +29,10 @@
     "generate:fallbacks": "npm run build && node scripts/generate-fallbacks.mjs",
     "generate:links": "node scripts/generate-link-artifacts.mjs",
     "validate:release-artifacts": "node scripts/validate-release-artifacts.mjs",
+    "validate:interactions": "node scripts/validate-interactions.mjs",
     "audit:final": "node scripts/final-canonical-audit.mjs",
     "validate:fixtures": "tsx lib/fixture-validation.ts",
-    "check": "npm run typecheck && npm run lint && npm run format:check && npm run validate:fixtures && npm run test && npm run build",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run validate:fixtures && npm run validate:interactions && npm run test && npm run build",
     "verify:pre-release": "npm run check && npm run test:e2e && npm run test:a11y && npm run test:visual",
     "verify:release": "npm run verify:pre-release && npm run generate:fallbacks && npm run validate:release-artifacts && if [ -n \"$BASE_URL\" ]; then npm run test:deployed; else echo 'BASE_URL not set; deployed smoke test skipped'; fi",
     "verify:final": "npm audit --audit-level=low && npm run audit:final && npm run verify:release && npm run build:sites"

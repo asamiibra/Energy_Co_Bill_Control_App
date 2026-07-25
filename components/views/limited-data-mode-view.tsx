@@ -10,6 +10,7 @@ import { ForecastRangeVisualization } from '../forecast-range-visualization';
 import { ActionConfirmationModal } from '../action-confirmation-modal';
 import { EVENT_NAMES } from '@/domain/event';
 import { useLocalActionFeedback } from '@/hooks/use-local-action-feedback';
+import { auditLedger } from '@/services/audit-ledger';
 
 import type { DemoScenario } from '@/domain/scenario';
 
@@ -176,11 +177,21 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
           {scenario.drivers.map((driver) => (
             <div key={driver.id} className="rounded-lg border border-gray-200">
               <button
-                onClick={() =>
+                onClick={() => {
+                  auditLedger.recordEvent(
+                    EVENT_NAMES.DRIVER_EXPLANATION_OPENED,
+                    {
+                      scenarioId: scenario.scenarioId,
+                      householdId: scenario.household.customerId,
+                      forecastVersionId: scenario.forecast.forecastVersionId,
+                      properties: { driverId: driver.id },
+                    }
+                  );
                   setExpandedDriver(
                     expandedDriver === driver.id ? null : driver.id
-                  )
-                }
+                  );
+                }}
+                data-interaction-id={`limited-driver-${driver.id}`}
                 className="focus-visible w-full p-4 text-left transition-colors hover:bg-gray-50"
               >
                 <div className="flex items-center justify-between">
@@ -284,6 +295,7 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={() => setShowActionModal(true)}
+                    data-interaction-id="limited-save-action"
                     className="btn-primary"
                   >
                     Save this action
@@ -296,6 +308,7 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
                         { reminder: true }
                       )
                     }
+                    data-interaction-id="limited-set-reminder"
                     className="btn-secondary"
                   >
                     Set reminder
@@ -307,6 +320,7 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
                         'No action was saved or executed.'
                       )
                     }
+                    data-interaction-id="limited-decline"
                     className="btn-outline"
                   >
                     Not now
@@ -318,6 +332,7 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
                         'Advisor interest recorded locally. No message or request was sent.'
                       )
                     }
+                    data-interaction-id="limited-advisor-support"
                     className="focus-visible px-4 py-2 text-blue-600 transition-colors hover:text-blue-800"
                   >
                     Talk with an advisor
@@ -360,6 +375,7 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
                   'Advisor interest recorded locally. No message or request was sent.'
                 )
               }
+              data-interaction-id="limited-suppressed-advisor"
               className="focus-visible flex items-center space-x-3 rounded-lg border border-blue-200 p-4 text-left transition-colors hover:bg-blue-50"
             >
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
@@ -383,6 +399,7 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
                   { properties: { option: 'interval_data_evaluation' } }
                 )
               }
+              data-interaction-id="limited-interval-evaluation"
               className="focus-visible flex items-center space-x-3 rounded-lg border border-blue-200 p-4 text-left transition-colors hover:bg-blue-50"
             >
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">

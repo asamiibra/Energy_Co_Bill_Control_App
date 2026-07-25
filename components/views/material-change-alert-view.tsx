@@ -201,7 +201,11 @@ export function MaterialChangeAlertView({
       {/* Why This Changed */}
       <div className="rounded-lg border bg-white p-6 shadow-sm">
         <button
-          onClick={() => setShowWhyChanged(!showWhyChanged)}
+          onClick={() => {
+            setShowWhyChanged(!showWhyChanged);
+            recordActionEvent(EVENT_NAMES.WHY_CHANGED_OPENED);
+          }}
+          data-interaction-id="alert-why-changed"
           className="flex w-full items-center justify-between text-left"
         >
           <h3 className="text-lg font-semibold text-gray-900">
@@ -259,6 +263,7 @@ export function MaterialChangeAlertView({
                   <input
                     aria-label={`Select ${recommendation.title}`}
                     type="checkbox"
+                    data-interaction-id={`alert-select-${recommendation.recommendationId}`}
                     checked={selectedRecommendations.includes(
                       recommendation.recommendationId
                     )}
@@ -306,10 +311,15 @@ export function MaterialChangeAlertView({
           </div>
 
           {/* Action Buttons */}
+          <p id="alert-selection-help" className="mt-4 text-sm text-gray-600">
+            Select at least one action to enable saving.
+          </p>
           <div className="mt-6 flex flex-wrap gap-2">
             <button
               onClick={handleSave}
+              data-interaction-id="alert-save-selected"
               disabled={selectedRecommendations.length === 0}
+              aria-describedby="alert-selection-help"
               className={`focus-visible rounded-md px-4 py-2 transition-colors ${
                 selectedRecommendations.length === 0
                   ? 'cursor-not-allowed bg-gray-100 text-gray-400'
@@ -320,18 +330,21 @@ export function MaterialChangeAlertView({
             </button>
             <button
               onClick={handleModify}
+              data-interaction-id="alert-modify"
               className="px-4 py-2 text-gray-600 transition-colors hover:text-gray-800"
             >
               Modify
             </button>
             <button
               onClick={handleDecline}
+              data-interaction-id="alert-decline"
               className="px-4 py-2 text-gray-600 transition-colors hover:text-gray-800"
             >
               Not now
             </button>
             <button
               onClick={handleAdvisor}
+              data-interaction-id="alert-advisor-support"
               className="px-4 py-2 text-blue-600 transition-colors hover:text-blue-800"
             >
               Talk with an advisor

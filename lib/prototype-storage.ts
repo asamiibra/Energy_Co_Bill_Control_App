@@ -5,6 +5,7 @@ export const PROTOTYPE_STORAGE_KEYS = [
   'bill-control-consent-overrides',
   'bill-control-presentation-progress',
   'bill-control-faithfulness-test-state',
+  'bill-control-support-interests',
 ] as const;
 
 export function resetPrototypeLocalState(): void {

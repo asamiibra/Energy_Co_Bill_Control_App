@@ -52,7 +52,7 @@ test.describe('final red-team routing and storage', () => {
     });
     await page.goto('/?scenario=safety&presentation=true');
     await expect(
-      page.getByText('Essential Use Protection Active')
+      page.getByText('Essential-use protection active')
     ).toBeVisible();
   });
 
@@ -65,11 +65,11 @@ test.describe('final red-team routing and storage', () => {
     }
     await page.keyboard.press('3');
     await expect(
-      page.getByText('Essential Use Protection Active')
+      page.getByText('Essential-use protection active')
     ).toBeVisible();
     await expect(
       page.getByText('Reduce essential heating overnight')
-    ).toBeVisible();
+    ).toHaveCount(0);
     await expect(
       page.getByRole('button', { name: /switch tariff|change thermostat/i })
     ).toHaveCount(0);
@@ -94,16 +94,22 @@ test.describe('final red-team interaction truthfulness', () => {
   }) => {
     await page.goto('/?scenario=safety&presentation=true');
     await page
-      .getByRole('button', { name: /Check budget-plan eligibility/ })
+      .getByRole('button', { name: /Explore budget-plan support/ })
       .click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page.getByRole('button', { name: 'Save my interest' }).click();
     await expect(page.getByRole('status')).toContainText(
-      'Eligibility was not checked'
+      'No application was submitted'
     );
     await page.getByRole('button', { name: /Speak with an advisor/ }).click();
-    await expect(page.getByRole('status')).toContainText('No call');
+    await page.getByLabel('Message me').check();
+    await page.getByRole('button', { name: 'Save preference' }).click();
+    await expect(page.getByRole('status')).toContainText(
+      'No external request was sent'
+    );
     await expect(
       page.getByText('Reduce essential heating overnight')
-    ).toBeVisible();
+    ).toHaveCount(0);
   });
 
   test('cold-start and forecast-miss actions produce auditable feedback', async ({
@@ -143,10 +149,15 @@ test.describe('final red-team interaction truthfulness', () => {
 
     await page.goto('/?scenario=baseline');
     await page.getByRole('button', { name: 'Help and Support' }).click();
-    await expect(page.getByRole('status')).toContainText('does not contact');
+    await expect(
+      page.getByRole('region', { name: 'Bill Control help' })
+    ).toContainText('no external request is sent');
     await page.getByRole('button', { name: 'Account Menu' }).click();
-    await expect(page.getByRole('status')).toContainText('synthetic demo');
-    await page.getByRole('button', { name: 'Consent and preferences' }).click();
+    const accountMenu = page.getByRole('region', { name: 'Account menu' });
+    await expect(accountMenu).toContainText('Alex Morgan');
+    await accountMenu
+      .getByRole('button', { name: 'Consent and preferences' })
+      .click();
     await expect(page).toHaveURL(/scenario=consent/);
   });
 });

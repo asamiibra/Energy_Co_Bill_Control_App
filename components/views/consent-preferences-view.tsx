@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Shield,
   Check,
@@ -13,7 +13,7 @@ import {
 
 import { auditLedger } from '@/services/audit-ledger';
 import type { DemoScenario } from '@/domain/scenario';
-import type { ConsentPermission } from '@/domain/consent';
+import { ConsentStateSchema, type ConsentPermission } from '@/domain/consent';
 import { mockConsentService } from '@/services/mock-consent-service';
 import { EVENT_NAMES } from '@/domain/event';
 import { formatDate } from '@/lib/format-date';
@@ -31,6 +31,53 @@ export function ConsentPreferencesView({
   );
   const [showImpact, setShowImpact] = useState<string | null>(null);
   const [supportStatus, setSupportStatus] = useState<string | null>(null);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('bill-control-consent-overrides');
+      if (!raw) return;
+      const parsed = ConsentStateSchema.safeParse(JSON.parse(raw));
+      if (parsed.success) {
+        queueMicrotask(() =>
+          setScenario((current) => ({
+            ...current,
+            consentState: parsed.data,
+          }))
+        );
+      }
+    } catch {
+      localStorage.removeItem('bill-control-consent-overrides');
+    }
+  }, []);
+
+  const applyConsentUpdate = (
+    updatedConsent: DemoScenario['consentState'],
+    purpose: ConsentPermission['purpose'],
+    currentStatus: ConsentPermission['status'],
+    eventName: string
+  ) => {
+    const newStatus = updatedConsent.permissions.find(
+      (permission) => permission.purpose === purpose
+    )?.status;
+    setScenario({ ...scenario, consentState: updatedConsent });
+    try {
+      localStorage.setItem(
+        'bill-control-consent-overrides',
+        JSON.stringify(updatedConsent)
+      );
+    } catch {
+      // The current-session state remains available.
+    }
+    auditLedger.recordEvent(eventName, {
+      scenarioId: scenario.scenarioId,
+      householdId: scenario.household.customerId,
+      consentVersionId: updatedConsent.consentVersionId,
+      properties: { purpose, previousStatus: currentStatus, newStatus },
+    });
+    setShowImpact(purpose);
+    setTimeout(() => setShowImpact(null), 5000);
+  };
 
   const recordPrivacySupport = (option: string, message: string) => {
     auditLedger.recordEvent(EVENT_NAMES.SUPPORT_OPTION_SELECTED, {
@@ -53,34 +100,29 @@ export function ConsentPreferencesView({
           ? mockConsentService.restorePermission(scenario.consentState, purpose)
           : mockConsentService.grantPermission(scenario.consentState, purpose);
 
-    const newStatus = updatedConsent.permissions.find(
-      (permission) => permission.purpose === purpose
-    )?.status;
-
-    setScenario({ ...scenario, consentState: updatedConsent });
-
-    // Record audit event
     const eventName =
-      newStatus === 'revoked'
+      currentStatus === 'granted'
         ? EVENT_NAMES.CONSENT_REVOKED
         : currentStatus === 'revoked' || currentStatus === 'declined'
           ? EVENT_NAMES.CONSENT_RESTORED
           : EVENT_NAMES.CONSENT_GRANTED;
+    applyConsentUpdate(updatedConsent, purpose, currentStatus, eventName);
+  };
 
-    auditLedger.recordEvent(eventName, {
-      scenarioId: scenario.scenarioId,
-      householdId: scenario.household.customerId,
-      consentVersionId: updatedConsent.consentVersionId,
-      properties: {
-        purpose,
-        previousStatus: currentStatus,
-        newStatus,
-      },
-    });
-
-    // Show impact message
-    setShowImpact(purpose);
-    setTimeout(() => setShowImpact(null), 5000);
+  const handleDeclinePermission = (
+    purpose: ConsentPermission['purpose'],
+    currentStatus: ConsentPermission['status']
+  ) => {
+    const updatedConsent = mockConsentService.declinePermission(
+      scenario.consentState,
+      purpose
+    );
+    applyConsentUpdate(
+      updatedConsent,
+      purpose,
+      currentStatus,
+      EVENT_NAMES.CONSENT_DECLINED
+    );
   };
 
   const getStatusBadge = (status: string) => {
@@ -166,6 +208,24 @@ export function ConsentPreferencesView({
             Updates automatically when you change permissions
           </div>
         </div>
+        <button
+          onClick={() => setShowVersionHistory((current) => !current)}
+          data-interaction-id="consent-version-history"
+          className="focus-visible mt-3 text-sm font-medium text-blue-700"
+          aria-expanded={showVersionHistory}
+        >
+          {showVersionHistory ? 'Hide version history' : 'View version history'}
+        </button>
+        {showVersionHistory && (
+          <div className="mt-3 rounded-md border bg-white p-3 text-sm text-gray-700">
+            Current version: {scenario.consentState.consentVersionId}
+            <br />
+            Last local update:{' '}
+            {scenario.consentState.updatedAt
+              ? formatDate(scenario.consentState.updatedAt, { format: 'long' })
+              : 'No local changes in this session'}
+          </div>
+        )}
       </div>
 
       {/* Permissions List */}
@@ -194,13 +254,23 @@ export function ConsentPreferencesView({
               </div>
 
               <button
-                onClick={() =>
+                onClick={() => {
+                  auditLedger.recordEvent(
+                    EVENT_NAMES.CONSENT_PERMISSION_VIEWED,
+                    {
+                      scenarioId: scenario.scenarioId,
+                      householdId: scenario.household.customerId,
+                      consentVersionId: scenario.consentState.consentVersionId,
+                      properties: { purpose: permission.purpose },
+                    }
+                  );
                   setExpandedPermission(
                     expandedPermission === permission.purpose
                       ? null
                       : permission.purpose
-                  )
-                }
+                  );
+                }}
+                data-interaction-id={`consent-details-${permission.purpose}`}
                 className="focus-visible ml-4 p-2 text-gray-400 hover:text-gray-600"
                 aria-label={
                   expandedPermission === permission.purpose
@@ -278,6 +348,7 @@ export function ConsentPreferencesView({
                             permission.status
                           )
                         }
+                        data-interaction-id={`consent-revoke-${permission.purpose}`}
                         className="focus-visible rounded-md border border-orange-300 px-4 py-2 text-sm font-medium text-orange-700 transition-colors hover:bg-orange-50"
                       >
                         Revoke permission
@@ -294,9 +365,24 @@ export function ConsentPreferencesView({
                             permission.status
                           )
                         }
+                        data-interaction-id={`consent-grant-${permission.purpose}`}
                         className="btn-primary text-sm"
                       >
                         Grant permission
+                      </button>
+                    )}
+                    {permission.status === 'not_requested' && (
+                      <button
+                        onClick={() =>
+                          handleDeclinePermission(
+                            permission.purpose,
+                            permission.status
+                          )
+                        }
+                        data-interaction-id={`consent-decline-${permission.purpose}`}
+                        className="btn-outline text-sm"
+                      >
+                        Decline
                       </button>
                     )}
                   </div>
@@ -441,6 +527,7 @@ export function ConsentPreferencesView({
               'Privacy-policy interest recorded locally. This demo has no external policy page.'
             )
           }
+          data-interaction-id="consent-privacy-policy"
           className="focus-visible mt-4 text-sm font-medium text-blue-600 hover:text-blue-800"
         >
           View full privacy policy →
@@ -463,6 +550,7 @@ export function ConsentPreferencesView({
               'Privacy-team interest recorded locally. No message or request was sent.'
             )
           }
+          data-interaction-id="consent-contact-privacy"
           className="btn-primary"
         >
           Contact privacy team

@@ -1,0 +1,722 @@
+[
+  [
+    "error-return-baseline",
+    "unknown",
+    "Go to Baseline Forecast",
+    "Navigate to baseline",
+    "route",
+    "router",
+    "none:navigation",
+    "interaction-completeness"
+  ],
+  [
+    "error-boundary-reset",
+    "error",
+    "Reset to Baseline Forecast",
+    "Recover to baseline",
+    "route",
+    "router",
+    "none:error recovery",
+    "interaction-completeness"
+  ],
+  [
+    "header-help",
+    "all",
+    "Help and Support",
+    "Toggle help panel",
+    "panel",
+    "none",
+    "none:disclosure",
+    "interaction-completeness"
+  ],
+  [
+    "header-account-menu",
+    "all",
+    "Account Menu",
+    "Toggle account menu",
+    "menu",
+    "none",
+    "none:disclosure",
+    "interaction-completeness"
+  ],
+  [
+    "account-consent-preferences",
+    "all",
+    "Consent and preferences",
+    "Navigate to consent",
+    "route",
+    "router",
+    "none:navigation",
+    "interaction-completeness"
+  ],
+  [
+    "header-panel-close",
+    "all",
+    "Close",
+    "Close header panel",
+    "panel",
+    "none",
+    "none:disclosure",
+    "interaction-completeness"
+  ],
+  [
+    "footer-estimate-method",
+    "all",
+    "How this estimate works",
+    "Open help explanation",
+    "panel",
+    "none",
+    "none:disclosure",
+    "interaction-completeness"
+  ],
+  [
+    "footer-consent-preferences",
+    "all",
+    "Consent and preferences",
+    "Navigate to consent",
+    "route",
+    "router",
+    "none:navigation",
+    "interaction-completeness"
+  ],
+  [
+    "message-sms-view-forecast",
+    "all",
+    "View forecast",
+    "Open forecast from SMS",
+    "forecast",
+    "audit ledger",
+    "message_link_selected",
+    "interaction-completeness"
+  ],
+  [
+    "message-email-view-forecast",
+    "all",
+    "View forecast",
+    "Open forecast from email",
+    "forecast",
+    "audit ledger",
+    "message_link_selected",
+    "interaction-completeness"
+  ],
+  [
+    "message-skip-to-forecast",
+    "all",
+    "Skip to Forecast Details",
+    "Open forecast",
+    "forecast",
+    "audit ledger",
+    "forecast_viewed",
+    "interaction-completeness"
+  ],
+  [
+    "forecast-back-to-messages",
+    "all",
+    "Back to message previews",
+    "Return to previews",
+    "preview",
+    "audit ledger",
+    "message_preview_opened",
+    "interaction-completeness"
+  ],
+  [
+    "demo-switcher-toggle",
+    "all",
+    "Demo scenario switcher",
+    "Toggle demo menu",
+    "menu",
+    "none",
+    "none:demo disclosure",
+    "interaction-completeness"
+  ],
+  [
+    "demo-scenario-*",
+    "all",
+    "Scenario option",
+    "Navigate to scenario",
+    "route",
+    "router",
+    "scenario_loaded",
+    "interaction-completeness"
+  ],
+  [
+    "demo-audit-viewer-open",
+    "all",
+    "Open interviewer audit viewer",
+    "Open audit dialog",
+    "dialog",
+    "audit ledger",
+    "none:interviewer utility",
+    "interaction-completeness"
+  ],
+  [
+    "demo-reset",
+    "all",
+    "Reset prototype",
+    "Clear prototype state",
+    "storage and route",
+    "prototype storage",
+    "none:confirmed reset",
+    "interaction-completeness"
+  ],
+  [
+    "audit-viewer-close",
+    "all",
+    "Close audit viewer",
+    "Close audit dialog",
+    "dialog",
+    "none",
+    "none:disclosure",
+    "interaction-completeness"
+  ],
+  [
+    "baseline-driver-*",
+    "baseline",
+    "Driver explanation",
+    "Toggle driver details",
+    "disclosure",
+    "evidence ledger",
+    "driver_explanation_opened",
+    "interaction-completeness"
+  ],
+  [
+    "baseline-save-action",
+    "baseline",
+    "Save this action",
+    "Open save dialog",
+    "dialog",
+    "action intent",
+    "recommendation_selected",
+    "interaction-completeness"
+  ],
+  [
+    "baseline-set-reminder",
+    "baseline",
+    "Set reminder",
+    "Save local reminder",
+    "local storage",
+    "local action",
+    "reminder_set",
+    "interaction-completeness"
+  ],
+  [
+    "baseline-decline-action",
+    "baseline",
+    "Not now",
+    "Record local decline",
+    "confirmation",
+    "local action",
+    "action_plan_declined",
+    "interaction-completeness"
+  ],
+  [
+    "baseline-advisor-support",
+    "baseline",
+    "Talk with an advisor",
+    "Save advisor interest",
+    "confirmation",
+    "local action",
+    "advisor_requested",
+    "interaction-completeness"
+  ],
+  [
+    "action-dialog-close",
+    "baseline,limited-data",
+    "Close save action dialog",
+    "Close dialog",
+    "dialog",
+    "none",
+    "none:dialog control",
+    "interaction-completeness"
+  ],
+  [
+    "action-dialog-reminder-date",
+    "baseline,limited-data",
+    "Reminder date",
+    "Edit local reminder date",
+    "form value",
+    "action intent",
+    "none:form field",
+    "interaction-completeness"
+  ],
+  [
+    "action-dialog-notes",
+    "baseline,limited-data",
+    "Notes",
+    "Edit local notes",
+    "form value",
+    "action intent",
+    "none:form field",
+    "interaction-completeness"
+  ],
+  [
+    "action-dialog-save",
+    "baseline,limited-data",
+    "Save Action Plan",
+    "Save local intent",
+    "local storage",
+    "action intent",
+    "action_plan_saved",
+    "interaction-completeness"
+  ],
+  [
+    "action-dialog-cancel",
+    "baseline,limited-data",
+    "Cancel",
+    "Close without saving",
+    "dialog",
+    "none",
+    "none:dialog control",
+    "interaction-completeness"
+  ],
+  [
+    "alert-why-changed",
+    "alert",
+    "Why this changed",
+    "Toggle change explanation",
+    "disclosure",
+    "evidence ledger",
+    "why_changed_opened",
+    "interaction-completeness"
+  ],
+  [
+    "alert-select-*",
+    "alert",
+    "Select recommendation",
+    "Toggle action selection",
+    "selection",
+    "action intent",
+    "recommendation_selected",
+    "interaction-completeness"
+  ],
+  [
+    "alert-save-selected",
+    "alert",
+    "Save selected actions",
+    "Save selected local intent",
+    "local storage",
+    "action intent",
+    "action_plan_saved",
+    "interaction-completeness"
+  ],
+  [
+    "alert-modify",
+    "alert",
+    "Modify",
+    "Enter local modification state",
+    "confirmation",
+    "action intent",
+    "action_plan_modified",
+    "interaction-completeness"
+  ],
+  [
+    "alert-decline",
+    "alert",
+    "Not now",
+    "Record local decline",
+    "confirmation",
+    "action intent",
+    "action_plan_declined",
+    "interaction-completeness"
+  ],
+  [
+    "alert-advisor-support",
+    "alert",
+    "Talk with an advisor",
+    "Save advisor interest",
+    "confirmation",
+    "local action",
+    "advisor_requested",
+    "interaction-completeness"
+  ],
+  [
+    "safety-open-*",
+    "safety",
+    "Safe next-step card",
+    "Open support dialog",
+    "dialog",
+    "local support intent",
+    "none:dialog trigger",
+    "interaction-completeness"
+  ],
+  [
+    "safety-open-advisor",
+    "safety",
+    "Speak with an advisor",
+    "Open advisor preference dialog",
+    "dialog",
+    "local support intent",
+    "none:dialog trigger",
+    "interaction-completeness"
+  ],
+  [
+    "safety-dialog-close",
+    "safety",
+    "Close support dialog",
+    "Close dialog",
+    "dialog",
+    "none",
+    "none:dialog control",
+    "interaction-completeness"
+  ],
+  [
+    "safety-save-*",
+    "safety",
+    "Save my interest",
+    "Save local support intent",
+    "local storage",
+    "local support intent",
+    "support_option_selected",
+    "interaction-completeness"
+  ],
+  [
+    "safety-advisor-preference-*",
+    "safety",
+    "Advisor preference",
+    "Choose advisor channel",
+    "selection",
+    "local support intent",
+    "none:form field",
+    "interaction-completeness"
+  ],
+  [
+    "safety-alternatives-done",
+    "safety",
+    "Done",
+    "Close alternatives dialog",
+    "dialog",
+    "none",
+    "safe_alternative_selected",
+    "interaction-completeness"
+  ],
+  [
+    "safety-decision-explanation",
+    "safety",
+    "How was this decision made?",
+    "Toggle customer explanation",
+    "disclosure",
+    "policy service",
+    "safety_reason_viewed",
+    "interaction-completeness"
+  ],
+  [
+    "limited-driver-*",
+    "limited-data",
+    "Source detail",
+    "Toggle source explanation",
+    "disclosure",
+    "evidence ledger",
+    "driver_explanation_opened",
+    "interaction-completeness"
+  ],
+  [
+    "limited-save-action",
+    "limited-data",
+    "Save this action",
+    "Open save dialog",
+    "dialog",
+    "action intent",
+    "recommendation_selected",
+    "interaction-completeness"
+  ],
+  [
+    "limited-set-reminder",
+    "limited-data",
+    "Set reminder",
+    "Save local reminder",
+    "local storage",
+    "local action",
+    "reminder_set",
+    "interaction-completeness"
+  ],
+  [
+    "limited-decline",
+    "limited-data",
+    "Not now",
+    "Record local decline",
+    "confirmation",
+    "local action",
+    "action_plan_declined",
+    "interaction-completeness"
+  ],
+  [
+    "limited-advisor-support",
+    "limited-data",
+    "Talk with an advisor",
+    "Save advisor interest",
+    "confirmation",
+    "local action",
+    "advisor_requested",
+    "interaction-completeness"
+  ],
+  [
+    "limited-suppressed-advisor",
+    "limited-data",
+    "Talk with an advisor",
+    "Save advisor interest",
+    "confirmation",
+    "local action",
+    "advisor_requested",
+    "interaction-completeness"
+  ],
+  [
+    "limited-interval-evaluation",
+    "limited-data",
+    "Request interval-data evaluation",
+    "Save local interest",
+    "confirmation",
+    "local action",
+    "support_option_selected",
+    "interaction-completeness"
+  ],
+  [
+    "cold-start-toggle-details",
+    "cold-start",
+    "Add details",
+    "Toggle optional questionnaire",
+    "disclosure",
+    "none",
+    "none:optional form",
+    "interaction-completeness"
+  ],
+  [
+    "cold-start-refine",
+    "cold-start",
+    "Refine estimate",
+    "Select approved refined fixture",
+    "forecast state",
+    "fixture service",
+    "cold_start_estimate_refined",
+    "interaction-completeness"
+  ],
+  [
+    "cold-start-continue-without",
+    "cold-start",
+    "Continue without answering",
+    "Close questionnaire",
+    "disclosure",
+    "none",
+    "none:optional form",
+    "interaction-completeness"
+  ],
+  [
+    "cold-start-save-alert",
+    "cold-start",
+    "Set alert preference",
+    "Save local alert preference",
+    "local storage",
+    "local action",
+    "reminder_set",
+    "interaction-completeness"
+  ],
+  [
+    "cold-start-decline-alert",
+    "cold-start",
+    "Not now",
+    "Decline local alert",
+    "confirmation",
+    "local action",
+    "action_plan_declined",
+    "interaction-completeness"
+  ],
+  [
+    "cold-start-advisor",
+    "cold-start",
+    "Talk with an advisor",
+    "Save advisor interest",
+    "confirmation",
+    "local action",
+    "advisor_requested",
+    "interaction-completeness"
+  ],
+  [
+    "cold-start-support-advisor",
+    "cold-start",
+    "Talk with an advisor",
+    "Save advisor interest",
+    "confirmation",
+    "local action",
+    "advisor_requested",
+    "interaction-completeness"
+  ],
+  [
+    "forecast-miss-review-change",
+    "forecast-miss",
+    "Review what changed",
+    "Toggle miss explanation",
+    "disclosure",
+    "measurement service",
+    "why_changed_opened",
+    "interaction-completeness"
+  ],
+  [
+    "forecast-miss-corrective-response",
+    "forecast-miss",
+    "Corrective response",
+    "Toggle corrective response",
+    "disclosure",
+    "measurement service",
+    "none:explanation",
+    "interaction-completeness"
+  ],
+  [
+    "forecast-miss-advisor",
+    "forecast-miss",
+    "Talk with an advisor",
+    "Save advisor interest",
+    "confirmation",
+    "local action",
+    "advisor_requested",
+    "interaction-completeness"
+  ],
+  [
+    "forecast-miss-acknowledge",
+    "forecast-miss",
+    "Acknowledge and continue",
+    "Record acknowledgment",
+    "confirmation",
+    "audit ledger",
+    "forecast_miss_acknowledged",
+    "interaction-completeness"
+  ],
+  [
+    "consent-version-history",
+    "consent",
+    "View version history",
+    "Toggle version history",
+    "disclosure",
+    "consent service",
+    "none:version disclosure",
+    "interaction-completeness"
+  ],
+  [
+    "consent-details-*",
+    "consent",
+    "Permission details",
+    "Toggle purpose details",
+    "disclosure",
+    "consent service",
+    "consent_permission_viewed",
+    "interaction-completeness"
+  ],
+  [
+    "consent-grant-*",
+    "consent",
+    "Grant permission",
+    "Grant and version locally",
+    "consent state",
+    "consent service",
+    "consent_granted",
+    "interaction-completeness"
+  ],
+  [
+    "consent-decline-*",
+    "consent",
+    "Decline permission",
+    "Decline and version locally",
+    "consent state",
+    "consent service",
+    "consent_declined",
+    "interaction-completeness"
+  ],
+  [
+    "consent-revoke-*",
+    "consent",
+    "Revoke permission",
+    "Revoke and version locally",
+    "consent state",
+    "consent service",
+    "consent_revoked",
+    "interaction-completeness"
+  ],
+  [
+    "consent-privacy-policy",
+    "consent",
+    "View full privacy policy",
+    "Show prototype limitation",
+    "confirmation",
+    "audit ledger",
+    "support_option_selected",
+    "interaction-completeness"
+  ],
+  [
+    "consent-contact-privacy",
+    "consent",
+    "Contact privacy team",
+    "Save local interest",
+    "confirmation",
+    "audit ledger",
+    "support_option_selected",
+    "interaction-completeness"
+  ],
+  [
+    "tariff-assumptions",
+    "tariff-preview",
+    "Assumptions",
+    "Toggle assumptions",
+    "disclosure",
+    "fixture service",
+    "none:future explanation",
+    "interaction-completeness"
+  ],
+  [
+    "tariff-trade-offs",
+    "tariff-preview",
+    "Review trade-offs",
+    "Toggle trade-offs",
+    "disclosure",
+    "fixture service",
+    "none:future explanation",
+    "interaction-completeness"
+  ],
+  [
+    "tariff-manage-permissions",
+    "tariff-preview",
+    "Manage permissions",
+    "Navigate to consent",
+    "route",
+    "router",
+    "none:navigation",
+    "interaction-completeness"
+  ],
+  [
+    "tariff-advisor-support",
+    "tariff-preview",
+    "Ask an advisor",
+    "Save advisor interest",
+    "confirmation",
+    "local action",
+    "advisor_requested",
+    "interaction-completeness"
+  ],
+  [
+    "connected-*",
+    "connected-home-preview",
+    "Preview detail",
+    "Toggle requirement detail",
+    "disclosure",
+    "fixture service",
+    "none:future explanation",
+    "interaction-completeness"
+  ],
+  [
+    "connected-manage-permissions",
+    "connected-home-preview",
+    "Manage permissions",
+    "Navigate to consent",
+    "route",
+    "router",
+    "none:navigation",
+    "interaction-completeness"
+  ],
+  [
+    "connected-advisor-support",
+    "connected-home-preview",
+    "Ask an advisor",
+    "Save advisor interest",
+    "confirmation",
+    "local action",
+    "advisor_requested",
+    "interaction-completeness"
+  ]
+]

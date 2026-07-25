@@ -50,9 +50,9 @@ test.describe('@visual release artifact integrity', () => {
     {
       scenario: 'safety',
       expected: [
-        'Essential Use Protection Active',
+        'Essential-use protection active',
         'Jordan Lee',
-        'POLICY-JORDAN-ESSENTIAL-001',
+        'We are not recommending changes to essential heating under current conditions.',
       ],
     },
   ] as const;

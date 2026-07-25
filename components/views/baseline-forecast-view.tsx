@@ -11,6 +11,7 @@ import { ActionConfirmationModal } from '../action-confirmation-modal';
 import { ForecastRangeVisualization } from '../forecast-range-visualization';
 import { EVENT_NAMES } from '@/domain/event';
 import { useLocalActionFeedback } from '@/hooks/use-local-action-feedback';
+import { auditLedger } from '@/services/audit-ledger';
 
 import type { DemoScenario } from '@/domain/scenario';
 
@@ -111,11 +112,21 @@ export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
           {scenario.drivers.map((driver, index) => (
             <div key={driver.id} className="rounded-lg border border-gray-200">
               <button
-                onClick={() =>
+                onClick={() => {
+                  auditLedger.recordEvent(
+                    EVENT_NAMES.DRIVER_EXPLANATION_OPENED,
+                    {
+                      scenarioId: scenario.scenarioId,
+                      householdId: scenario.household.customerId,
+                      forecastVersionId: scenario.forecast.forecastVersionId,
+                      properties: { driverId: driver.id },
+                    }
+                  );
                   setExpandedDriver(
                     expandedDriver === driver.id ? null : driver.id
-                  )
-                }
+                  );
+                }}
+                data-interaction-id={`baseline-driver-${driver.id}`}
                 className="w-full p-4 text-left transition-colors hover:bg-gray-50"
               >
                 <div className="flex items-center justify-between">
@@ -207,6 +218,7 @@ export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
             <div className="mt-4 flex flex-wrap gap-2">
               <button
                 onClick={() => setShowActionModal(true)}
+                data-interaction-id="baseline-save-action"
                 className="focus-visible rounded-md bg-navy px-4 py-2 text-white transition-colors hover:bg-navy-600"
               >
                 Save this action
@@ -219,6 +231,7 @@ export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
                     { reminder: true }
                   )
                 }
+                data-interaction-id="baseline-set-reminder"
                 className="px-4 py-2 text-gray-600 transition-colors hover:text-gray-800"
               >
                 Set reminder
@@ -230,6 +243,7 @@ export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
                     'No action was saved or executed.'
                   )
                 }
+                data-interaction-id="baseline-decline-action"
                 className="px-4 py-2 text-gray-600 transition-colors hover:text-gray-800"
               >
                 Not now
@@ -241,6 +255,7 @@ export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
                     'Advisor interest recorded locally. No message or request was sent.'
                   )
                 }
+                data-interaction-id="baseline-advisor-support"
                 className="px-4 py-2 text-blue-600 transition-colors hover:text-blue-800"
               >
                 Talk with an advisor

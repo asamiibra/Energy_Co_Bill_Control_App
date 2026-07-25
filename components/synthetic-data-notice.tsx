@@ -1,10 +1,13 @@
 export function SyntheticDataNotice() {
   return (
-    <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 p-3">
-      <p className="text-sm text-blue-700">
-        <span className="font-medium">Prototype Notice:</span> Illustrative
-        prototype for the 12-week MVP pilot using synthetic customer and energy
-        data.
+    <div
+      className="mb-4 rounded-md border border-gray-200 bg-gray-100 px-3 py-2"
+      role="note"
+      aria-label="Prototype disclosure"
+    >
+      <p className="text-xs text-gray-700">
+        Illustrative prototype using synthetic customer and energy data. No
+        account, tariff, payment, or device actions are connected.
       </p>
     </div>
   );

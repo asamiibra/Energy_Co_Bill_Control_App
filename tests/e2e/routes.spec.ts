@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 const routes = [
   ['baseline', 'Your bill is currently expected to be $178.'],
   ['alert', 'Your estimate changed'],
-  ['safety', 'Essential Use Protection Active'],
+  ['safety', 'Essential-use protection active'],
   ['limited-data', 'Limited-Data Estimate'],
   ['cold-start', 'Welcome to Bill Control'],
   [
@@ -125,9 +125,20 @@ test.describe('customer action boundaries', () => {
     await page
       .getByRole('button', { name: 'Skip to Forecast Details' })
       .click();
-    const suppressed = page.getByText('Reduce essential heating overnight');
-    await expect(suppressed).toBeVisible();
-    await expect(suppressed.locator('..')).not.toContainText('$');
+    await expect(
+      page.getByText(
+        'We are not recommending changes to essential heating under current conditions.'
+      )
+    ).toBeVisible();
+    await expect(
+      page.getByText('Reduce essential heating overnight')
+    ).toHaveCount(0);
+    await page
+      .getByRole('button', { name: 'How was this decision made?' })
+      .click();
+    await expect(
+      page.getByText('A heating-reduction recommendation was withheld.')
+    ).toBeVisible();
 
     await page.goto('/?scenario=tariff-preview');
     await page

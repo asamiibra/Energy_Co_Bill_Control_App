@@ -1,5 +1,11 @@
+'use client';
+
+import { useState } from 'react';
 import { Battery, Car, LockKeyhole, Sun, Thermometer } from 'lucide-react';
 
+import { EVENT_NAMES } from '@/domain/event';
+import { useLocalActionFeedback } from '@/hooks/use-local-action-feedback';
+import { navigateToScenario } from '@/lib/scenario-router';
 import type { DemoScenario } from '@/domain/scenario';
 
 export function ConnectedHomePreviewView({
@@ -8,6 +14,8 @@ export function ConnectedHomePreviewView({
   scenario: DemoScenario;
 }) {
   const preview = scenario.futurePreview;
+  const [openDetail, setOpenDetail] = useState<string | null>(null);
+  const { actionStatus, recordLocalAction } = useLocalActionFeedback(scenario);
 
   if (!preview || preview.kind !== 'connected-home') {
     return null;
@@ -95,6 +103,81 @@ export function ConnectedHomePreviewView({
           Future dependency: {preview.partnerDependency}. This preview does not
           fabricate device data and cannot enroll or control any device.
         </p>
+
+        <div className="mt-6 space-y-2">
+          {[
+            [
+              'capabilities',
+              'Capability details',
+              'A future governed service could coordinate approved device schedules while preserving customer control.',
+            ],
+            [
+              'data',
+              'Data requirements',
+              'Fresh device telemetry and authoritative tariff context would be required. Neither is connected here.',
+            ],
+            [
+              'consent',
+              'Consent requirements',
+              'Connected-device access must be purpose-specific, explicit, current, and revocable.',
+            ],
+            [
+              'partner',
+              'Partner dependencies',
+              `${preview.partnerDependency}. Partner referral remains declined and no transfer occurs.`,
+            ],
+            [
+              'workflow',
+              'Future workflow',
+              'Review → permission check → explicit confirmation → governed execution → audit and rollback.',
+            ],
+          ].map(([id, label, description]) => (
+            <div key={id} className="rounded-lg border">
+              <button
+                onClick={() =>
+                  setOpenDetail((current) => (current === id ? null : id))
+                }
+                data-interaction-id={`connected-${id}`}
+                className="focus-visible w-full p-4 text-left font-semibold"
+                aria-expanded={openDetail === id}
+              >
+                {label}
+              </button>
+              {openDetail === id && (
+                <p className="border-t p-4 text-sm text-gray-700">
+                  {description}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-4 flex flex-wrap gap-3">
+          <button
+            onClick={() => navigateToScenario('consent')}
+            data-interaction-id="connected-manage-permissions"
+            className="btn-outline"
+          >
+            Manage permissions
+          </button>
+          <button
+            onClick={() =>
+              recordLocalAction(
+                EVENT_NAMES.ADVISOR_REQUESTED,
+                'Your connected-home advisor preference was saved in this prototype. No external request or partner transfer was sent.'
+              )
+            }
+            data-interaction-id="connected-advisor-support"
+            className="btn-primary"
+          >
+            Ask an advisor
+          </button>
+        </div>
+        {actionStatus && (
+          <p className="mt-3 text-sm text-blue-800" role="status">
+            {actionStatus}
+          </p>
+        )}
       </div>
     </section>
   );

@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 const routes = [
   ['baseline', 'Your bill is currently expected to be $178.'],
   ['alert', 'Your estimate changed'],
-  ['safety', 'Essential Use Protection Active'],
+  ['safety', 'Essential-use protection active'],
   ['limited-data', 'Limited-Data Estimate'],
   ['cold-start', 'Welcome to Bill Control'],
   [

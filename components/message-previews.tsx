@@ -173,6 +173,7 @@ You have ${scenario.forecast.daysRemaining} days remaining in your billing perio
               <div className="mt-3">
                 <button
                   onClick={onViewForecast}
+                  data-interaction-id="message-sms-view-forecast"
                   className="text-sm font-medium text-blue-600 underline hover:text-blue-800"
                 >
                   View forecast
@@ -241,6 +242,7 @@ You have ${scenario.forecast.daysRemaining} days remaining in your billing perio
                 <div className="mt-4 rounded-r border-l-4 border-blue-400 bg-blue-50 p-3">
                   <button
                     onClick={onViewForecast}
+                    data-interaction-id="message-email-view-forecast"
                     className="font-medium text-blue-600 hover:text-blue-800"
                   >
                     View your complete forecast →

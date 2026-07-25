@@ -14,8 +14,11 @@ const scenarios = {
     values: ['$164', '$186', '$168–$204'],
   },
   safety: {
-    text: 'Essential Use Protection Active',
-    values: ['Jordan Lee', 'POLICY-JORDAN-ESSENTIAL-001'],
+    text: 'Essential-use protection active',
+    values: [
+      'Jordan Lee',
+      'We are not recommending changes to essential heating under current conditions.',
+    ],
   },
 };
 

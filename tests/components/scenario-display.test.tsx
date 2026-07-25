@@ -25,13 +25,15 @@ describe('ScenarioDisplay', () => {
   it('renders safety suppression without executable savings', () => {
     render(<ScenarioDisplay scenario={safetyJordanScenario} />);
 
-    expect(screen.getByText('Essential Use Protection Active')).toBeVisible();
+    expect(screen.getByText('Essential-use protection active')).toBeVisible();
     expect(
-      screen.getByText('Reduce essential heating overnight')
+      screen.getByText(
+        'We are not recommending changes to essential heating under current conditions.'
+      )
     ).toBeVisible();
     expect(
-      screen.getByText(/suppressed due to essential-use protection/i)
-    ).toBeVisible();
+      screen.queryByText('Reduce essential heating overnight')
+    ).not.toBeInTheDocument();
   });
 
   it('renders a non-executable tariff preview', () => {

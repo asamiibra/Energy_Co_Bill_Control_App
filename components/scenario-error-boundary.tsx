@@ -44,6 +44,7 @@ export class ScenarioErrorBoundary extends React.Component<
                   url.searchParams.set('scenario', 'baseline');
                   window.location.href = url.toString();
                 }}
+                data-interaction-id="error-boundary-reset"
                 className="rounded-md bg-navy px-4 py-2 text-white transition-colors hover:bg-navy-600"
               >
                 Reset to Baseline Forecast

@@ -80,13 +80,19 @@ export function AuditViewer({
           <button
             ref={closeButtonRef}
             onClick={onClose}
+            data-interaction-id="audit-viewer-close"
             className="min-h-11 min-w-11 rounded-md p-2 hover:bg-gray-100"
             aria-label="Close audit viewer"
           >
             <X aria-hidden="true" />
           </button>
         </div>
-        <div className="overflow-auto p-4">
+        <div
+          className="overflow-auto p-4"
+          role="region"
+          aria-label="Audit event table"
+          tabIndex={0}
+        >
           {events.length === 0 ? (
             <p className="text-gray-600">No events recorded in this session.</p>
           ) : (
@@ -117,7 +123,14 @@ export function AuditViewer({
                     <td className="p-2 font-medium">{event.eventName}</td>
                     <td className="p-2">{event.scenarioId}</td>
                     <td className="p-2 font-mono text-xs">
-                      {JSON.stringify(event.properties)}
+                      {JSON.stringify({
+                        forecastVersionId: event.forecastVersionId,
+                        recommendationId: event.recommendationId,
+                        policyDecisionId: event.policyDecisionId,
+                        consentVersionId: event.consentVersionId,
+                        occurredAt: event.occurredAt,
+                        ...event.properties,
+                      })}
                     </td>
                   </tr>
                 ))}

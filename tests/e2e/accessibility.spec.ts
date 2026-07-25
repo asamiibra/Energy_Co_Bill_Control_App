@@ -53,3 +53,17 @@ test('@a11y expanded consent state has no automated violations', async ({
     .click();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
+
+test('@a11y safety support dialogs have no automated violations', async ({
+  page,
+}) => {
+  await page.goto('/?scenario=safety&presentation=true');
+  await page
+    .getByRole('button', { name: 'Explore budget-plan support' })
+    .click();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.keyboard.press('Escape');
+
+  await page.getByRole('button', { name: 'Speak with an advisor' }).click();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});

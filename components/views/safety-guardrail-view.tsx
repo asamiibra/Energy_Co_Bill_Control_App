@@ -1,39 +1,33 @@
 'use client';
 
-import { useEffect } from 'react';
-
+import { useEffect, useState } from 'react';
 import {
+  BadgeDollarSign,
+  ChevronDown,
+  ChevronUp,
+  HeartHandshake,
+  MessageCircle,
   Shield,
-  HelpCircle,
-  Phone,
-  FileText,
-  Users,
-  DollarSign,
+  Sparkles,
 } from 'lucide-react';
 
+import { EVENT_NAMES } from '@/domain/event';
+import type { DemoScenario } from '@/domain/scenario';
+import { auditLedger } from '@/services/audit-ledger';
 import { buildEvidenceLedger } from '@/services/explanation-evidence-ledger';
 import { generateSafetyExplanation } from '@/services/explanation-presenter';
+import { saveSupportIntent } from '@/services/local-support-intent-service';
 import { ForecastRangeVisualization } from '../forecast-range-visualization';
-import { EVENT_NAMES } from '@/domain/event';
-import { auditLedger } from '@/services/audit-ledger';
-import { useLocalActionFeedback } from '@/hooks/use-local-action-feedback';
+import { SafetySupportDialog } from '../safety-support-dialog';
 
-import type { DemoScenario } from '@/domain/scenario';
+type DialogKind =
+  'budget_plan' | 'assistance_programs' | 'safe_alternatives' | 'advisor';
 
-interface SafetyGuardrailViewProps {
-  scenario: DemoScenario;
-}
-
-export function SafetyGuardrailView({ scenario }: SafetyGuardrailViewProps) {
-  const { actionStatus, recordLocalAction } = useLocalActionFeedback(scenario);
-  const ledger = buildEvidenceLedger(scenario);
-  const explanation = generateSafetyExplanation(ledger);
-  const suppressedRecommendations = scenario.recommendations.filter(
-    (r) => r.status === 'suppressed'
-  );
-  const availableRecommendations = scenario.recommendations.filter(
-    (r) => r.status === 'available'
-  );
+export function SafetyGuardrailView({ scenario }: { scenario: DemoScenario }) {
+  const [dialog, setDialog] = useState<DialogKind | null>(null);
+  const [showDecision, setShowDecision] = useState(false);
+  const [confirmation, setConfirmation] = useState<string | null>(null);
+  const explanation = generateSafetyExplanation(buildEvidenceLedger(scenario));
 
   useEffect(() => {
     auditLedger.recordEventOnce(EVENT_NAMES.SAFETY_STATE_VIEWED, {
@@ -43,318 +37,213 @@ export function SafetyGuardrailView({ scenario }: SafetyGuardrailViewProps) {
     });
   }, [scenario]);
 
-  const selectSupport = (option: string, message: string) =>
-    recordLocalAction(EVENT_NAMES.SUPPORT_OPTION_SELECTED, message, {
-      properties: { option },
+  const openDialog = (kind: DialogKind) => {
+    setConfirmation(null);
+    setDialog(kind);
+    if (kind === 'safe_alternatives') {
+      auditLedger.recordEvent(EVENT_NAMES.SAFE_ALTERNATIVE_SELECTED, {
+        scenarioId: scenario.scenarioId,
+        householdId: scenario.household.customerId,
+        policyDecisionId: scenario.safetyDecision.policyDecisionId,
+        properties: { option: 'low_impact_alternatives' },
+      });
+    }
+  };
+
+  const saveIntent = (
+    kind: Exclude<DialogKind, 'safe_alternatives'>,
+    preference?: 'call' | 'message' | 'contact_information'
+  ) => {
+    saveSupportIntent({
+      scenarioId: scenario.scenarioId,
+      kind,
+      preference,
     });
 
+    auditLedger.recordEvent(
+      kind === 'advisor'
+        ? EVENT_NAMES.ADVISOR_REQUESTED
+        : EVENT_NAMES.SUPPORT_OPTION_SELECTED,
+      {
+        scenarioId: scenario.scenarioId,
+        householdId: scenario.household.customerId,
+        policyDecisionId: scenario.safetyDecision.policyDecisionId,
+        properties: {
+          option: kind,
+          preference,
+          executionMode: 'local_intent_only',
+        },
+      }
+    );
+
+    setConfirmation(
+      kind === 'budget_plan'
+        ? 'Your interest in budget-plan support was saved in this prototype. No application was submitted.'
+        : kind === 'assistance_programs'
+          ? 'Your interest in support programs was saved in this prototype. No application was submitted.'
+          : 'Your advisor-support preference was saved in this prototype. No external request was sent.'
+    );
+    setDialog(null);
+  };
+
   return (
-    <div className="space-y-6">
-      {/* Safety Message */}
-      <div className="rounded-lg border border-blue-200 bg-blue-50 p-6">
-        <div className="flex items-start space-x-4">
-          <div className="flex-shrink-0">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-              <Shield size={24} className="text-blue-600" />
-            </div>
+    <div className="space-y-4">
+      <section
+        className="rounded-xl border border-blue-200 bg-blue-50 p-5"
+        aria-labelledby="safety-title"
+      >
+        <div className="flex items-start gap-4">
+          <div className="rounded-full bg-blue-100 p-3">
+            <Shield className="text-blue-700" aria-hidden="true" />
           </div>
-          <div>
-            <h2 className="mb-2 text-lg font-semibold text-blue-900">
-              Essential Use Protection Active
+          <div className="min-w-0">
+            <h2 id="safety-title" className="text-xl text-blue-950">
+              Essential-use protection active
             </h2>
-            <p className="mb-3 text-blue-800">{explanation.safetySummary}</p>
-            <div className="text-sm text-blue-700">
-              <p>
-                Customer safety and comfort come first. Savings recommendations
-                have been limited.
-              </p>
-              <p className="mt-1">No automatic action has been taken.</p>
-            </div>
+            <p className="mt-2 font-medium text-blue-900">
+              We are not recommending changes to essential heating under current
+              conditions.
+            </p>
+            <p className="mt-2 text-sm text-blue-800">
+              Customer safety and comfort come first. Recommendations that could
+              reduce essential heating have been withheld. No automatic action
+              has been taken.
+            </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Current Forecast */}
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
-        <h3 className="mb-4 text-lg font-semibold text-gray-900">
-          Your current forecast
-        </h3>
-
-        <p className="mb-4 text-gray-600">{explanation.forecastSummary}</p>
-
-        <div className="grid gap-6 md:grid-cols-2">
-          {/* Forecast Details */}
+      <section className="card p-5" aria-labelledby="safety-forecast-title">
+        <div className="grid gap-5 md:grid-cols-2 md:items-center">
           <div>
-            <ForecastRangeVisualization
-              expectedBill={scenario.forecast.expectedBill}
-              range={scenario.forecast.expectedRange}
-            />
-          </div>
-
-          {/* Forecast Context */}
-          <div className="space-y-3">
-            <div className="text-sm text-gray-600">
-              <div>
-                <strong>Season:</strong> Winter billing period
-              </div>
-              <div>
-                <strong>Days remaining:</strong>{' '}
-                {scenario.forecast.daysRemaining}
-              </div>
-              <div>
-                <strong>Data quality:</strong>{' '}
-                {scenario.forecast.dataQualityTier}
-              </div>
-              <div>
-                <strong>Protection:</strong> Essential use (customer-declared)
-              </div>
+            <h3 id="safety-forecast-title" className="text-lg">
+              Current forecast
+            </h3>
+            <p className="mt-1 text-sm text-gray-600">
+              {explanation.forecastSummary}
+            </p>
+            <div className="mt-3 text-sm text-gray-700">
+              Winter period · {scenario.forecast.daysRemaining} days remaining ·{' '}
+              {scenario.forecast.dataQualityTier} data
             </div>
           </div>
+          <ForecastRangeVisualization
+            expectedBill={scenario.forecast.expectedBill}
+            range={scenario.forecast.expectedRange}
+          />
         </div>
+      </section>
 
-        {/* Drivers */}
-        <div className="mt-6">
-          <h4 className="mb-3 font-medium text-gray-900">
-            {explanation.driversSummary}
-          </h4>
-          <div className="space-y-2">
-            {explanation.driverDetails.map((detail, index) => (
-              <div
-                key={index}
-                className="flex items-start space-x-3 rounded-md bg-gray-50 p-3"
-              >
-                <div className="mt-2 h-2 w-2 rounded-full bg-orange-500"></div>
-                <span className="text-sm text-gray-700">{detail}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Suppressed Recommendations */}
-      {suppressedRecommendations.length > 0 && (
-        <div className="rounded-lg border bg-white p-6 shadow-sm">
-          <h3 className="mb-4 text-lg font-semibold text-gray-900">
-            Recommendations limited for your protection
+      <section className="card p-5" aria-labelledby="safe-next-steps-title">
+        <div>
+          <h3 id="safe-next-steps-title" className="text-lg">
+            Safe next steps
           </h3>
-
-          {suppressedRecommendations.map((recommendation) => (
-            <div
-              key={recommendation.recommendationId}
-              className="rounded-lg border border-gray-200 bg-gray-50 p-4"
-            >
-              <div className="flex items-start space-x-3">
-                <Shield size={20} className="mt-0.5 text-blue-500" />
-                <div>
-                  <h4 className="font-medium text-gray-700 line-through">
-                    {recommendation.title}
-                  </h4>
-                  <p className="mt-1 text-sm text-gray-600">
-                    This recommendation has been suppressed due to essential-use
-                    protection.
-                  </p>
-                  <div className="mt-2 text-xs text-blue-600">
-                    Policy Decision: {recommendation.policyDecisionId}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Support Options */}
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
-        <h3 className="mb-4 text-lg font-semibold text-gray-900">
-          Support options available
-        </h3>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <button
-            onClick={() =>
-              selectSupport(
-                'budget_plan',
-                'Budget-plan interest recorded locally. Eligibility was not checked.'
-              )
-            }
-            className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-              <DollarSign size={20} className="text-green-600" />
-            </div>
-            <div>
-              <div className="font-medium text-gray-900">
-                Check budget-plan eligibility
-              </div>
-              <div className="text-sm text-gray-600">
-                Spread costs evenly throughout the year
-              </div>
-            </div>
-          </button>
-
-          <button
-            onClick={() =>
-              selectSupport(
-                'support_tariff',
-                'Support-tariff interest recorded locally. No eligibility decision was made.'
-              )
-            }
-            className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
-              <FileText size={20} className="text-blue-600" />
-            </div>
-            <div>
-              <div className="font-medium text-gray-900">
-                Review a support tariff
-              </div>
-              <div className="text-sm text-gray-600">
-                Special rates for qualifying customers
-              </div>
-            </div>
-          </button>
-
-          <button
-            onClick={() =>
-              selectSupport(
-                'assistance_programs',
-                'Support-program interest recorded locally. No application was submitted.'
-              )
-            }
-            className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100">
-              <Users size={20} className="text-purple-600" />
-            </div>
-            <div>
-              <div className="font-medium text-gray-900">
-                Review available support options
-              </div>
-              <div className="text-sm text-gray-600">
-                Energy assistance and hardship programs
-              </div>
-            </div>
-          </button>
-
-          <button
-            onClick={() =>
-              recordLocalAction(
-                EVENT_NAMES.SAFE_ALTERNATIVE_SELECTED,
-                'Safe-alternative interest recorded locally. No device or account change was made.',
-                { properties: { option: 'safe_alternatives' } }
-              )
-            }
-            className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
-          >
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100">
-              <HelpCircle size={20} className="text-orange-600" />
-            </div>
-            <div>
-              <div className="font-medium text-gray-900">
-                View safe alternatives
-              </div>
-              <div className="text-sm text-gray-600">
-                Low-impact energy-saving tips
-              </div>
-            </div>
-          </button>
+          <p className="mt-1 text-sm text-gray-600">
+            Choose a local prototype pathway. Nothing is submitted externally.
+          </p>
         </div>
 
-        {/* Primary Support CTA */}
-        <div className="mt-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h4 className="font-medium text-blue-900">
-                Need to talk with someone?
-              </h4>
-              <p className="mt-1 text-sm text-blue-700">
-                Our advisors can help you explore options that work for your
-                situation.
-              </p>
-            </div>
+        <div className="mt-4 grid gap-3 md:grid-cols-3">
+          {[
+            {
+              kind: 'budget_plan' as const,
+              title: 'Explore budget-plan support',
+              description: 'Review illustrative budget-billing considerations.',
+              icon: BadgeDollarSign,
+            },
+            {
+              kind: 'assistance_programs' as const,
+              title: 'Review assistance programs',
+              description: 'Explore assistance and payment-support categories.',
+              icon: HeartHandshake,
+            },
+            {
+              kind: 'safe_alternatives' as const,
+              title: 'View low-impact alternatives',
+              description: 'See options that do not reduce essential heating.',
+              icon: Sparkles,
+            },
+          ].map(({ kind, title, description, icon: Icon }) => (
             <button
-              onClick={() =>
-                recordLocalAction(
-                  EVENT_NAMES.ADVISOR_REQUESTED,
-                  'Advisor interest recorded locally. No call or message was placed.'
-                )
-              }
-              className="focus-visible flex items-center space-x-2 rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+              key={kind}
+              onClick={() => openDialog(kind)}
+              data-interaction-id={`safety-open-${kind}`}
+              className="focus-visible rounded-lg border p-4 text-left hover:border-blue-300 hover:bg-blue-50"
             >
-              <Phone size={16} />
-              <span>Speak with an advisor</span>
+              <Icon className="text-blue-700" aria-hidden="true" />
+              <span className="mt-3 block font-medium">{title}</span>
+              <span className="mt-1 block text-sm text-gray-600">
+                {description}
+              </span>
             </button>
-          </div>
-        </div>
-        {actionStatus && (
-          <p className="mt-3 text-sm text-blue-800" role="status">
-            {actionStatus}
-          </p>
-        )}
-      </div>
-
-      {/* Available Safe Actions */}
-      {availableRecommendations.length > 0 && (
-        <div className="rounded-lg border bg-white p-6 shadow-sm">
-          <h3 className="mb-4 text-lg font-semibold text-gray-900">
-            Safe actions available
-          </h3>
-
-          {availableRecommendations.map((recommendation) => (
-            <div
-              key={recommendation.recommendationId}
-              className="rounded-lg border border-gray-200 p-4 transition-colors hover:border-blue-300"
-            >
-              <div className="flex items-start space-x-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-                  <Phone size={20} className="text-green-600" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">
-                    {recommendation.title}
-                  </h4>
-                  <p className="mt-1 text-sm text-gray-600">
-                    {recommendation.description}
-                  </p>
-
-                  <button
-                    onClick={() =>
-                      recordLocalAction(
-                        EVENT_NAMES.SAFE_ALTERNATIVE_SELECTED,
-                        'Safe action interest recorded locally. No external action was taken.',
-                        {
-                          properties: {
-                            recommendationId: recommendation.recommendationId,
-                          },
-                        }
-                      )
-                    }
-                    className="mt-3 rounded-md border border-blue-300 px-4 py-2 text-sm text-blue-600 transition-colors hover:bg-blue-50"
-                  >
-                    {recommendation.title}
-                  </button>
-                </div>
-              </div>
-            </div>
           ))}
         </div>
-      )}
 
-      {/* Policy Information */}
-      <div className="rounded-lg border border-gray-200 bg-gray-50 p-4">
-        <div className="text-sm text-gray-600">
-          <p>
-            <strong>Essential-use protection policy:</strong> This decision
-            follows the essential-use protection selected for this account. You
-            maintain full control over your energy usage and can adjust these
-            preferences at any time.
-          </p>
-          <p className="mt-2">
-            <strong>Policy ID:</strong>{' '}
-            {scenario.safetyDecision.policyDecisionId}
-          </p>
-        </div>
-      </div>
+        <button
+          onClick={() => openDialog('advisor')}
+          data-interaction-id="safety-open-advisor"
+          className="focus-visible mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-navy px-4 py-3 font-medium text-white hover:bg-navy-600"
+        >
+          <MessageCircle aria-hidden="true" />
+          Speak with an advisor
+        </button>
+
+        {confirmation && (
+          <div
+            className="mt-4 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-900"
+            role="status"
+          >
+            {confirmation}
+          </div>
+        )}
+      </section>
+
+      <section className="rounded-lg border border-gray-200 bg-white">
+        <button
+          onClick={() => {
+            setShowDecision((current) => !current);
+            auditLedger.recordEvent(EVENT_NAMES.SAFETY_REASON_VIEWED, {
+              scenarioId: scenario.scenarioId,
+              householdId: scenario.household.customerId,
+              policyDecisionId: scenario.safetyDecision.policyDecisionId,
+            });
+          }}
+          data-interaction-id="safety-decision-explanation"
+          className="focus-visible flex w-full items-center justify-between p-4 text-left"
+          aria-expanded={showDecision}
+        >
+          <span className="font-medium">How was this decision made?</span>
+          {showDecision ? (
+            <ChevronUp aria-hidden="true" />
+          ) : (
+            <ChevronDown aria-hidden="true" />
+          )}
+        </button>
+        {showDecision && (
+          <div className="border-t px-4 pb-4 pt-3 text-sm text-gray-700">
+            Essential-use protection is active for this account, so Bill Control
+            has withheld recommendations that could reduce essential heating.
+            You remain in control of your energy use and account preferences.
+            <p className="mt-3 font-medium text-gray-800">
+              A heating-reduction recommendation was withheld.
+            </p>
+          </div>
+        )}
+      </section>
+
+      {dialog && (
+        <SafetySupportDialog
+          kind={dialog}
+          onClose={() => setDialog(null)}
+          onSave={(preference) =>
+            saveIntent(
+              dialog as Exclude<DialogKind, 'safe_alternatives'>,
+              preference
+            )
+          }
+        />
+      )}
     </div>
   );
 }

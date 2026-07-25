@@ -1,0 +1,8 @@
+node_modules
+.next
+dist
+.vinext
+.wrangler
+playwright-report
+test-results
+artifacts/final-audit

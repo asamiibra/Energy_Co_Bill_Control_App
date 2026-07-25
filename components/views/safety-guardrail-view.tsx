@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect } from 'react';
+
 import {
   Shield,
   HelpCircle,
@@ -12,6 +14,9 @@ import {
 import { buildEvidenceLedger } from '@/services/explanation-evidence-ledger';
 import { generateSafetyExplanation } from '@/services/explanation-presenter';
 import { ForecastRangeVisualization } from '../forecast-range-visualization';
+import { EVENT_NAMES } from '@/domain/event';
+import { auditLedger } from '@/services/audit-ledger';
+import { useLocalActionFeedback } from '@/hooks/use-local-action-feedback';
 
 import type { DemoScenario } from '@/domain/scenario';
 
@@ -20,6 +25,7 @@ interface SafetyGuardrailViewProps {
 }
 
 export function SafetyGuardrailView({ scenario }: SafetyGuardrailViewProps) {
+  const { actionStatus, recordLocalAction } = useLocalActionFeedback(scenario);
   const ledger = buildEvidenceLedger(scenario);
   const explanation = generateSafetyExplanation(ledger);
   const suppressedRecommendations = scenario.recommendations.filter(
@@ -28,6 +34,19 @@ export function SafetyGuardrailView({ scenario }: SafetyGuardrailViewProps) {
   const availableRecommendations = scenario.recommendations.filter(
     (r) => r.status === 'available'
   );
+
+  useEffect(() => {
+    auditLedger.recordEventOnce(EVENT_NAMES.SAFETY_STATE_VIEWED, {
+      scenarioId: scenario.scenarioId,
+      householdId: scenario.household.customerId,
+      policyDecisionId: scenario.safetyDecision.policyDecisionId,
+    });
+  }, [scenario]);
+
+  const selectSupport = (option: string, message: string) =>
+    recordLocalAction(EVENT_NAMES.SUPPORT_OPTION_SELECTED, message, {
+      properties: { option },
+    });
 
   return (
     <div className="space-y-6">
@@ -151,7 +170,15 @@ export function SafetyGuardrailView({ scenario }: SafetyGuardrailViewProps) {
         </h3>
 
         <div className="grid gap-4 md:grid-cols-2">
-          <button className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50">
+          <button
+            onClick={() =>
+              selectSupport(
+                'budget_plan',
+                'Budget-plan interest recorded locally. Eligibility was not checked.'
+              )
+            }
+            className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
+          >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
               <DollarSign size={20} className="text-green-600" />
             </div>
@@ -165,7 +192,15 @@ export function SafetyGuardrailView({ scenario }: SafetyGuardrailViewProps) {
             </div>
           </button>
 
-          <button className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50">
+          <button
+            onClick={() =>
+              selectSupport(
+                'support_tariff',
+                'Support-tariff interest recorded locally. No eligibility decision was made.'
+              )
+            }
+            className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
+          >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100">
               <FileText size={20} className="text-blue-600" />
             </div>
@@ -179,7 +214,15 @@ export function SafetyGuardrailView({ scenario }: SafetyGuardrailViewProps) {
             </div>
           </button>
 
-          <button className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50">
+          <button
+            onClick={() =>
+              selectSupport(
+                'assistance_programs',
+                'Support-program interest recorded locally. No application was submitted.'
+              )
+            }
+            className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
+          >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100">
               <Users size={20} className="text-purple-600" />
             </div>
@@ -193,7 +236,16 @@ export function SafetyGuardrailView({ scenario }: SafetyGuardrailViewProps) {
             </div>
           </button>
 
-          <button className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50">
+          <button
+            onClick={() =>
+              recordLocalAction(
+                EVENT_NAMES.SAFE_ALTERNATIVE_SELECTED,
+                'Safe-alternative interest recorded locally. No device or account change was made.',
+                { properties: { option: 'safe_alternatives' } }
+              )
+            }
+            className="flex items-center space-x-3 rounded-lg border border-gray-200 p-4 text-left transition-colors hover:border-blue-300 hover:bg-blue-50"
+          >
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-orange-100">
               <HelpCircle size={20} className="text-orange-600" />
             </div>
@@ -220,12 +272,25 @@ export function SafetyGuardrailView({ scenario }: SafetyGuardrailViewProps) {
                 situation.
               </p>
             </div>
-            <button className="focus-visible flex items-center space-x-2 rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700">
+            <button
+              onClick={() =>
+                recordLocalAction(
+                  EVENT_NAMES.ADVISOR_REQUESTED,
+                  'Advisor interest recorded locally. No call or message was placed.'
+                )
+              }
+              className="focus-visible flex items-center space-x-2 rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+            >
               <Phone size={16} />
               <span>Speak with an advisor</span>
             </button>
           </div>
         </div>
+        {actionStatus && (
+          <p className="mt-3 text-sm text-blue-800" role="status">
+            {actionStatus}
+          </p>
+        )}
       </div>
 
       {/* Available Safe Actions */}
@@ -252,7 +317,20 @@ export function SafetyGuardrailView({ scenario }: SafetyGuardrailViewProps) {
                     {recommendation.description}
                   </p>
 
-                  <button className="mt-3 rounded-md border border-blue-300 px-4 py-2 text-sm text-blue-600 transition-colors hover:bg-blue-50">
+                  <button
+                    onClick={() =>
+                      recordLocalAction(
+                        EVENT_NAMES.SAFE_ALTERNATIVE_SELECTED,
+                        'Safe action interest recorded locally. No external action was taken.',
+                        {
+                          properties: {
+                            recommendationId: recommendation.recommendationId,
+                          },
+                        }
+                      )
+                    }
+                    className="mt-3 rounded-md border border-blue-300 px-4 py-2 text-sm text-blue-600 transition-colors hover:bg-blue-50"
+                  >
                     {recommendation.title}
                   </button>
                 </div>

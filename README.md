@@ -50,17 +50,18 @@ viewer. Unknown scenario IDs render a controlled error state.
 npm run verify:pre-release
 ```
 
-| Command                      | Scope                                                       |
-| ---------------------------- | ----------------------------------------------------------- |
-| `npm run check`              | Types, lint, format, fixtures, unit/component tests, build  |
-| `npm run test:e2e`           | Chromium and WebKit flows, routing, actions, responsiveness |
-| `npm run test:a11y`          | axe checks for all nine states in Chromium and WebKit       |
-| `npm run test:visual`        | P0 visual baselines at four required viewports              |
-| `npm run generate:fallbacks` | Generate canonical fallback and deck screenshots            |
-| `npm run test:deployed`      | Smoke-test the public `BASE_URL` in desktop/mobile browsers |
-| `npm run verify:release`     | Run the complete release and artifact gate                  |
-| `npm run validate:fixtures`  | Typed fixture and cross-scenario invariants                 |
-| `npm audit`                  | Dependency vulnerability audit                              |
+| Command                           | Scope                                                       |
+| --------------------------------- | ----------------------------------------------------------- |
+| `npm run check`                   | Types, lint, format, fixtures, unit/component tests, build  |
+| `npm run test:e2e`                | Chromium and WebKit flows, routing, actions, responsiveness |
+| `npm run test:a11y`               | axe checks for all nine states in Chromium and WebKit       |
+| `npm run test:visual`             | P0 visual baselines at four required viewports              |
+| `npm run generate:fallbacks`      | Generate canonical fallback and deck screenshots            |
+| `npm run test:deployed`           | Smoke-test the public `BASE_URL` in desktop/mobile browsers |
+| `npm run verify:release`          | Run the complete release and artifact gate                  |
+| `BASE_URL=… npm run verify:final` | Run the final canonical, release, deployed, and Sites gate  |
+| `npm run validate:fixtures`       | Typed fixture and cross-scenario invariants                 |
+| `npm audit`                       | Dependency vulnerability audit                              |
 
 See `docs/testing.md` for suite details and baseline maintenance.
 

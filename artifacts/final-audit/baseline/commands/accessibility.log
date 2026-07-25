@@ -1,0 +1,55 @@
+COMMAND	npm run test:a11y
+START	2026-07-25T22:26:39Z
+
+> bill-control@0.1.0 test:a11y
+> playwright test --grep @a11y
+
+[WebServer] (node:83653) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83653) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83701) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83702) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83700) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83703) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83743) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 18 tests using 2 workers
+
+(node:83745) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:83744) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y baseline has no automated accessibility violations (1.4s)
+  ✓   2 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y alert has no automated accessibility violations (1.3s)
+  ✓   3 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y safety has no automated accessibility violations (1.1s)
+  ✓   4 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y limited-data has no automated accessibility violations (1.1s)
+  ✓   6 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y forecast-miss has no automated accessibility violations (1.0s)
+  ✓   5 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y cold-start has no automated accessibility violations (1.1s)
+  ✓   8 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y tariff-preview has no automated accessibility violations (932ms)
+  ✓   7 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y consent has no automated accessibility violations (1.0s)
+(node:83773) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   9 [chromium] › tests/e2e/accessibility.spec.ts:17:3 › @a11y connected-home-preview has no automated accessibility violations (904ms)
+(node:83783) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  10 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y baseline has no automated accessibility violations (2.3s)
+  ✓  11 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y alert has no automated accessibility violations (2.0s)
+  ✓  12 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y safety has no automated accessibility violations (1.7s)
+  ✓  13 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y limited-data has no automated accessibility violations (1.6s)
+  ✓  14 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y cold-start has no automated accessibility violations (1.5s)
+  ✓  15 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y forecast-miss has no automated accessibility violations (1.5s)
+  ✓  16 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y consent has no automated accessibility violations (1.5s)
+  ✓  17 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y tariff-preview has no automated accessibility violations (1.4s)
+  ✓  18 [webkit] › tests/e2e/accessibility.spec.ts:17:3 › @a11y connected-home-preview has no automated accessibility violations (1.2s)
+
+  18 passed (26.5s)
+
+END	2026-07-25T22:27:06Z
+DURATION_SECONDS	27
+EXIT_CODE	0

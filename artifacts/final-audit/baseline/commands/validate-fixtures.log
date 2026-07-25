@@ -1,0 +1,10 @@
+COMMAND	npm run validate:fixtures
+START	2026-07-25T22:25:56Z
+
+> bill-control@0.1.0 validate:fixtures
+> tsx lib/fixture-validation.ts
+
+
+END	2026-07-25T22:25:56Z
+DURATION_SECONDS	0
+EXIT_CODE	0

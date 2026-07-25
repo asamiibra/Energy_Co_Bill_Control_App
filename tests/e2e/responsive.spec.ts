@@ -19,6 +19,7 @@ const viewports = [
   { name: '390x844', width: 390, height: 844 },
   { name: '375x667', width: 375, height: 667 },
   { name: '430x932', width: 430, height: 932 },
+  { name: '320x568', width: 320, height: 568 },
 ] as const;
 
 test.describe('responsive state integrity', () => {

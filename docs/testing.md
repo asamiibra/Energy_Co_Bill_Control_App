@@ -76,3 +76,9 @@ npm run generate:fallbacks
 BASE_URL=https://public-url npm run test:deployed
 BASE_URL=https://public-url npm run verify:release
 ```
+
+For the final interview gate:
+
+```bash
+BASE_URL=https://public-url npm run verify:final
+```

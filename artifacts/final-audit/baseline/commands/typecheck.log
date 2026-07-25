@@ -1,0 +1,10 @@
+COMMAND	npm run typecheck
+START	2026-07-25T22:25:47Z
+
+> bill-control@0.1.0 typecheck
+> tsc --noEmit
+
+
+END	2026-07-25T22:25:49Z
+DURATION_SECONDS	2
+EXIT_CODE	0

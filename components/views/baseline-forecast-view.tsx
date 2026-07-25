@@ -9,6 +9,8 @@ import { buildEvidenceLedger } from '@/services/explanation-evidence-ledger';
 import { generateBaselineExplanation } from '@/services/explanation-presenter';
 import { ActionConfirmationModal } from '../action-confirmation-modal';
 import { ForecastRangeVisualization } from '../forecast-range-visualization';
+import { EVENT_NAMES } from '@/domain/event';
+import { useLocalActionFeedback } from '@/hooks/use-local-action-feedback';
 
 import type { DemoScenario } from '@/domain/scenario';
 
@@ -19,6 +21,7 @@ interface BaselineForecastViewProps {
 export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
   const [showActionModal, setShowActionModal] = useState(false);
   const [expandedDriver, setExpandedDriver] = useState<string | null>(null);
+  const { actionStatus, recordLocalAction } = useLocalActionFeedback(scenario);
 
   const ledger = buildEvidenceLedger(scenario);
   const explanation = generateBaselineExplanation(ledger);
@@ -208,16 +211,46 @@ export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
               >
                 Save this action
               </button>
-              <button className="px-4 py-2 text-gray-600 transition-colors hover:text-gray-800">
+              <button
+                onClick={() =>
+                  recordLocalAction(
+                    EVENT_NAMES.REMINDER_SET,
+                    'Reminder saved in this browser only. No account change was made.',
+                    { reminder: true }
+                  )
+                }
+                className="px-4 py-2 text-gray-600 transition-colors hover:text-gray-800"
+              >
                 Set reminder
               </button>
-              <button className="px-4 py-2 text-gray-600 transition-colors hover:text-gray-800">
+              <button
+                onClick={() =>
+                  recordLocalAction(
+                    EVENT_NAMES.ACTION_PLAN_DECLINED,
+                    'No action was saved or executed.'
+                  )
+                }
+                className="px-4 py-2 text-gray-600 transition-colors hover:text-gray-800"
+              >
                 Not now
               </button>
-              <button className="px-4 py-2 text-blue-600 transition-colors hover:text-blue-800">
+              <button
+                onClick={() =>
+                  recordLocalAction(
+                    EVENT_NAMES.ADVISOR_REQUESTED,
+                    'Advisor interest recorded locally. No message or request was sent.'
+                  )
+                }
+                className="px-4 py-2 text-blue-600 transition-colors hover:text-blue-800"
+              >
                 Talk with an advisor
               </button>
             </div>
+            {actionStatus && (
+              <p className="mt-3 text-sm text-blue-800" role="status">
+                {actionStatus}
+              </p>
+            )}
           </div>
 
           {/* Read-only Statement */}

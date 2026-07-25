@@ -1,0 +1,19 @@
+COMMAND	npm test
+START	2026-07-25T22:25:56Z
+
+> bill-control@0.1.0 test
+> vitest run
+
+
+ RUN  v4.1.10 /Users/ahmedsami/Library/Mobile Documents/com~apple~CloudDocs/My Documents/Dev/Bain&Co - Energy Co Case/bill-control
+
+
+ Test Files  9 passed (9)
+      Tests  61 passed (61)
+   Start at  17:25:58
+   Duration  2.95s (transform 2.19s, setup 2.05s, import 3.43s, tests 308ms, environment 15.27s)
+
+
+END	2026-07-25T22:26:01Z
+DURATION_SECONDS	5
+EXIT_CODE	0

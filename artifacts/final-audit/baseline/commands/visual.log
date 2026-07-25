@@ -1,0 +1,68 @@
+COMMAND	npm run test:visual
+START	2026-07-25T22:27:06Z
+
+> bill-control@0.1.0 test:visual
+> playwright test --grep @visual
+
+[WebServer] (node:83923) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83923) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83963) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83961) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83962) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83964) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:84003) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 30 tests using 2 workers
+
+(node:84008) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:84009) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1280x720 (726ms)
+  ✓   2 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1440x900 (755ms)
+  ✓   4 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 390x844 (466ms)
+  ✓   3 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1024x768 (502ms)
+  ✓   6 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1280x720 (613ms)
+  ✓   5 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1440x900 (640ms)
+  ✓   8 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 390x844 (426ms)
+  ✓   7 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1024x768 (524ms)
+  ✓   9 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1440x900 (593ms)
+  ✓  10 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1280x720 (577ms)
+  ✓  12 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 390x844 (464ms)
+  ✓  11 [chromium] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1024x768 (567ms)
+  ✓  13 [chromium] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › baseline deck frame (408ms)
+  ✓  14 [chromium] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › alert deck frame (402ms)
+  ✓  15 [chromium] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › safety deck frame (367ms)
+(node:84062) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -  16 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1440x900
+  -  17 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1024x768
+  -  18 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 390x844
+  -  19 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1440x900
+  -  20 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1280x720
+  -  21 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 1024x768
+  -  22 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › alert at 390x844
+  -  23 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1440x900
+  -  24 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1280x720
+  -  25 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 1024x768
+  -  26 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › safety at 390x844
+  -  27 [webkit] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › baseline deck frame
+  -  28 [webkit] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › alert deck frame
+  -  29 [webkit] › tests/e2e/visual.spec.ts:61:5 › @visual release artifact integrity › safety deck frame
+(node:84066) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -  30 [webkit] › tests/e2e/visual.spec.ts:16:7 › @visual P0 visual integrity › baseline at 1280x720
+
+  15 skipped
+  15 passed (16.7s)
+
+END	2026-07-25T22:27:23Z
+DURATION_SECONDS	17
+EXIT_CODE	0

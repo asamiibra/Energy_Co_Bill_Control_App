@@ -1,0 +1,17 @@
+captured_at=2026-07-25T22:24:34Z
+branch=main
+commit=f8a4a05694585f38d520fb786a088b262ceed842
+working_tree_start
+?? artifacts/final-audit/
+working_tree_end
+node=v24.13.0
+npm=11.6.2
+pnpm=not-installed
+next=
+playwright=Version 1.62.0
+lockfile_sha256=b49aab5eb0d26e7bdf2c53d4ee6e54118b3fa9b792cee1d57736caf1beb064ef
+deployment_url=https://bill-control-mvp.ahmdsomy.chatgpt.site
+deployment_version=5
+deployment_source_commit=bc6910ed3b622c72b64144b47d61215fabd2a876
+release_hardening_verdict=READY FOR FINAL RED-TEAM WITH NON-BLOCKING RISKS
+next=16.2.12

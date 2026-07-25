@@ -17,6 +17,8 @@ import { formatDate } from '@/lib/format-date';
 import { ForecastRangeVisualization } from '../forecast-range-visualization';
 import { coldStartRefinedScenario } from '@/data/scenarios/cold-start';
 import { auditLedger } from '@/services/audit-ledger';
+import { EVENT_NAMES } from '@/domain/event';
+import { useLocalActionFeedback } from '@/hooks/use-local-action-feedback';
 
 import type { DemoScenario } from '@/domain/scenario';
 
@@ -33,6 +35,7 @@ export function ColdStartView({
     (candidate) => candidate.status === 'available'
   );
   const [isRefined, setIsRefined] = useState(false);
+  const { actionStatus, recordLocalAction } = useLocalActionFeedback(scenario);
 
   const handleRefineEstimate = () => {
     // Simulate refinement by switching to refined scenario
@@ -363,12 +366,46 @@ export function ColdStartView({
             </p>
 
             <div className="flex flex-wrap gap-2">
-              <button className="btn-primary">Set alert preference</button>
-              <button className="btn-secondary">Not now</button>
-              <button className="focus-visible px-4 py-2 text-blue-600 transition-colors hover:text-blue-800">
+              <button
+                onClick={() =>
+                  recordLocalAction(
+                    EVENT_NAMES.REMINDER_SET,
+                    'Alert preference saved in this browser only. No account setting was changed.',
+                    { reminder: true }
+                  )
+                }
+                className="btn-primary"
+              >
+                Set alert preference
+              </button>
+              <button
+                onClick={() =>
+                  recordLocalAction(
+                    EVENT_NAMES.ACTION_PLAN_DECLINED,
+                    'No alert preference was saved.'
+                  )
+                }
+                className="btn-secondary"
+              >
+                Not now
+              </button>
+              <button
+                onClick={() =>
+                  recordLocalAction(
+                    EVENT_NAMES.ADVISOR_REQUESTED,
+                    'Advisor interest recorded locally. No message or request was sent.'
+                  )
+                }
+                className="focus-visible px-4 py-2 text-blue-600 transition-colors hover:text-blue-800"
+              >
                 Talk with an advisor
               </button>
             </div>
+            {actionStatus && (
+              <p className="mt-3 text-sm text-blue-800" role="status">
+                {actionStatus}
+              </p>
+            )}
           </div>
 
           <div className="mt-4 rounded-md bg-gray-50 p-3">
@@ -390,7 +427,17 @@ export function ColdStartView({
           Our advisors can help you understand your early estimate and what to
           expect as your account builds history.
         </p>
-        <button className="btn-primary">Talk with an advisor</button>
+        <button
+          onClick={() =>
+            recordLocalAction(
+              EVENT_NAMES.ADVISOR_REQUESTED,
+              'Advisor interest recorded locally. No message or request was sent.'
+            )
+          }
+          className="btn-primary"
+        >
+          Talk with an advisor
+        </button>
       </div>
     </div>
   );

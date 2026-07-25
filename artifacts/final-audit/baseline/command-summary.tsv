@@ -1,0 +1,15 @@
+npm-ci	2026-07-25T22:25:31Z	16	0	npm ci
+typecheck	2026-07-25T22:25:47Z	2	0	npm run typecheck
+lint	2026-07-25T22:25:49Z	4	0	npm run lint
+format-check	2026-07-25T22:25:53Z	3	1	npm run format:check
+validate-fixtures	2026-07-25T22:25:56Z	0	0	npm run validate:fixtures
+unit-component	2026-07-25T22:25:56Z	5	0	npm test
+e2e	2026-07-25T22:26:01Z	38	0	npm run test:e2e
+accessibility	2026-07-25T22:26:39Z	27	0	npm run test:a11y
+visual	2026-07-25T22:27:06Z	17	0	npm run test:visual
+build	2026-07-25T22:27:23Z	8	0	npm run build
+generate-fallbacks	2026-07-25T22:27:31Z	12	0	env BASE_URL=https://bill-control-mvp.ahmdsomy.chatgpt.site npm run generate:fallbacks
+deployed-smoke	2026-07-25T22:27:43Z	24	0	env BASE_URL=https://bill-control-mvp.ahmdsomy.chatgpt.site npm run test:deployed
+verify-pre-release	2026-07-25T22:28:07Z	7	1	npm run verify:pre-release
+check	2026-07-25T22:28:14Z	7	1	npm run check
+verify-release	2026-07-25T22:28:21Z	7	1	env BASE_URL=https://bill-control-mvp.ahmdsomy.chatgpt.site npm run verify:release

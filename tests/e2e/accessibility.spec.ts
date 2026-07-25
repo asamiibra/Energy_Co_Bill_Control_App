@@ -25,3 +25,31 @@ for (const scenario of scenarios) {
     expect(results.violations).toEqual([]);
   });
 }
+
+test('@a11y interactive overlays have no automated violations', async ({
+  page,
+}) => {
+  await page.goto('/?scenario=baseline&presentation=true');
+  await page.getByRole('button', { name: 'Save this action' }).click();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.keyboard.press('Escape');
+
+  await page.keyboard.press('Shift+D');
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page
+    .getByRole('button', { name: 'Open interviewer audit viewer' })
+    .click();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});
+
+test('@a11y expanded consent state has no automated violations', async ({
+  page,
+}) => {
+  await page.goto('/?scenario=consent&presentation=true');
+  await page.getByRole('button', { name: 'Show more' }).first().click();
+  await page
+    .getByRole('button', { name: /permission/ })
+    .first()
+    .click();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});

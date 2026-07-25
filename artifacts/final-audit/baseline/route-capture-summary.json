@@ -1,0 +1,74 @@
+[
+  {
+    "scenario": "baseline",
+    "status": 200,
+    "durationMs": 2187,
+    "url": "https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=baseline&presentation=true",
+    "consoleEntries": [],
+    "networkEntries": []
+  },
+  {
+    "scenario": "alert",
+    "status": 200,
+    "durationMs": 1360,
+    "url": "https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=alert&presentation=true",
+    "consoleEntries": [],
+    "networkEntries": []
+  },
+  {
+    "scenario": "safety",
+    "status": 200,
+    "durationMs": 1062,
+    "url": "https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=safety&presentation=true",
+    "consoleEntries": [],
+    "networkEntries": []
+  },
+  {
+    "scenario": "limited-data",
+    "status": 200,
+    "durationMs": 1057,
+    "url": "https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=limited-data&presentation=true",
+    "consoleEntries": [],
+    "networkEntries": []
+  },
+  {
+    "scenario": "cold-start",
+    "status": 200,
+    "durationMs": 1249,
+    "url": "https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=cold-start&presentation=true",
+    "consoleEntries": [],
+    "networkEntries": []
+  },
+  {
+    "scenario": "forecast-miss",
+    "status": 200,
+    "durationMs": 1092,
+    "url": "https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=forecast-miss&presentation=true",
+    "consoleEntries": [],
+    "networkEntries": []
+  },
+  {
+    "scenario": "consent",
+    "status": 200,
+    "durationMs": 1049,
+    "url": "https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=consent&presentation=true",
+    "consoleEntries": [],
+    "networkEntries": []
+  },
+  {
+    "scenario": "tariff-preview",
+    "status": 200,
+    "durationMs": 1111,
+    "url": "https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=tariff-preview&presentation=true",
+    "consoleEntries": [],
+    "networkEntries": []
+  },
+  {
+    "scenario": "connected-home-preview",
+    "status": 200,
+    "durationMs": 1029,
+    "url": "https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=connected-home-preview&presentation=true",
+    "consoleEntries": [],
+    "networkEntries": []
+  }
+]

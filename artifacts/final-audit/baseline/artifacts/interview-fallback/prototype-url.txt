@@ -1,0 +1,5 @@
+Main prototype: https://bill-control-mvp.ahmdsomy.chatgpt.site/
+Baseline Forecast: https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=baseline
+Material-Change Alert: https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=alert
+Safety Guardrail: https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=safety
+Presentation mode: https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=baseline&presentation=true

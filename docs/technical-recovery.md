@@ -12,6 +12,12 @@ BASE_URL=https://example.test npm run test:deployed
 BASE_URL=https://example.test npm run verify:release
 ```
 
+For a complete final recovery verification, run:
+
+```bash
+BASE_URL=https://example.test npm run verify:final
+```
+
 Local development defaults to `http://localhost:3000`. The final deployment and
 direct routes are recorded in `artifacts/prototype-url.txt`.
 

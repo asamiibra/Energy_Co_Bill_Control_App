@@ -12,6 +12,8 @@ import {
 import { formatCurrency, formatCurrencyRange } from '@/lib/format-currency';
 import { formatDateTime } from '@/lib/format-date';
 import { ForecastRangeVisualization } from '../forecast-range-visualization';
+import { EVENT_NAMES } from '@/domain/event';
+import { useLocalActionFeedback } from '@/hooks/use-local-action-feedback';
 
 import type { DemoScenario } from '@/domain/scenario';
 
@@ -23,6 +25,7 @@ export function ForecastMissView({ scenario }: ForecastMissViewProps) {
   const [showWhyChanged, setShowWhyChanged] = useState(false);
   const [showImprovements, setShowImprovements] = useState(false);
   const [acknowledged, setAcknowledged] = useState(false);
+  const { actionStatus, recordLocalAction } = useLocalActionFeedback(scenario);
 
   const missEval = scenario.forecast.forecastMissEvaluation;
   const previousForecast = scenario.previousForecast;
@@ -321,7 +324,15 @@ export function ForecastMissView({ scenario }: ForecastMissViewProps) {
         <h3 className="mb-4 text-lg font-semibold text-gray-900">Next steps</h3>
 
         <div className="space-y-3">
-          <button className="focus-visible flex w-full items-center space-x-3 rounded-lg border border-blue-200 p-4 text-left transition-colors hover:bg-blue-50">
+          <button
+            onClick={() =>
+              recordLocalAction(
+                EVENT_NAMES.ADVISOR_REQUESTED,
+                'Advisor interest recorded locally. No message or request was sent.'
+              )
+            }
+            className="focus-visible flex w-full items-center space-x-3 rounded-lg border border-blue-200 p-4 text-left transition-colors hover:bg-blue-50"
+          >
             <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
               <MessageCircle size={20} className="text-blue-600" />
             </div>
@@ -337,7 +348,13 @@ export function ForecastMissView({ scenario }: ForecastMissViewProps) {
 
           {!acknowledged && (
             <button
-              onClick={() => setAcknowledged(true)}
+              onClick={() => {
+                setAcknowledged(true);
+                recordLocalAction(
+                  EVENT_NAMES.FORECAST_MISS_ACKNOWLEDGED,
+                  'Acknowledgment recorded locally. No account or billing change was made.'
+                );
+              }}
               className="btn-primary w-full"
             >
               Acknowledge and continue
@@ -353,6 +370,11 @@ export function ForecastMissView({ scenario }: ForecastMissViewProps) {
                 </span>
               </div>
             </div>
+          )}
+          {actionStatus && !acknowledged && (
+            <p className="text-sm text-blue-800" role="status">
+              {actionStatus}
+            </p>
           )}
         </div>
       </div>

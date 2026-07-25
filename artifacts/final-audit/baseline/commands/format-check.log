@@ -1,0 +1,31 @@
+COMMAND	npm run format:check
+START	2026-07-25T22:25:53Z
+
+> bill-control@0.1.0 format:check
+> prettier --check .
+
+Checking formatting...
+[warn] artifacts/final-audit/baseline/console/alert.json
+[warn] artifacts/final-audit/baseline/console/baseline.json
+[warn] artifacts/final-audit/baseline/console/cold-start.json
+[warn] artifacts/final-audit/baseline/console/connected-home-preview.json
+[warn] artifacts/final-audit/baseline/console/consent.json
+[warn] artifacts/final-audit/baseline/console/forecast-miss.json
+[warn] artifacts/final-audit/baseline/console/limited-data.json
+[warn] artifacts/final-audit/baseline/console/safety.json
+[warn] artifacts/final-audit/baseline/console/tariff-preview.json
+[warn] artifacts/final-audit/baseline/network/alert.json
+[warn] artifacts/final-audit/baseline/network/baseline.json
+[warn] artifacts/final-audit/baseline/network/cold-start.json
+[warn] artifacts/final-audit/baseline/network/connected-home-preview.json
+[warn] artifacts/final-audit/baseline/network/consent.json
+[warn] artifacts/final-audit/baseline/network/forecast-miss.json
+[warn] artifacts/final-audit/baseline/network/limited-data.json
+[warn] artifacts/final-audit/baseline/network/safety.json
+[warn] artifacts/final-audit/baseline/network/tariff-preview.json
+[warn] artifacts/final-audit/baseline/route-capture-summary.json
+[warn] Code style issues found in 19 files. Run Prettier with --write to fix.
+
+END	2026-07-25T22:25:56Z
+DURATION_SECONDS	3
+EXIT_CODE	1

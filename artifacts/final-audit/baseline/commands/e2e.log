@@ -1,0 +1,180 @@
+COMMAND	npm run test:e2e
+START	2026-07-25T22:26:01Z
+
+> bill-control@0.1.0 test:e2e
+> playwright test --grep-invert '@a11y|@visual'
+
+[WebServer] (node:83226) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83226) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83275) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83274) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83276) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83277) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:83323) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+
+Running 142 tests using 2 workers
+
+(node:83329) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:83330) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓    2 [chromium] › tests/e2e/release-hardening.spec.ts:4:3 › release presentation controls › presentation mode is deterministic and keyboard-driven (644ms)
+  ✓    1 [chromium] › tests/e2e/release-hardening.spec.ts:45:3 › release presentation controls › reset clears only prototype state and returns to baseline (747ms)
+  ✓    3 [chromium] › tests/e2e/release-hardening.spec.ts:74:3 › offline-after-load P0 reliability › bundled P0 states and local actions remain usable offline (475ms)
+  ✓    4 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 1440x900 (367ms)
+  ✓    6 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 1024x768 (339ms)
+  ✓    5 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 1280x720 (349ms)
+  ✓    8 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 375x667 (362ms)
+  ✓    7 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 390x844 (366ms)
+  ✓    9 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 430x932 (405ms)
+  ✓   10 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 1440x900 (426ms)
+  ✓   12 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 1024x768 (338ms)
+  ✓   11 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 1280x720 (372ms)
+  ✓   14 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 375x667 (341ms)
+  ✓   13 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 390x844 (363ms)
+  ✓   15 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 430x932 (341ms)
+  ✓   16 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 1440x900 (360ms)
+  ✓   17 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 1280x720 (281ms)
+  ✓   18 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 1024x768 (326ms)
+  ✓   19 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 390x844 (256ms)
+  ✓   20 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 375x667 (286ms)
+  ✓   21 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 430x932 (302ms)
+  ✓   22 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 1440x900 (308ms)
+  ✓   23 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 1280x720 (319ms)
+  ✓   24 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 1024x768 (342ms)
+  ✓   25 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 390x844 (335ms)
+  ✓   26 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 375x667 (319ms)
+  ✓   27 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 430x932 (321ms)
+  ✓   28 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 1440x900 (302ms)
+  ✓   29 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 1280x720 (335ms)
+  ✓   30 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 1024x768 (310ms)
+  ✓   31 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 390x844 (282ms)
+  ✓   32 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 375x667 (294ms)
+  ✓   33 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 430x932 (303ms)
+  ✓   34 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1440x900 (349ms)
+  ✓   35 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1280x720 (319ms)
+  ✓   36 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1024x768 (326ms)
+  ✓   37 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 390x844 (305ms)
+  ✓   38 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 375x667 (284ms)
+  ✓   39 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 430x932 (295ms)
+  ✓   40 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 1440x900 (287ms)
+  ✓   41 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 1280x720 (308ms)
+  ✓   42 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 1024x768 (273ms)
+  ✓   43 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 390x844 (268ms)
+  ✓   44 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 375x667 (280ms)
+  ✓   45 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 430x932 (284ms)
+  ✓   46 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1440x900 (312ms)
+  ✓   47 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1280x720 (304ms)
+  ✓   48 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1024x768 (305ms)
+  ✓   49 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 390x844 (286ms)
+  ✓   50 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 375x667 (282ms)
+  ✓   51 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 430x932 (281ms)
+  ✓   52 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1440x900 (303ms)
+  ✓   53 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1280x720 (289ms)
+  ✓   54 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1024x768 (277ms)
+  ✓   55 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 390x844 (258ms)
+  ✓   56 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 375x667 (286ms)
+  ✓   57 [chromium] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 430x932 (275ms)
+  ✓   58 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › baseline supports direct navigation and refresh (349ms)
+  ✓   59 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › alert supports direct navigation and refresh (360ms)
+  ✓   60 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › safety supports direct navigation and refresh (350ms)
+  ✓   61 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › limited-data supports direct navigation and refresh (356ms)
+  ✓   62 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › cold-start supports direct navigation and refresh (357ms)
+  ✓   63 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › forecast-miss supports direct navigation and refresh (338ms)
+  ✓   64 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › consent supports direct navigation and refresh (340ms)
+  ✓   65 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › tariff-preview supports direct navigation and refresh (336ms)
+  ✓   67 [chromium] › tests/e2e/routes.spec.ts:58:3 › route and runtime quality › unknown scenario fails safely without a blank state (194ms)
+  ✓   66 [chromium] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › connected-home-preview supports direct navigation and refresh (339ms)
+  ✓   68 [chromium] › tests/e2e/routes.spec.ts:70:3 › route and runtime quality › back and forward navigation stay synchronized (318ms)
+  ✓   69 [chromium] › tests/e2e/routes.spec.ts:81:3 › customer action boundaries › baseline saves local intent without execution (410ms)
+  ✓   70 [chromium] › tests/e2e/routes.spec.ts:99:3 › customer action boundaries › alert save, modify, decline, and advisor paths remain local (459ms)
+  ✓   71 [chromium] › tests/e2e/routes.spec.ts:123:3 › customer action boundaries › safety and previews expose no executable action (400ms)
+(node:83502) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:83503) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   72 [webkit] › tests/e2e/release-hardening.spec.ts:4:3 › release presentation controls › presentation mode is deterministic and keyboard-driven (3.1s)
+  ✓   73 [webkit] › tests/e2e/release-hardening.spec.ts:45:3 › release presentation controls › reset clears only prototype state and returns to baseline (3.5s)
+  -   75 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 1440x900
+  -   76 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 1280x720
+  -   77 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 1024x768
+  -   78 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 390x844
+  -   79 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 375x667
+  -   80 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › baseline has no horizontal overflow at 430x932
+  -   81 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 1440x900
+  -   82 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 1280x720
+  -   83 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 1024x768
+  -   84 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 390x844
+  -   85 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 375x667
+  -   86 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › alert has no horizontal overflow at 430x932
+  -   87 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 1440x900
+  -   88 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 1280x720
+  -   89 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 1024x768
+  -   90 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 390x844
+  -   91 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 375x667
+  -   92 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › safety has no horizontal overflow at 430x932
+  -   93 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 1440x900
+  -   94 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 1280x720
+  -   95 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 1024x768
+  -   96 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 390x844
+  -   97 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 375x667
+  -   98 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › limited-data has no horizontal overflow at 430x932
+  -   99 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 1440x900
+  ✓   74 [webkit] › tests/e2e/release-hardening.spec.ts:74:3 › offline-after-load P0 reliability › bundled P0 states and local actions remain usable offline (1.1s)
+  -  100 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 1280x720
+  -  101 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 390x844
+  -  102 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 1024x768
+  -  103 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 375x667
+  -  105 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1440x900
+  -  104 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › cold-start has no horizontal overflow at 430x932
+  -  106 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1280x720
+  -  107 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 1024x768
+  -  108 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 390x844
+  -  109 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 375x667
+  -  110 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › forecast-miss has no horizontal overflow at 430x932
+  -  111 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 1440x900
+  -  112 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 1280x720
+  -  114 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 390x844
+  -  113 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 1024x768
+  -  115 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 375x667
+  -  116 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › consent has no horizontal overflow at 430x932
+  -  117 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1440x900
+  -  118 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1280x720
+  -  119 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 1024x768
+  -  120 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 390x844
+  -  121 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 375x667
+  -  122 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › tariff-preview has no horizontal overflow at 430x932
+  -  123 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1440x900
+  -  124 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1024x768
+  -  125 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 1280x720
+  -  126 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 390x844
+  -  127 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 375x667
+  -  128 [webkit] › tests/e2e/responsive.spec.ts:29:7 › responsive state integrity › connected-home-preview has no horizontal overflow at 430x932
+  ✓  129 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › baseline supports direct navigation and refresh (721ms)
+  ✓  130 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › alert supports direct navigation and refresh (728ms)
+  ✓  131 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › safety supports direct navigation and refresh (664ms)
+  ✓  132 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › limited-data supports direct navigation and refresh (662ms)
+  ✓  134 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › forecast-miss supports direct navigation and refresh (680ms)
+  ✓  133 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › cold-start supports direct navigation and refresh (702ms)
+  ✓  136 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › tariff-preview supports direct navigation and refresh (611ms)
+  ✓  135 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › consent supports direct navigation and refresh (648ms)
+  ✓  138 [webkit] › tests/e2e/routes.spec.ts:58:3 › route and runtime quality › unknown scenario fails safely without a blank state (435ms)
+  ✓  137 [webkit] › tests/e2e/routes.spec.ts:20:5 › route and runtime quality › connected-home-preview supports direct navigation and refresh (620ms)
+  ✓  139 [webkit] › tests/e2e/routes.spec.ts:70:3 › route and runtime quality › back and forward navigation stay synchronized (682ms)
+  ✓  140 [webkit] › tests/e2e/routes.spec.ts:81:3 › customer action boundaries › baseline saves local intent without execution (653ms)
+  ✓  141 [webkit] › tests/e2e/routes.spec.ts:99:3 › customer action boundaries › alert save, modify, decline, and advisor paths remain local (751ms)
+  ✓  142 [webkit] › tests/e2e/routes.spec.ts:123:3 › customer action boundaries › safety and previews expose no executable action (608ms)
+
+  54 skipped
+  88 passed (37.2s)
+
+END	2026-07-25T22:26:39Z
+DURATION_SECONDS	38
+EXIT_CODE	0

@@ -30,6 +30,17 @@ export function ConsentPreferencesView({
     null
   );
   const [showImpact, setShowImpact] = useState<string | null>(null);
+  const [supportStatus, setSupportStatus] = useState<string | null>(null);
+
+  const recordPrivacySupport = (option: string, message: string) => {
+    auditLedger.recordEvent(EVENT_NAMES.SUPPORT_OPTION_SELECTED, {
+      scenarioId: scenario.scenarioId,
+      householdId: scenario.household.customerId,
+      consentVersionId: scenario.consentState.consentVersionId,
+      properties: { option, executionMode: 'local_intent_only' },
+    });
+    setSupportStatus(message);
+  };
 
   const handleTogglePermission = (
     purpose: ConsentPermission['purpose'],
@@ -162,8 +173,8 @@ export function ConsentPreferencesView({
         {scenario.consentState.permissions.map((permission) => (
           <div key={permission.purpose} className="card p-6">
             <div className="mb-4 flex items-start justify-between">
-              <div className="flex-1">
-                <div className="mb-2 flex items-center space-x-3">
+              <div className="min-w-0 flex-1">
+                <div className="mb-2 flex flex-wrap items-center gap-2">
                   <h3 className="text-lg font-semibold text-gray-900">
                     {permission.purpose
                       .split('_')
@@ -423,7 +434,15 @@ export function ConsentPreferencesView({
           </p>
         </div>
 
-        <button className="focus-visible mt-4 text-sm font-medium text-blue-600 hover:text-blue-800">
+        <button
+          onClick={() =>
+            recordPrivacySupport(
+              'privacy_policy',
+              'Privacy-policy interest recorded locally. This demo has no external policy page.'
+            )
+          }
+          className="focus-visible mt-4 text-sm font-medium text-blue-600 hover:text-blue-800"
+        >
           View full privacy policy →
         </button>
       </div>
@@ -437,7 +456,22 @@ export function ConsentPreferencesView({
           Our privacy team can help you understand how your data is used and
           what options are available.
         </p>
-        <button className="btn-primary">Contact privacy team</button>
+        <button
+          onClick={() =>
+            recordPrivacySupport(
+              'privacy_team',
+              'Privacy-team interest recorded locally. No message or request was sent.'
+            )
+          }
+          className="btn-primary"
+        >
+          Contact privacy team
+        </button>
+        {supportStatus && (
+          <p className="mt-3 text-sm text-blue-800" role="status">
+            {supportStatus}
+          </p>
+        )}
       </div>
     </div>
   );

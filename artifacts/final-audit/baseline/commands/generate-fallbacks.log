@@ -1,0 +1,34 @@
+COMMAND	env BASE_URL=https://bill-control-mvp.ahmdsomy.chatgpt.site npm run generate:fallbacks
+START	2026-07-25T22:27:31Z
+
+> bill-control@0.1.0 generate:fallbacks
+> npm run build && node scripts/generate-fallbacks.mjs
+
+
+> bill-control@0.1.0 build
+> next build
+
+▲ Next.js 16.2.12 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.1s
+  Running TypeScript ...
+  Finished TypeScript in 3.5s ...
+  Collecting page data using 4 workers ...
+  Generating static pages using 4 workers (0/3) ...
+✓ Generating static pages using 4 workers (3/3) in 248ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+└ ○ /_not-found
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
+Generated canonical fallback and deck screenshots.
+
+END	2026-07-25T22:27:43Z
+DURATION_SECONDS	12
+EXIT_CODE	0

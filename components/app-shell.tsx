@@ -67,6 +67,7 @@ export function AppShell({
     scenarioId: scenario?.scenarioId,
     visible: true,
   });
+  const [shellStatus, setShellStatus] = useState<string | null>(null);
   const showMessagePreviews =
     !presentationMode &&
     (messagePreviewState.scenarioId === scenario?.scenarioId
@@ -224,6 +225,20 @@ export function AppShell({
     });
   };
 
+  const recordShellSupport = (option: string, message: string) => {
+    if (!scenario) {
+      return;
+    }
+
+    auditLedger.recordEvent(EVENT_NAMES.SUPPORT_OPTION_SELECTED, {
+      scenarioId: scenario.scenarioId,
+      householdId: scenario.household.customerId,
+      forecastVersionId: scenario.forecast.forecastVersionId,
+      properties: { option, executionMode: 'local_intent_only' },
+    });
+    setShellStatus(message);
+  };
+
   if (!scenario) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -306,6 +321,12 @@ export function AppShell({
                 )}
 
                 <button
+                  onClick={() =>
+                    recordShellSupport(
+                      'help',
+                      'Help interest recorded locally. This demo does not contact an external support service.'
+                    )
+                  }
                   className="focus-visible hidden rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700 sm:block"
                   aria-label="Help and Support"
                 >
@@ -314,6 +335,12 @@ export function AppShell({
 
                 <div className="relative hidden sm:block">
                   <button
+                    onClick={() =>
+                      recordShellSupport(
+                        'account_menu',
+                        'This is a synthetic demo account. No account controls are connected.'
+                      )
+                    }
                     className="focus-visible flex items-center space-x-1 rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
                     aria-label="Account Menu"
                   >
@@ -336,6 +363,14 @@ export function AppShell({
       {/* Main Content */}
       <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <SyntheticDataNotice />
+        {shellStatus && (
+          <div
+            className="mb-4 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm text-blue-800"
+            role="status"
+          >
+            {shellStatus}
+          </div>
+        )}
 
         {/* Message-First Entry or Scenario Display */}
         {scenario && showMessagePreviews ? (
@@ -396,11 +431,22 @@ export function AppShell({
                 <span>Data updated: Today at 8:00 AM</span>
               </div>
               <span className="hidden sm:inline">•</span>
-              <button className="focus-visible underline hover:text-gray-700">
+              <button
+                onClick={() =>
+                  recordShellSupport(
+                    'estimate_method',
+                    'This estimate is derived from the displayed billing, weather, tariff, and data-quality evidence.'
+                  )
+                }
+                className="focus-visible underline hover:text-gray-700"
+              >
                 How this estimate works
               </button>
               <span className="hidden sm:inline">•</span>
-              <button className="focus-visible underline hover:text-gray-700">
+              <button
+                onClick={() => navigateToScenario('consent', presentationMode)}
+                className="focus-visible underline hover:text-gray-700"
+              >
                 Consent and preferences
               </button>
             </div>

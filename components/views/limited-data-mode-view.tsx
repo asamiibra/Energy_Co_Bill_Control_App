@@ -8,6 +8,8 @@ import { formatDate } from '@/lib/format-date';
 import { evaluateForecastUsefulness } from '@/services/policy-service';
 import { ForecastRangeVisualization } from '../forecast-range-visualization';
 import { ActionConfirmationModal } from '../action-confirmation-modal';
+import { EVENT_NAMES } from '@/domain/event';
+import { useLocalActionFeedback } from '@/hooks/use-local-action-feedback';
 
 import type { DemoScenario } from '@/domain/scenario';
 
@@ -18,6 +20,7 @@ interface LimitedDataModeViewProps {
 export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
   const [showActionModal, setShowActionModal] = useState(false);
   const [expandedDriver, setExpandedDriver] = useState<string | null>(null);
+  const { actionStatus, recordLocalAction } = useLocalActionFeedback(scenario);
 
   const usefulnessEval = evaluateForecastUsefulness(scenario);
   const availableRecommendations = scenario.recommendations.filter(
@@ -285,12 +288,46 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
                   >
                     Save this action
                   </button>
-                  <button className="btn-secondary">Set reminder</button>
-                  <button className="btn-outline">Not now</button>
-                  <button className="focus-visible px-4 py-2 text-blue-600 transition-colors hover:text-blue-800">
+                  <button
+                    onClick={() =>
+                      recordLocalAction(
+                        EVENT_NAMES.REMINDER_SET,
+                        'Reminder saved in this browser only. No account change was made.',
+                        { reminder: true }
+                      )
+                    }
+                    className="btn-secondary"
+                  >
+                    Set reminder
+                  </button>
+                  <button
+                    onClick={() =>
+                      recordLocalAction(
+                        EVENT_NAMES.ACTION_PLAN_DECLINED,
+                        'No action was saved or executed.'
+                      )
+                    }
+                    className="btn-outline"
+                  >
+                    Not now
+                  </button>
+                  <button
+                    onClick={() =>
+                      recordLocalAction(
+                        EVENT_NAMES.ADVISOR_REQUESTED,
+                        'Advisor interest recorded locally. No message or request was sent.'
+                      )
+                    }
+                    className="focus-visible px-4 py-2 text-blue-600 transition-colors hover:text-blue-800"
+                  >
                     Talk with an advisor
                   </button>
                 </div>
+                {actionStatus && (
+                  <p className="mt-3 text-sm text-blue-800" role="status">
+                    {actionStatus}
+                  </p>
+                )}
               </div>
             ))}
 
@@ -316,7 +353,15 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
           </p>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <button className="focus-visible flex items-center space-x-3 rounded-lg border border-blue-200 p-4 text-left transition-colors hover:bg-blue-50">
+            <button
+              onClick={() =>
+                recordLocalAction(
+                  EVENT_NAMES.ADVISOR_REQUESTED,
+                  'Advisor interest recorded locally. No message or request was sent.'
+                )
+              }
+              className="focus-visible flex items-center space-x-3 rounded-lg border border-blue-200 p-4 text-left transition-colors hover:bg-blue-50"
+            >
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
                 <Info size={20} className="text-blue-600" />
               </div>
@@ -330,7 +375,16 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
               </div>
             </button>
 
-            <button className="focus-visible flex items-center space-x-3 rounded-lg border border-blue-200 p-4 text-left transition-colors hover:bg-blue-50">
+            <button
+              onClick={() =>
+                recordLocalAction(
+                  EVENT_NAMES.SUPPORT_OPTION_SELECTED,
+                  'Interval-data evaluation interest recorded locally. No request was sent.',
+                  { properties: { option: 'interval_data_evaluation' } }
+                )
+              }
+              className="focus-visible flex items-center space-x-3 rounded-lg border border-blue-200 p-4 text-left transition-colors hover:bg-blue-50"
+            >
               <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-100">
                 <TrendingUp size={20} className="text-blue-600" />
               </div>
@@ -344,6 +398,11 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
               </div>
             </button>
           </div>
+          {actionStatus && (
+            <p className="mt-3 text-sm text-blue-800" role="status">
+              {actionStatus}
+            </p>
+          )}
         </div>
       )}
 

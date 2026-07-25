@@ -52,6 +52,17 @@ describe('event and audit ledger', () => {
     expect(PrototypeEventSchema.safeParse(first).success).toBe(true);
   });
 
+  it('defers session ID generation until runtime use', () => {
+    const randomUuid = vi.spyOn(crypto, 'randomUUID');
+    randomUuid.mockClear();
+
+    const ledger = new AuditLedger();
+
+    expect(randomUuid).not.toHaveBeenCalled();
+    expect(ledger.getSessionId()).toBeTruthy();
+    expect(randomUuid).toHaveBeenCalledTimes(1);
+  });
+
   it('survives malformed or unavailable local storage', () => {
     vi.mocked(localStorage.getItem).mockReturnValueOnce('{bad json');
     expect(() => new AuditLedger()).not.toThrow();

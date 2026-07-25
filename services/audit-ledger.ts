@@ -11,11 +11,10 @@ import { PrototypeEventSchema, type PrototypeEvent } from '@/domain/event';
 
 export class AuditLedger {
   private events: PrototypeEvent[] = [];
-  private sessionId: string;
+  private sessionId?: string;
   private readonly storageKey = 'bill-control-audit-events';
 
   constructor() {
-    this.sessionId = crypto.randomUUID();
     this.loadFromStorage();
   }
 
@@ -34,9 +33,10 @@ export class AuditLedger {
       properties?: Record<string, unknown>;
     }
   ): PrototypeEvent {
+    const sessionId = this.getSessionId();
     const event: PrototypeEvent = {
       eventId: crypto.randomUUID(),
-      sessionId: this.sessionId,
+      sessionId,
       traceId: crypto.randomUUID(),
       scenarioId: context.scenarioId,
       householdId: context.householdId,
@@ -59,9 +59,10 @@ export class AuditLedger {
     eventName: string,
     context: Parameters<AuditLedger['recordEvent']>[1]
   ): PrototypeEvent {
+    const sessionId = this.getSessionId();
     const existing = this.events.find(
       (event) =>
-        event.sessionId === this.sessionId &&
+        event.sessionId === sessionId &&
         event.eventName === eventName &&
         event.scenarioId === context.scenarioId
     );
@@ -73,7 +74,8 @@ export class AuditLedger {
    * Get all events for current session
    */
   getSessionEvents(): PrototypeEvent[] {
-    return this.events.filter((e) => e.sessionId === this.sessionId);
+    const sessionId = this.getSessionId();
+    return this.events.filter((event) => event.sessionId === sessionId);
   }
 
   /**
@@ -109,6 +111,7 @@ export class AuditLedger {
    * Get current session ID
    */
   getSessionId(): string {
+    this.sessionId ??= crypto.randomUUID();
     return this.sessionId;
   }
 

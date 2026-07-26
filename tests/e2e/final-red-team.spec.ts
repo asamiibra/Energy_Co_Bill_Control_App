@@ -60,10 +60,13 @@ test.describe('final red-team routing and storage', () => {
     page,
   }) => {
     await page.goto('/?scenario=baseline&presentation=true');
+    await expect(page.getByText('1 of 3 — Baseline Forecast')).toBeVisible();
+    await page.waitForTimeout(100);
     for (let index = 0; index < 20; index += 1) {
       await page.keyboard.press(String((index % 3) + 1));
     }
     await page.keyboard.press('3');
+    await expect(page).toHaveURL(/scenario=safety/);
     await expect(
       page.getByText('Essential-use protection active')
     ).toBeVisible();

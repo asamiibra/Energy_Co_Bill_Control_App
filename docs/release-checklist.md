@@ -21,12 +21,12 @@
 - [x] Accessibility tests pass.
 - [x] Visual regression passes.
 - [x] Production build passes.
-- [ ] Deployed smoke tests pass.
+- [x] Deployed smoke tests pass.
 
 ## Demo Integrity
 
 - [x] Scoped reset works.
-- [ ] Shared URL and QR open `/demo`.
+- [x] Shared URL and QR open `/demo`.
 - [x] Three P0 scenario cards render canonical fixture values.
 - [x] P1 and P2 groups expand and every direct route works.
 - [x] Guided navigation, refresh, and browser history work.

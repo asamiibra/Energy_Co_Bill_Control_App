@@ -97,6 +97,7 @@ export function AppShell({
       '2': 'alert',
       '3': 'safety',
     };
+    let shortcutTimer: ReturnType<typeof setTimeout> | null = null;
     const handleKeyDown = (event: KeyboardEvent) => {
       const nextScenario = shortcuts[event.key];
       if (
@@ -107,12 +108,23 @@ export function AppShell({
         !(event.target instanceof HTMLInputElement) &&
         !(event.target instanceof HTMLTextAreaElement)
       ) {
-        navigateToScenario(nextScenario, true);
+        if (shortcutTimer) {
+          clearTimeout(shortcutTimer);
+        }
+        shortcutTimer = setTimeout(
+          () => navigateToScenario(nextScenario, true),
+          50
+        );
       }
     };
 
     document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      if (shortcutTimer) {
+        clearTimeout(shortcutTimer);
+      }
+    };
   }, [presentationMode, screenshotMode]);
 
   useEffect(() => {

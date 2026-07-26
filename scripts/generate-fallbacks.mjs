@@ -3,7 +3,6 @@ import { cp, mkdir } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 
 const localBaseUrl = 'http://127.0.0.1:3100';
-const baseUrl = process.env.BASE_URL || localBaseUrl;
 const scenarios = {
   baseline: {
     text: 'Your bill is currently expected to be $178.',
@@ -40,14 +39,12 @@ async function waitForServer(url) {
 }
 
 try {
-  if (!process.env.BASE_URL) {
-    server = spawn(
-      process.platform === 'win32' ? 'npm.cmd' : 'npm',
-      ['run', 'start', '--', '--hostname', '127.0.0.1', '--port', '3100'],
-      { stdio: 'inherit' }
-    );
-    await waitForServer(localBaseUrl);
-  }
+  server = spawn(
+    process.platform === 'win32' ? 'npm.cmd' : 'npm',
+    ['run', 'start', '--', '--hostname', '127.0.0.1', '--port', '3100'],
+    { stdio: 'inherit' }
+  );
+  await waitForServer(localBaseUrl);
 
   await mkdir('public/fallback', { recursive: true });
   await mkdir('artifacts/screenshots', { recursive: true });
@@ -61,7 +58,7 @@ try {
 
   for (const [scenario, contract] of Object.entries(scenarios)) {
     const page = await context.newPage();
-    await page.goto(`${baseUrl}/?scenario=${scenario}&screenshot=true`, {
+    await page.goto(`${localBaseUrl}/?scenario=${scenario}&screenshot=true`, {
       waitUntil: 'networkidle',
     });
     await page.addStyleTag({

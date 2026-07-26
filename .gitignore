@@ -18,6 +18,7 @@ test-results/
 
 # production
 /build
+!build/sites-vite-plugin.ts
 
 # misc
 .DS_Store

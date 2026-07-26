@@ -95,6 +95,12 @@ test.describe('interaction completeness', () => {
         await expect(control).toBeVisible();
 
         const before = await observableState(page, interactionId);
+        if (
+          interactionId === 'presentation-reset' ||
+          interactionId === 'demo-reset'
+        ) {
+          page.once('dialog', (dialog) => dialog.accept());
+        }
         await control.click();
         await page.waitForTimeout(25);
         const after = await observableState(page, interactionId);
@@ -108,10 +114,10 @@ test.describe('interaction completeness', () => {
   }
 
   test('nested shared controls have observable outcomes', async ({ page }) => {
-    await page.goto('/?scenario=baseline');
+    await page.goto('/?scenario=baseline&presentation=true');
 
     await page.getByLabel('Prototype disclosure').waitFor();
-    await page.getByRole('button', { name: 'Demo scenario switcher' }).click();
+    await page.keyboard.press('Shift+D');
     await page
       .getByRole('button', { name: 'Open interviewer audit viewer' })
       .click();
@@ -125,9 +131,6 @@ test.describe('interaction completeness', () => {
     ).toBeVisible();
     await page.getByRole('button', { name: 'Close' }).click();
 
-    await page
-      .getByRole('button', { name: 'Skip to Forecast Details' })
-      .click();
     await page.getByRole('button', { name: 'Save this action' }).click();
     await page.getByLabel('Notes (optional)').fill('Keep comfort unchanged.');
     await page.getByRole('button', { name: 'Save Action Plan' }).click();
@@ -166,11 +169,9 @@ test.describe('Safety Guardrail interaction contract', () => {
   test('retains restricted details in the interviewer audit viewer', async ({
     page,
   }) => {
-    await page.goto('/?scenario=safety');
-    await page
-      .getByRole('button', { name: 'Skip to Forecast Details' })
-      .click();
-    await page.getByRole('button', { name: 'Demo scenario switcher' }).click();
+    await page.goto('/?scenario=safety&presentation=true');
+    await page.getByText('Essential-use protection active').waitFor();
+    await page.keyboard.press('Shift+D');
     await page
       .getByRole('button', { name: 'Open interviewer audit viewer' })
       .click();

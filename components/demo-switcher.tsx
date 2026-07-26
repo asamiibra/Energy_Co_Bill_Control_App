@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ChevronDown, RotateCcw, Settings } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 import {
   getAvailableScenarios,
   navigateToScenario,
@@ -33,7 +33,11 @@ export function DemoSwitcher({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.shiftKey && event.key.toLowerCase() === 'd') {
+      if (
+        presentationMode &&
+        event.shiftKey &&
+        event.key.toLowerCase() === 'd'
+      ) {
         event.preventDefault();
         setIsAuditOpen(false);
         setIsOpen((current) => !current);
@@ -45,7 +49,7 @@ export function DemoSwitcher({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [presentationMode]);
 
   // Group scenarios
   const p0Scenarios = scenarios.filter((s) => s.group === 'P0');
@@ -54,19 +58,6 @@ export function DemoSwitcher({
 
   return (
     <div className="relative" data-demo-utility>
-      {!presentationMode && (
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          data-interaction-id="demo-switcher-toggle"
-          className="focus-visible no-print flex items-center gap-2 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-gray-900"
-          aria-label="Demo scenario switcher"
-        >
-          <Settings size={16} />
-          <span className="hidden sm:inline">Demo</span>
-          <ChevronDown size={14} />
-        </button>
-      )}
-
       {isOpen && (
         <>
           {/* Overlay to close dropdown when clicking outside */}

@@ -19,6 +19,20 @@ const browserEngineWarnings = [
   'window.styleMedia is a deprecated draft version of window.matchMedia API',
 ];
 
+test('deployed demo overview opens the guided path', async ({ page }) => {
+  const response = await page.goto('/demo');
+  expect(response?.ok()).toBe(true);
+  await expect(
+    page.getByRole('heading', { name: 'Bill Control Interactive Prototype' })
+  ).toBeVisible();
+  await expect(page.getByLabel('Prototype disclosure')).toHaveCount(1);
+  await page
+    .getByRole('link', { name: 'Start the 90-second guided demo' })
+    .click();
+  await expect(page).toHaveURL(/scenario=baseline&presentation=true/);
+  await expect(page.getByText('1 of 3 — Baseline Forecast')).toBeVisible();
+});
+
 for (const [scenario, expectedText] of routes) {
   test(`${scenario} deployed route loads and refreshes`, async ({ page }) => {
     const runtimeProblems: string[] = [];

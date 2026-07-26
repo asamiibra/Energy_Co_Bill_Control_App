@@ -23,21 +23,21 @@ const requiredFiles = [
 await Promise.all(requiredFiles.map((file) => access(file)));
 
 const urlText = await readFile('artifacts/prototype-url.txt', 'utf8');
-const presentationLine = urlText
+const demoLine = urlText
   .split('\n')
-  .find((line) => line.startsWith('Presentation mode: '));
-if (!presentationLine) {
-  throw new Error('Presentation URL is missing.');
+  .find((line) => line.startsWith('Demo overview: '));
+if (!demoLine) {
+  throw new Error('Demo overview URL is missing.');
 }
-const presentationUrl = presentationLine.replace('Presentation mode: ', '');
-if (!presentationUrl.startsWith('https://')) {
-  throw new Error('Presentation URL is not public HTTPS.');
+const demoUrl = demoLine.replace('Demo overview: ', '');
+if (!demoUrl.startsWith('https://') || !demoUrl.endsWith('/demo')) {
+  throw new Error('Demo overview URL is not the public HTTPS /demo route.');
 }
 
 const png = PNG.sync.read(await readFile('artifacts/prototype-qr.png'));
 const decoded = jsQR(new Uint8ClampedArray(png.data), png.width, png.height);
-if (!decoded || decoded.data !== presentationUrl) {
-  throw new Error('QR code does not match the presentation URL.');
+if (!decoded || decoded.data !== demoUrl) {
+  throw new Error('QR code does not match the demo overview URL.');
 }
 
 console.log('Release artifacts and QR decode validation passed.');

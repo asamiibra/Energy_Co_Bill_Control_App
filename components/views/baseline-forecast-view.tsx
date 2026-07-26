@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Calendar, TrendingUp, Thermometer, Clock, Zap } from 'lucide-react';
 
 import { formatCurrency, formatCurrencyRange } from '@/lib/format-currency';
@@ -22,6 +22,9 @@ interface BaselineForecastViewProps {
 export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
   const [showActionModal, setShowActionModal] = useState(false);
   const [expandedDriver, setExpandedDriver] = useState<string | null>(null);
+  const [feedbackSource, setFeedbackSource] = useState<string | null>(null);
+  const driversSection = useRef<HTMLDivElement>(null);
+  const actionSection = useRef<HTMLDivElement>(null);
   const { actionStatus, recordLocalAction } = useLocalActionFeedback(scenario);
 
   const ledger = buildEvidenceLedger(scenario);
@@ -29,6 +32,19 @@ export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
   const recommendation = scenario.recommendations.find(
     (r) => r.status === 'available'
   );
+  const moveToSection = (
+    section: 'drivers' | 'actions',
+    target: HTMLDivElement | null
+  ) => {
+    auditLedger.recordEvent(EVENT_NAMES.BASELINE_SECTION_NAVIGATED, {
+      scenarioId: scenario.scenarioId,
+      householdId: scenario.household.customerId,
+      forecastVersionId: scenario.forecast.forecastVersionId,
+      properties: { section },
+    });
+    target?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    target?.focus({ preventScroll: true });
+  };
 
   return (
     <div className="space-y-6">
@@ -74,6 +90,32 @@ export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
                   <span>{scenario.forecast.daysRemaining} days remaining</span>
                 </div>
               </div>
+
+              <div className="rounded-lg bg-gray-50 p-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-gray-600">
+                  Forecast → Why → Act
+                </p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <button
+                    onClick={() =>
+                      moveToSection('drivers', driversSection.current)
+                    }
+                    data-interaction-id="baseline-jump-drivers"
+                    className="focus-visible min-h-11 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-blue-800 hover:bg-blue-50"
+                  >
+                    See what is driving this estimate
+                  </button>
+                  <button
+                    onClick={() =>
+                      moveToSection('actions', actionSection.current)
+                    }
+                    data-interaction-id="baseline-jump-actions"
+                    className="focus-visible min-h-11 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-blue-800 hover:bg-blue-50"
+                  >
+                    See what you can do
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -93,16 +135,23 @@ export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
             </div>
 
             <div className="text-xs text-gray-500">
-              <div>Forecast version: {scenario.forecast.forecastVersionId}</div>
-              <div>Last updated: Today at 8:00 AM</div>
+              Last updated: Today at 8:00 AM
             </div>
           </div>
         </div>
       </div>
 
       {/* Drivers Section */}
-      <div className="rounded-lg border bg-white p-6 shadow-sm">
-        <h3 className="mb-4 text-lg font-semibold text-gray-900">
+      <div
+        ref={driversSection}
+        tabIndex={-1}
+        className="scroll-mt-28 rounded-lg border bg-white p-6 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+        aria-labelledby="baseline-drivers-title"
+      >
+        <h3
+          id="baseline-drivers-title"
+          className="mb-4 text-lg font-semibold text-gray-900"
+        >
           What&apos;s driving your estimate
         </h3>
 
@@ -174,8 +223,16 @@ export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
 
       {/* Recommendation Section */}
       {recommendation && (
-        <div className="rounded-lg border bg-white p-6 shadow-sm">
-          <h3 className="mb-4 text-lg font-semibold text-gray-900">
+        <div
+          ref={actionSection}
+          tabIndex={-1}
+          className="scroll-mt-28 rounded-lg border bg-white p-6 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+          aria-labelledby="baseline-actions-title"
+        >
+          <h3
+            id="baseline-actions-title"
+            className="mb-4 text-lg font-semibold text-gray-900"
+          >
             What you can do
           </h3>
 
@@ -224,45 +281,58 @@ export function BaselineForecastView({ scenario }: BaselineForecastViewProps) {
                 Save this action
               </button>
               <button
-                onClick={() =>
+                onClick={() => {
+                  setFeedbackSource('reminder');
                   recordLocalAction(
                     EVENT_NAMES.REMINDER_SET,
                     'Reminder saved in this browser only. No account change was made.',
                     { reminder: true }
-                  )
-                }
+                  );
+                }}
                 data-interaction-id="baseline-set-reminder"
                 className="px-4 py-2 text-gray-600 transition-colors hover:text-gray-800"
               >
                 Set reminder
               </button>
               <button
-                onClick={() =>
+                onClick={() => {
+                  setFeedbackSource('decline');
                   recordLocalAction(
                     EVENT_NAMES.ACTION_PLAN_DECLINED,
                     'No action was saved or executed.'
-                  )
-                }
+                  );
+                }}
                 data-interaction-id="baseline-decline-action"
                 className="px-4 py-2 text-gray-600 transition-colors hover:text-gray-800"
               >
                 Not now
               </button>
               <button
-                onClick={() =>
+                onClick={() => {
+                  setFeedbackSource('advisor');
                   recordLocalAction(
                     EVENT_NAMES.ADVISOR_REQUESTED,
-                    'Advisor interest recorded locally. No message or request was sent.'
-                  )
-                }
+                    'Your advisor-support preference was saved in this prototype. No external message or request was sent.'
+                  );
+                }}
                 data-interaction-id="baseline-advisor-support"
+                aria-describedby={
+                  feedbackSource === 'advisor'
+                    ? 'baseline-action-confirmation'
+                    : undefined
+                }
                 className="px-4 py-2 text-blue-600 transition-colors hover:text-blue-800"
               >
                 Talk with an advisor
               </button>
             </div>
             {actionStatus && (
-              <p className="mt-3 text-sm text-blue-800" role="status">
+              <p
+                id="baseline-action-confirmation"
+                className="mt-3 text-sm text-blue-800"
+                role="status"
+                aria-live="polite"
+              >
                 {actionStatus}
               </p>
             )}

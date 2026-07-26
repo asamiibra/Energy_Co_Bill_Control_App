@@ -60,7 +60,7 @@ test.describe('@visual release artifact integrity', () => {
   for (const state of releaseStates) {
     test(`${state.scenario} deck frame`, async ({ page }) => {
       await page.setViewportSize({ width: 1440, height: 900 });
-      await page.goto(`/?scenario=${state.scenario}&presentation=true`);
+      await page.goto(`/?scenario=${state.scenario}&screenshot=true`);
       await expect(
         page.getByText('Bill Control', { exact: true }).first()
       ).toBeVisible();

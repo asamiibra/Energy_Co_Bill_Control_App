@@ -112,21 +112,111 @@
   [
     "forecast-back-to-messages",
     "all",
-    "Back to message previews",
-    "Return to previews",
+    "Back to message preview",
+    "Return to customer message preview",
     "preview",
     "audit ledger",
     "message_preview_opened",
     "interaction-completeness"
   ],
   [
-    "demo-switcher-toggle",
-    "all",
-    "Demo scenario switcher",
-    "Toggle demo menu",
-    "menu",
+    "forecast-back-to-demo",
+    "presentation",
+    "Back to demo overview",
+    "Return to demo landing",
+    "route",
+    "router",
+    "none:navigation",
+    "interaction-completeness"
+  ],
+  [
+    "presentation-technical-details",
+    "presentation",
+    "Technical details",
+    "Toggle technical identifiers",
+    "disclosure",
+    "fixture service",
+    "none:interviewer utility",
+    "interaction-completeness"
+  ],
+  [
+    "demo-start-guided",
+    "demo",
+    "Start the 90-second guided demo",
+    "Open baseline presentation state",
+    "route",
+    "router",
+    "scenario_loaded",
+    "interaction-completeness"
+  ],
+  [
+    "demo-primary-*",
+    "demo",
+    "Open primary scenario",
+    "Open selected P0 presentation state",
+    "route",
+    "router",
+    "scenario_loaded",
+    "interaction-completeness"
+  ],
+  [
+    "demo-*-toggle",
+    "demo",
+    "Secondary scenario group",
+    "Toggle secondary group",
+    "disclosure",
     "none",
-    "none:demo disclosure",
+    "none:demo navigation",
+    "interaction-completeness"
+  ],
+  [
+    "demo-secondary-*",
+    "demo",
+    "Open secondary state",
+    "Open selected presentation state",
+    "route",
+    "router",
+    "scenario_loaded",
+    "interaction-completeness"
+  ],
+  [
+    "presentation-previous",
+    "presentation",
+    "Previous scenario",
+    "Open previous P0 state",
+    "route",
+    "router",
+    "scenario_loaded",
+    "interaction-completeness"
+  ],
+  [
+    "presentation-next",
+    "presentation",
+    "Next scenario",
+    "Open next P0 state",
+    "route",
+    "router",
+    "scenario_loaded",
+    "interaction-completeness"
+  ],
+  [
+    "presentation-overview",
+    "presentation",
+    "Demo overview",
+    "Return to demo landing",
+    "route",
+    "router",
+    "none:navigation",
+    "interaction-completeness"
+  ],
+  [
+    "presentation-reset",
+    "presentation",
+    "Reset demo",
+    "Clear prototype state and return to baseline",
+    "storage and route",
+    "prototype storage",
+    "none:confirmed reset",
     "interaction-completeness"
   ],
   [
@@ -177,6 +267,26 @@
     "disclosure",
     "evidence ledger",
     "driver_explanation_opened",
+    "interaction-completeness"
+  ],
+  [
+    "baseline-jump-drivers",
+    "baseline",
+    "See what is driving this estimate",
+    "Move focus to drivers",
+    "focus and scroll",
+    "audit ledger",
+    "baseline_section_navigated",
+    "interaction-completeness"
+  ],
+  [
+    "baseline-jump-actions",
+    "baseline",
+    "See what you can do",
+    "Move focus to recommendation",
+    "focus and scroll",
+    "audit ledger",
+    "baseline_section_navigated",
     "interaction-completeness"
   ],
   [

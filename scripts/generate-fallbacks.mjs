@@ -61,7 +61,7 @@ try {
 
   for (const [scenario, contract] of Object.entries(scenarios)) {
     const page = await context.newPage();
-    await page.goto(`${baseUrl}/?scenario=${scenario}&presentation=true`, {
+    await page.goto(`${baseUrl}/?scenario=${scenario}&screenshot=true`, {
       waitUntil: 'networkidle',
     });
     await page.addStyleTag({
@@ -106,6 +106,14 @@ try {
     await page.close();
   }
 
+  await cp(
+    'docs/interview-demo-runbook.md',
+    'artifacts/interview-fallback/demo-runbook.md'
+  );
+  await cp(
+    'docs/technical-recovery.md',
+    'artifacts/interview-fallback/technical-recovery.md'
+  );
   await browser.close();
   console.log('Generated canonical fallback and deck screenshots.');
 } finally {

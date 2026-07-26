@@ -86,7 +86,9 @@ test.describe('final red-team interaction truthfulness', () => {
     await page.getByRole('button', { name: 'Not now' }).click();
     await expect(page.getByRole('status')).toContainText('No action');
     await page.getByRole('button', { name: 'Talk with an advisor' }).click();
-    await expect(page.getByRole('status')).toContainText('No message');
+    await expect(page.getByRole('status')).toHaveText(
+      'Your advisor-support preference was saved in this prototype. No external message or request was sent.'
+    );
   });
 
   test('safety support never claims eligibility or execution', async ({

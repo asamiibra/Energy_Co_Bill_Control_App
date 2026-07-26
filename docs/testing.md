@@ -23,6 +23,10 @@ regression.
   boundaries rendered from fixtures.
 - `tests/e2e/routes.spec.ts`: all nine direct URLs and refreshes, history,
   controlled unknown state, customer actions, and non-execution guarantees.
+- `tests/e2e/demo-entry.spec.ts`: `/demo` fixture-backed cards, all primary and
+  secondary routes, guided presentation navigation, browser history, screenshot
+  mode, Baseline focus links, technical-detail boundaries, and confirmation
+  timing.
 - `tests/e2e/responsive.spec.ts`: all nine states at 1440×900, 1280×720,
   1024×768, and 390×844 with horizontal-overflow assertions.
 - `tests/e2e/accessibility.spec.ts`: axe scans for all nine states in Chromium
@@ -44,6 +48,10 @@ npm run test:visual -- --update-snapshots
 Review every changed PNG for clipping, overflow, obscured content, unsafe copy,
 missing synthetic-data disclosure, and responsive regressions. Then rerun
 `npm run test:visual` without the update flag.
+
+Deck and fallback screenshots use `screenshot=true`, never presentation mode.
+This renders the customer state directly while excluding guided navigation,
+scenario utilities, and expandable technical details.
 
 ## Focused Commands
 
@@ -68,6 +76,10 @@ Before a stakeholder demo, manually confirm:
 3. The demo switcher remains visibly separate from customer product controls.
 4. Saved plans, consent changes, and audit events remain local and disclose that
    no external action occurred.
+5. `/demo` shows exactly one synthetic-data notice and all three canonical P0
+   messages.
+6. Customer routes contain no guided-demo labels, catalogue, or raw footer
+   forecast identifier.
 
 Release artifacts and deployed checks use:
 
@@ -76,6 +88,10 @@ npm run generate:fallbacks
 BASE_URL=https://public-url npm run test:deployed
 BASE_URL=https://public-url npm run verify:release
 ```
+
+The generated URL file and QR code must resolve to
+`https://public-url/demo`. Direct customer and presentation routes remain in the
+same artifact for recovery.
 
 For the final interview gate:
 

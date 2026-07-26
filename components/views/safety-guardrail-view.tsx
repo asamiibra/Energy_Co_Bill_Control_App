@@ -35,6 +35,24 @@ export function SafetyGuardrailView({ scenario }: { scenario: DemoScenario }) {
       householdId: scenario.household.customerId,
       policyDecisionId: scenario.safetyDecision.policyDecisionId,
     });
+    auditLedger.recordEventOnce(EVENT_NAMES.RECOMMENDATION_SUPPRESSED, {
+      scenarioId: scenario.scenarioId,
+      householdId: scenario.household.customerId,
+      policyDecisionId: scenario.safetyDecision.policyDecisionId,
+      recommendationId: scenario.recommendations.find(
+        (recommendation) => recommendation.status === 'suppressed'
+      )?.recommendationId,
+      properties: {
+        policySource: 'customer_declared_essential_use',
+        suppressionReason: scenario.safetyDecision.reasonCode,
+        suppressedRecommendationTitle: scenario.recommendations.find(
+          (recommendation) => recommendation.status === 'suppressed'
+        )?.title,
+        safeAlternatives: scenario.recommendations
+          .filter((recommendation) => recommendation.status === 'available')
+          .map((recommendation) => recommendation.recommendationId),
+      },
+    });
   }, [scenario]);
 
   const openDialog = (kind: DialogKind) => {

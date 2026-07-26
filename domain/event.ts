@@ -33,6 +33,7 @@ export const EVENT_NAMES = {
   DRIVER_EXPLANATION_OPENED: 'driver_explanation_opened',
   WHY_CHANGED_OPENED: 'why_changed_opened',
   COMPREHENSION_RESPONSE_RECORDED: 'comprehension_response_recorded',
+  BASELINE_SECTION_NAVIGATED: 'baseline_section_navigated',
 
   // Action events
   RECOMMENDATION_SELECTED: 'recommendation_selected',

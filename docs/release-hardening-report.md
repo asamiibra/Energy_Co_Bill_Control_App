@@ -13,7 +13,7 @@ package are verified. No critical or high-severity defect remains open.
 - Release date: July 25, 2026
 - Public site: `https://bill-control-mvp.ahmdsomy.chatgpt.site`
 - Presentation entry:
-  `https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=baseline&presentation=true`
+  `https://bill-control-mvp.ahmdsomy.chatgpt.site/demo`
 - Deployment provider: OpenAI Sites on Cloudflare Workers
 - Sites project: `appgprj_6a652efe97e88191a1d1134392868349`
 - Production version: 5

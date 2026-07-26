@@ -17,15 +17,24 @@ npm ci
 npm run dev
 ```
 
-Open `http://localhost:3000/?scenario=baseline`.
+Open `http://localhost:3000/demo` for the interview-demo overview.
 
-Presentation mode is available at
-`/?scenario=baseline&presentation=true`. It hides the demo trigger, resets
-prototype-local state on entry, and supports `1`, `2`, and `3` for the P0 path.
-Press `Shift + D` to toggle interviewer utilities and `Escape` to close them.
+The application has three explicit modes:
+
+- **Customer mode:** direct scenario URLs without extra query parameters. These
+  begin with the message relevant to that customer journey and never expose the
+  scenario catalogue or interviewer navigation.
+- **Presentation mode:** add `presentation=true`. This opens the selected state
+  directly, adds the guided three-step navigation, preserves local state across
+  scenarios, and clears state only when **Reset demo** is selected.
+- **Screenshot mode:** add `screenshot=true`. This opens the selected customer
+  state directly without presentation navigation or technical demo utilities.
 
 The public interview build is
-`https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=baseline&presentation=true`.
+`https://bill-control-mvp.ahmdsomy.chatgpt.site/demo`.
+
+Presentation mode also supports `1`, `2`, and `3` for the P0 path. Press
+`Shift + D` to toggle interviewer utilities and `Escape` to close them.
 
 ## Demo Scenarios
 
@@ -41,8 +50,15 @@ The public interview build is
 | Tariff-Fit Preview      | `/?scenario=tariff-preview`         |
 | Connected-Home Preview  | `/?scenario=connected-home-preview` |
 
-The demo switcher exposes these states and an interviewer-only local audit
-viewer. Unknown scenario IDs render a controlled error state.
+The guided presentation sequence uses:
+
+1. `/?scenario=baseline&presentation=true`
+2. `/?scenario=alert&presentation=true`
+3. `/?scenario=safety&presentation=true`
+
+The `/demo` overview also provides visually secondary links to all P1 and P2
+states. Interviewer utilities remain available only in presentation mode.
+Unknown scenario IDs render a controlled error state.
 
 ## Verification
 

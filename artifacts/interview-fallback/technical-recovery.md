@@ -12,6 +12,12 @@ BASE_URL=https://example.test npm run test:deployed
 BASE_URL=https://example.test npm run verify:release
 ```
 
+For a complete final recovery verification, run:
+
+```bash
+BASE_URL=https://example.test npm run verify:final
+```
+
 Local development defaults to `http://localhost:3000`. The final deployment and
 direct routes are recorded in `artifacts/prototype-url.txt`.
 
@@ -19,7 +25,7 @@ direct routes are recorded in `artifacts/prototype-url.txt`.
 
 - Site: `https://bill-control-mvp.ahmdsomy.chatgpt.site`
 - Presentation entry:
-  `https://bill-control-mvp.ahmdsomy.chatgpt.site/?scenario=baseline&presentation=true`
+  `https://bill-control-mvp.ahmdsomy.chatgpt.site/demo`
 - Hosting: OpenAI Sites on Cloudflare Workers
 - Access: public, no sign-in required
 
@@ -34,7 +40,9 @@ direct routes are recorded in `artifacts/prototype-url.txt`.
 - `/?scenario=consent`
 - `/?scenario=tariff-preview`
 - `/?scenario=connected-home-preview`
+- Demo overview: `/demo`
 - Presentation: `/?scenario=baseline&presentation=true`
+- Screenshot: `/?scenario=baseline&screenshot=true`
 
 ## Recovery
 

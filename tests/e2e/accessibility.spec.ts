@@ -67,3 +67,15 @@ test('@a11y safety support dialogs have no automated violations', async ({
   await page.getByRole('button', { name: 'Speak with an advisor' }).click();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
 });
+
+test('@a11y demo landing and guided navigation have no automated violations', async ({
+  page,
+}) => {
+  await page.goto('/demo');
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.getByText('MVP resilience states', { exact: true }).click();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+
+  await page.goto('/?scenario=baseline&presentation=true');
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});

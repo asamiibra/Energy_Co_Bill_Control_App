@@ -1,13 +1,8 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from 'react';
+import Link from 'next/link';
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import { HelpCircle, User, ChevronDown } from 'lucide-react';
 
 import {
@@ -23,10 +18,12 @@ import { MessagePreviews } from './message-previews';
 import { auditLedger } from '@/services/audit-ledger';
 import { actionIntentService } from '@/services/action-intent-service';
 import { EVENT_NAMES } from '@/domain/event';
+import { PresentationNavigation } from './presentation-navigation';
 
 type AppShellProps = {
   initialScenarioId?: string;
   initialPresentationMode?: boolean;
+  initialScreenshotMode?: boolean;
 };
 
 const subscribeToHydration = () => () => {};
@@ -34,6 +31,7 @@ const subscribeToHydration = () => () => {};
 function getInitialSearchParams({
   initialScenarioId,
   initialPresentationMode,
+  initialScreenshotMode,
 }: AppShellProps): URLSearchParams {
   const params = new URLSearchParams();
   if (initialScenarioId) {
@@ -42,12 +40,16 @@ function getInitialSearchParams({
   if (initialPresentationMode) {
     params.set('presentation', 'true');
   }
+  if (initialScreenshotMode) {
+    params.set('screenshot', 'true');
+  }
   return params;
 }
 
 export function AppShell({
   initialScenarioId,
   initialPresentationMode = false,
+  initialScreenshotMode = false,
 }: AppShellProps) {
   const searchParams = useSearchParams();
   const hydrated = useSyncExternalStore(
@@ -58,11 +60,12 @@ export function AppShell({
   const initialSearchParams = getInitialSearchParams({
     initialScenarioId,
     initialPresentationMode,
+    initialScreenshotMode,
   });
   const activeSearchParams = hydrated ? searchParams : initialSearchParams;
   const scenario = getScenarioFromUrl(activeSearchParams);
   const presentationMode = activeSearchParams.get('presentation') === 'true';
-  const presentationPrepared = useRef(false);
+  const screenshotMode = activeSearchParams.get('screenshot') === 'true';
   const [messagePreviewState, setMessagePreviewState] = useState({
     scenarioId: scenario?.scenarioId,
     visible: true,
@@ -72,6 +75,7 @@ export function AppShell({
   );
   const showMessagePreviews =
     !presentationMode &&
+    !screenshotMode &&
     (messagePreviewState.scenarioId === scenario?.scenarioId
       ? messagePreviewState.visible
       : true);
@@ -84,14 +88,7 @@ export function AppShell({
   }, []);
 
   useEffect(() => {
-    if (presentationMode && !presentationPrepared.current) {
-      clearPrototypeState();
-      presentationPrepared.current = true;
-    }
-  }, [clearPrototypeState, presentationMode]);
-
-  useEffect(() => {
-    if (!presentationMode) {
+    if (!presentationMode || screenshotMode) {
       return;
     }
 
@@ -116,7 +113,7 @@ export function AppShell({
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [presentationMode]);
+  }, [presentationMode, screenshotMode]);
 
   useEffect(() => {
     if (scenario) {
@@ -369,7 +366,7 @@ export function AppShell({
 
                 <DemoSwitcher
                   currentScenario={searchParams.get('scenario') || 'baseline'}
-                  presentationMode={presentationMode}
+                  presentationMode={presentationMode && !screenshotMode}
                   onReset={handleReset}
                 />
               </div>
@@ -440,6 +437,13 @@ export function AppShell({
         </div>
       </header>
 
+      {presentationMode && !screenshotMode && (
+        <PresentationNavigation
+          currentScenario={activeSearchParams.get('scenario') || 'baseline'}
+          onReset={handleReset}
+        />
+      )}
+
       {/* Main Content */}
       <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <SyntheticDataNotice />
@@ -473,18 +477,51 @@ export function AppShell({
         ) : (
           scenario && (
             <div className="space-y-6">
-              {!presentationMode && !showMessagePreviews && (
+              {!showMessagePreviews && (
                 <div className="flex items-center justify-between">
-                  <button
-                    onClick={handleBackToMessages}
-                    data-interaction-id="forecast-back-to-messages"
-                    className="focus-visible text-sm text-blue-600 hover:text-blue-800"
-                  >
-                    ← Back to message previews
-                  </button>
+                  {presentationMode && !screenshotMode ? (
+                    <Link
+                      href="/demo"
+                      data-interaction-id="forecast-back-to-demo"
+                      className="focus-visible text-sm text-blue-700 hover:text-blue-900"
+                    >
+                      ← Back to demo overview
+                    </Link>
+                  ) : !screenshotMode ? (
+                    <button
+                      onClick={handleBackToMessages}
+                      data-interaction-id="forecast-back-to-messages"
+                      className="focus-visible text-sm text-blue-600 hover:text-blue-800"
+                    >
+                      ← Back to message preview
+                    </button>
+                  ) : null}
                 </div>
               )}
               <ScenarioDisplay scenario={scenario} />
+              {presentationMode && !screenshotMode && (
+                <details
+                  className="rounded-lg border bg-white p-4 text-sm"
+                  data-demo-utility
+                >
+                  <summary
+                    data-interaction-id="presentation-technical-details"
+                    className="focus-visible cursor-pointer font-medium text-navy"
+                  >
+                    Technical details
+                  </summary>
+                  <dl className="mt-3 grid gap-2 text-gray-700 sm:grid-cols-2">
+                    <div>
+                      <dt className="font-medium">Forecast version</dt>
+                      <dd>{scenario.forecast.forecastVersionId}</dd>
+                    </div>
+                    <div>
+                      <dt className="font-medium">Scenario</dt>
+                      <dd>{scenario.scenarioName}</dd>
+                    </div>
+                  </dl>
+                </details>
+              )}
             </div>
           )
         )}
@@ -516,12 +553,6 @@ export function AppShell({
                 Consent and preferences
               </button>
             </div>
-
-            {scenario && (
-              <div className="rounded bg-gray-100 px-2 py-1 text-xs">
-                {scenario.forecast.forecastVersionId}
-              </div>
-            )}
           </div>
 
           <div className="mt-4 border-t border-gray-100 pt-4 text-xs text-gray-400">

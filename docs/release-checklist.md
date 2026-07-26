@@ -21,11 +21,17 @@
 - [x] Accessibility tests pass.
 - [x] Visual regression passes.
 - [x] Production build passes.
-- [x] Deployed smoke tests pass.
+- [ ] Deployed smoke tests pass.
 
 ## Demo Integrity
 
 - [x] Scoped reset works.
+- [ ] Shared URL and QR open `/demo`.
+- [x] Three P0 scenario cards render canonical fixture values.
+- [x] P1 and P2 groups expand and every direct route works.
+- [x] Guided navigation, refresh, and browser history work.
+- [x] Customer mode contains no scenario catalogue or presenter controls.
+- [x] Screenshot mode contains no presenter navigation or technical utilities.
 - [x] The 90-second path is technically rehearsed.
 - [x] Demo utilities are hidden in presentation mode.
 - [x] Fallback and deck screenshots are generated.
@@ -33,6 +39,9 @@
 - [x] Interview fallback package is complete.
 - [x] Runbook is complete.
 - [x] Direct production URLs are verified.
+- [x] Baseline focus links move focus and emit audit events.
+- [x] Advisor confirmation is absent until interaction.
+- [x] Raw forecast version is absent from the customer footer.
 
 ## Submission Integrity
 

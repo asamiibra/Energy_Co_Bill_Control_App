@@ -6,8 +6,10 @@
 - [ ] Disable notifications and confirm screen-sharing permission.
 - [ ] Open `artifacts/prototype-url.txt` and verify the final HTTPS URL.
 - [ ] Scan `artifacts/prototype-qr.png` from the laptop screen.
-- [ ] Open presentation mode and press `Shift + D`, then **Reset prototype**.
-- [ ] Confirm Baseline Forecast loads with no demo utility visible.
+- [ ] Open the `/demo` overview from `artifacts/prototype-url.txt`.
+- [ ] Confirm the QR code opens `/demo`.
+- [ ] Select **Start the 90-second guided demo**.
+- [ ] Select **Reset demo** and confirm Baseline Forecast remains at step 1.
 - [ ] Open `artifacts/interview-fallback/` in Finder.
 - [ ] Confirm internet access and keep the local production build available.
 - [ ] Use 100% browser zoom.
@@ -18,7 +20,8 @@
 > normal forecast, a material change, and a case where the safety policy
 > suppresses a recommendation.
 
-Start at the presentation-mode Baseline Forecast URL.
+Start at the `/demo` overview, briefly identify the three customer questions,
+then select **Start the 90-second guided demo**.
 
 ## Baseline Forecast — 25 Seconds
 
@@ -27,7 +30,7 @@ Start at the presentation-mode Baseline Forecast URL.
 3. Select **Save this action**, then **Save Action Plan**.
 4. Point to the confirmation that no automatic change occurred.
 5. Point to the read-only disclosure.
-6. Press `2` to advance.
+6. Select **Next: Material-Change Alert**.
 
 ## Material-Change Alert — 30 Seconds
 
@@ -36,7 +39,7 @@ Start at the presentation-mode Baseline Forecast URL.
 3. Explain the two missing meter days and 18% usage variance.
 4. Select an action, then show **Save selected actions** and **Modify**.
 5. Emphasize that this is a different August billing cycle.
-6. Press `3` to advance.
+6. Select **Next: Safety Guardrail**.
 
 ## Safety Guardrail — 20 Seconds
 
@@ -44,6 +47,7 @@ Start at the presentation-mode Baseline Forecast URL.
 2. Show customer-declared essential-use protection.
 3. Show that heating reduction is suppressed with no savings amount.
 4. Point to the advisor and support paths.
+5. Select **Return to demo overview**.
 
 ## Close — 5 Seconds
 
@@ -57,7 +61,17 @@ Start at the presentation-mode Baseline Forecast URL.
 - `3`: Safety Guardrail in presentation mode.
 - `Shift + D`: Toggle the interviewer demo utility.
 - `Escape`: Close the demo utility or audit viewer.
-- **Reset prototype**: Clears only Bill Control local state after confirmation.
+- **Reset demo**: Clears only Bill Control local state after confirmation.
+
+## Direct Routes
+
+- Demo overview: `/demo`
+- Customer mode: `/?scenario={scenario}`
+- Presentation mode: `/?scenario={scenario}&presentation=true`
+- Screenshot mode: `/?scenario={scenario}&screenshot=true`
+
+Presentation navigation preserves saved local intent while moving between
+scenarios. Only **Reset demo** clears Bill Control prototype storage.
 
 ## Failure Recovery
 
@@ -69,8 +83,9 @@ screens without apology-heavy narration.
 
 ### Scenario Fails
 
-Use its direct URL from `artifacts/prototype-url.txt`. If needed, reset local
-state, then use the matching fallback screenshot.
+Return to `/demo` or use a direct presentation URL from
+`artifacts/prototype-url.txt`. If needed, reset local state, then use the
+matching fallback screenshot.
 
 ### Screen Share Is Slow
 

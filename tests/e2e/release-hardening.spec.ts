@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('release presentation controls', () => {
-  test('presentation mode is deterministic and keyboard-driven', async ({
+  test('presentation mode preserves state and is keyboard-driven', async ({
     page,
   }) => {
     await page.addInitScript(() => {
@@ -21,7 +21,7 @@ test.describe('release presentation controls', () => {
       .poll(() =>
         page.evaluate(() => localStorage.getItem('bill-control-saved-plans'))
       )
-      .toBeNull();
+      .toBe('[{"stale":true}]');
     expect(
       await page.evaluate(() => localStorage.getItem('unrelated-storage-key'))
     ).toBe('preserve-me');
@@ -45,19 +45,18 @@ test.describe('release presentation controls', () => {
   test('reset clears only prototype state and returns to baseline', async ({
     page,
   }) => {
-    await page.goto('/?scenario=alert');
+    await page.goto('/?scenario=alert&presentation=true');
     await page.evaluate(() => {
       localStorage.setItem('bill-control-local-reminders', 'local');
       localStorage.setItem('unrelated-storage-key', 'preserve-me');
     });
 
     page.on('dialog', (dialog) => dialog.accept());
-    await page.getByRole('button', { name: 'Demo scenario switcher' }).click();
-    await page.getByRole('button', { name: 'Reset prototype' }).click();
+    await page.getByRole('button', { name: 'Reset demo' }).click();
 
-    await expect(page).toHaveURL(/scenario=baseline/);
+    await expect(page).toHaveURL(/scenario=baseline&presentation=true/);
     await expect(
-      page.getByRole('button', { name: 'Skip to Forecast Details' })
+      page.getByText('Your bill is currently expected to be $178.')
     ).toBeVisible();
     expect(
       await page.evaluate(() =>
@@ -79,6 +78,7 @@ test.describe('offline-after-load P0 reliability', () => {
     await expect(
       page.getByText('Your bill is currently expected to be $178.')
     ).toBeVisible();
+    await expect(page.getByText('1 of 3 — Baseline Forecast')).toBeVisible();
 
     await context.setOffline(true);
 
@@ -90,10 +90,14 @@ test.describe('offline-after-load P0 reliability', () => {
 
     await page.keyboard.press('2');
     await expect(page.getByText('Your estimate changed')).toBeVisible();
+    await expect(
+      page.getByText('2 of 3 — Material-Change Alert')
+    ).toBeVisible();
     await page.keyboard.press('3');
     await expect(
       page.getByText('Essential-use protection active')
     ).toBeVisible();
+    await expect(page.getByText('3 of 3 — Safety Guardrail')).toBeVisible();
 
     await page.keyboard.press('Shift+D');
     await page

@@ -65,7 +65,9 @@ for (const file of await filesUnder('components')) {
   const visit = (node) => {
     if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
       const tag = node.tagName.getText(sourceFile);
-      if (['button', 'input', 'textarea', 'summary', 'a'].includes(tag)) {
+      if (
+        ['button', 'input', 'textarea', 'summary', 'a', 'Link'].includes(tag)
+      ) {
         const attribute = node.attributes.properties.find(
           (property) =>
             ts.isJsxAttribute(property) &&

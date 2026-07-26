@@ -7,7 +7,7 @@ export function SyntheticDataNotice() {
     >
       <p className="text-xs text-gray-700">
         Illustrative prototype using synthetic customer and energy data. No
-        account, tariff, payment, or device actions are connected.
+        account, tariff, payment or device actions are connected.
       </p>
     </div>
   );

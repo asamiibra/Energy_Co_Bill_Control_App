@@ -482,6 +482,7 @@ export function AppShell({
                   {presentationMode && !screenshotMode ? (
                     <Link
                       href="/demo"
+                      prefetch={false}
                       data-interaction-id="forecast-back-to-demo"
                       className="focus-visible text-sm text-blue-700 hover:text-blue-900"
                     >

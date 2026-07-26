@@ -61,6 +61,7 @@ export function PresentationNavigation({
           )}
           <Link
             href="/demo"
+            prefetch={false}
             data-interaction-id="presentation-overview"
             className="focus-visible inline-flex min-h-11 items-center rounded-md px-3 py-2 text-sm font-medium text-blue-900 underline hover:bg-blue-100"
           >

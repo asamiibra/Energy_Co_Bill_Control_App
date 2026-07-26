@@ -10,7 +10,7 @@ const routes = [
     'forecast-miss',
     'Your final bill was outside the range we previously showed',
   ],
-  ['consent', 'Consent and Preferences'],
+  ['consent', 'Your data and permissions'],
   ['tariff-preview', 'Tariff-Fit Preview'],
   ['connected-home-preview', 'Connected-Home Preview'],
 ] as const;

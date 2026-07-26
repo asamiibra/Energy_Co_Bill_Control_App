@@ -36,6 +36,7 @@ export function DemoLandingPage() {
           </div>
           <Link
             href="/?scenario=baseline&presentation=true"
+            prefetch={false}
             data-interaction-id="demo-start-guided"
             className="focus-visible mt-2 inline-flex min-h-12 items-center gap-2 rounded-lg bg-navy px-6 py-3 font-semibold text-white hover:bg-navy-600"
           >
@@ -73,6 +74,7 @@ export function DemoLandingPage() {
                 </blockquote>
                 <Link
                   href={`/?scenario=${scenario.id}&presentation=true`}
+                  prefetch={false}
                   data-interaction-id={`demo-primary-${scenario.id}`}
                   className="focus-visible mt-5 inline-flex min-h-11 items-center justify-center rounded-md border border-navy px-4 py-2 font-medium text-navy hover:bg-blue-50 lg:mt-auto"
                 >
@@ -112,6 +114,7 @@ export function DemoLandingPage() {
                       </p>
                       <Link
                         href={`/?scenario=${scenario.id}&presentation=true`}
+                        prefetch={false}
                         data-interaction-id={`demo-secondary-${scenario.id}`}
                         className="focus-visible mt-3 inline-flex min-h-11 items-center text-sm font-semibold text-blue-800 underline"
                       >

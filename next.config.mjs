@@ -7,6 +7,11 @@ const nextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  async rewrites() {
+    return [
+      { source: '/', destination: '/demo' },
+    ];
+  },
 };
 
 export default nextConfig;

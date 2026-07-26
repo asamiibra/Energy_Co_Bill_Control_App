@@ -17,6 +17,13 @@ npm ci
 npm run dev
 ```
 
+## Vercel deployment
+
+Import the GitHub repository into Vercel with this repository root selected.
+The checked-in `vercel.json` uses the Next.js preset, installs from
+`package-lock.json` with `npm ci`, and runs `npm run build`. No environment
+variables are required for the synthetic, read-only prototype.
+
 Open `http://localhost:3000/demo` for the interview-demo overview.
 
 The application has three explicit modes:
@@ -69,9 +76,9 @@ npm run verify:pre-release
 | Command                           | Scope                                                       |
 | --------------------------------- | ----------------------------------------------------------- |
 | `npm run check`                   | Types, lint, format, fixtures, unit/component tests, build  |
-| `npm run test:e2e`                | Chromium and WebKit flows, routing, actions, responsiveness |
-| `npm run test:a11y`               | axe checks for all nine states in Chromium and WebKit       |
-| `npm run test:visual`             | P0 visual baselines at four required viewports              |
+| `npm run test:e2e`                | Chromium, WebKit, and Firefox flows and responsiveness      |
+| `npm run test:a11y`               | axe checks for all nine states in all three browser engines |
+| `npm run test:visual`             | Chromium P0 and account-menu visual baselines               |
 | `npm run generate:fallbacks`      | Generate canonical fallback and deck screenshots            |
 | `npm run test:deployed`           | Smoke-test the public `BASE_URL` in desktop/mobile browsers |
 | `npm run verify:release`          | Run the complete release and artifact gate                  |

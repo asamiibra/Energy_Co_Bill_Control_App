@@ -48,6 +48,7 @@ export function navigateToScenario(
 ): void {
   const url = buildScenarioUrl(scenarioId, window.location.href, presentation);
   window.history.pushState(null, '', url);
+  window.dispatchEvent(new Event('bill-control:route-change'));
 }
 
 export function isValidScenarioId(

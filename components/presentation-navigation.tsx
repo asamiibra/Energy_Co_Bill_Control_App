@@ -19,10 +19,6 @@ export function PresentationNavigation({
   onReset: () => void;
 }) {
   const index = sequence.findIndex((item) => item.id === currentScenario);
-  if (index < 0) {
-    return null;
-  }
-
   const previous = sequence[index - 1];
   const next = sequence[index + 1];
 
@@ -34,10 +30,12 @@ export function PresentationNavigation({
     >
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-2 px-4 py-2 sm:px-6 lg:px-8">
         <div className="text-sm font-semibold text-navy">
-          {index + 1} of 3 — {sequence[index].name}
+          {index >= 0
+            ? `${index + 1} of 3 — ${sequence[index].name}`
+            : 'Supporting demo state'}
         </div>
         <div className="flex flex-wrap items-center justify-end gap-1">
-          {previous && (
+          {index >= 0 && previous && (
             <button
               onClick={() =>
                 navigateToScenario(previous.id as ScenarioId, true)
@@ -49,7 +47,7 @@ export function PresentationNavigation({
               Previous: {previous.name}
             </button>
           )}
-          {next && (
+          {index >= 0 && next && (
             <button
               onClick={() => navigateToScenario(next.id as ScenarioId, true)}
               data-interaction-id="presentation-next"

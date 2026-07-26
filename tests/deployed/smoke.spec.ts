@@ -94,6 +94,28 @@ test('deployed P0 actions remain read-only and resettable', async ({
   page.on('dialog', (dialog) => dialog.accept());
   await page.getByRole('button', { name: 'Reset prototype' }).click();
   await expect(page).toHaveURL(/scenario=baseline/);
+  await expect(page.getByRole('status')).toHaveText(
+    'Demo reset. Baseline Forecast and canonical data have been restored.'
+  );
+});
+
+test('deployed account and supporting-state controls remain complete', async ({
+  page,
+}) => {
+  await page.goto('/?scenario=consent&presentation=true');
+  await page.getByRole('button', { name: 'Account Menu' }).click();
+  await expect(page.getByRole('menu', { name: 'Account menu' })).toContainText(
+    'Alex Morgan'
+  );
+  await page.getByRole('menuitem', { name: 'Help and support' }).click();
+  await expect(
+    page.getByRole('heading', { name: 'Bill Control help' })
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Close Bill Control help' }).click();
+
+  page.once('dialog', (dialog) => dialog.accept());
+  await page.getByRole('button', { name: 'Reset demo' }).click();
+  await expect(page).toHaveURL('/?scenario=baseline&presentation=true');
 });
 
 test('deployed resilience interactions work', async ({ page }) => {

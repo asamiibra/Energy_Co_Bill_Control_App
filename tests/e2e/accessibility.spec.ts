@@ -30,6 +30,12 @@ test('@a11y interactive overlays have no automated violations', async ({
   page,
 }) => {
   await page.goto('/?scenario=baseline&presentation=true');
+  await page.getByRole('button', { name: 'Account Menu' }).click();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.getByRole('menuitem', { name: 'Help and support' }).click();
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  await page.keyboard.press('Escape');
+
   await page.getByRole('button', { name: 'Save this action' }).click();
   expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   await page.keyboard.press('Escape');

@@ -23,8 +23,6 @@ const viewports = [
 ] as const;
 
 test.describe('responsive state integrity', () => {
-  test.skip(({ browserName }) => browserName !== 'chromium');
-
   for (const scenario of states) {
     for (const viewport of viewports) {
       test(`${scenario} has no horizontal overflow at ${viewport.name}`, async ({

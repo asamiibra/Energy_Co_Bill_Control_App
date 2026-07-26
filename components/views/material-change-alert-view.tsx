@@ -176,9 +176,17 @@ export function MaterialChangeAlertView({
                   includeDecimals: false,
                 })}
               </div>
+              <div className="mb-3 text-sm text-gray-700">
+                Expected range:{' '}
+                {formatCurrencyRange(
+                  scenario.forecast.expectedRange.low,
+                  scenario.forecast.expectedRange.high
+                )}
+              </div>
               <ForecastRangeVisualization
                 expectedBill={scenario.forecast.expectedBill}
                 range={scenario.forecast.expectedRange}
+                showExpectedBill={false}
               />
               <div className="mt-2 text-xs text-gray-600">
                 Generated: {formatDateTime(scenario.forecast.generatedAt)}

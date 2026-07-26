@@ -61,8 +61,13 @@ export function DemoLandingPage() {
                 key={scenario.id}
                 className="flex flex-col rounded-xl border bg-white p-5 shadow-sm"
               >
-                <div className="text-sm font-semibold text-blue-800">
-                  Scenario {scenario.sequence}
+                <div className="flex items-center justify-between gap-2 text-sm font-semibold text-blue-800">
+                  <span>Scenario {scenario.sequence}</span>
+                  {scenario.sequence === 1 && (
+                    <span className="rounded-full bg-blue-100 px-2 py-1 text-xs">
+                      Start here
+                    </span>
+                  )}
                 </div>
                 <h3 className="mt-2 text-xl text-navy">{scenario.name}</h3>
                 <p className="mt-3 font-medium text-gray-900">

@@ -6,6 +6,8 @@ const viewports = [
   { name: '1280x720', width: 1280, height: 720 },
   { name: '1024x768', width: 1024, height: 768 },
   { name: '390x844', width: 390, height: 844 },
+  { name: '375x667', width: 375, height: 667 },
+  { name: '430x932', width: 430, height: 932 },
 ] as const;
 
 test.describe('@visual P0 visual integrity', () => {
@@ -28,6 +30,25 @@ test.describe('@visual P0 visual integrity', () => {
         );
       });
     }
+  }
+});
+
+test.describe('@visual header account surfaces', () => {
+  test.skip(({ browserName }) => browserName !== 'chromium');
+
+  for (const viewport of [
+    { name: 'desktop', width: 1440, height: 900 },
+    { name: 'mobile', width: 390, height: 844 },
+  ] as const) {
+    test(`account menu ${viewport.name}`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.goto('/?scenario=baseline&presentation=true');
+      await page.getByRole('button', { name: 'Account Menu' }).click();
+      await expect(page).toHaveScreenshot(`account-menu-${viewport.name}.png`, {
+        animations: 'disabled',
+        fullPage: false,
+      });
+    });
   }
 });
 

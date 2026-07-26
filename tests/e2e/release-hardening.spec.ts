@@ -47,25 +47,84 @@ test.describe('release presentation controls', () => {
   }) => {
     await page.goto('/?scenario=alert&presentation=true');
     await page.evaluate(() => {
-      localStorage.setItem('bill-control-local-reminders', 'local');
+      for (const key of [
+        'bill-control-saved-plans',
+        'bill-control-audit-events',
+        'bill-control-local-reminders',
+        'bill-control-consent-overrides',
+        'bill-control-presentation-progress',
+        'bill-control-faithfulness-test-state',
+        'bill-control-support-interests',
+      ]) {
+        localStorage.setItem(key, '{malformed');
+      }
       localStorage.setItem('unrelated-storage-key', 'preserve-me');
     });
 
     page.on('dialog', (dialog) => dialog.accept());
     await page.getByRole('button', { name: 'Reset demo' }).click();
 
-    await expect(page).toHaveURL(/scenario=baseline&presentation=true/);
+    await expect(page).toHaveURL('/?scenario=baseline&presentation=true');
     await expect(
       page.getByText('Your bill is currently expected to be $178.')
     ).toBeVisible();
+    await expect(page.getByRole('status')).toHaveText(
+      'Demo reset. Baseline Forecast and canonical data have been restored.'
+    );
     expect(
       await page.evaluate(() =>
-        localStorage.getItem('bill-control-local-reminders')
+        Object.fromEntries(
+          [
+            'bill-control-saved-plans',
+            'bill-control-audit-events',
+            'bill-control-local-reminders',
+            'bill-control-consent-overrides',
+            'bill-control-presentation-progress',
+            'bill-control-faithfulness-test-state',
+            'bill-control-support-interests',
+          ].map((key) => [key, localStorage.getItem(key)])
+        )
       )
-    ).toBeNull();
+    ).toEqual({
+      'bill-control-saved-plans': null,
+      'bill-control-audit-events': null,
+      'bill-control-local-reminders': null,
+      'bill-control-consent-overrides': null,
+      'bill-control-presentation-progress': null,
+      'bill-control-faithfulness-test-state': null,
+      'bill-control-support-interests': null,
+    });
     expect(
       await page.evaluate(() => localStorage.getItem('unrelated-storage-key'))
     ).toBe('preserve-me');
+  });
+
+  test('reset closes open transient surfaces from P0 and supporting states', async ({
+    page,
+  }) => {
+    await page.goto('/?scenario=baseline&presentation=true');
+    await page.getByRole('button', { name: 'Save this action' }).click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    page.once('dialog', (dialog) => dialog.accept());
+    await page
+      .locator('[data-interaction-id="presentation-reset"]')
+      .evaluate((control: HTMLButtonElement) => control.click());
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(page.getByRole('status')).toContainText(
+      'Baseline Forecast and canonical data have been restored'
+    );
+
+    await page.goto('/?scenario=consent&presentation=true');
+    await page.getByRole('button', { name: 'Account Menu' }).click();
+    await expect(
+      page.getByRole('menu', { name: 'Account menu' })
+    ).toBeVisible();
+    page.once('dialog', (dialog) => dialog.accept());
+    await page.getByRole('button', { name: 'Reset demo' }).click();
+    await expect(page.getByRole('menu', { name: 'Account menu' })).toHaveCount(
+      0
+    );
+    await expect(page).toHaveURL('/?scenario=baseline&presentation=true');
   });
 });
 
@@ -107,5 +166,11 @@ test.describe('offline-after-load P0 reliability', () => {
       page.getByRole('heading', { name: 'Interviewer Audit Viewer' })
     ).toBeVisible();
     await page.keyboard.press('Escape');
+
+    page.once('dialog', (dialog) => dialog.accept());
+    await page.getByRole('button', { name: 'Reset demo' }).click();
+    await expect(page.getByRole('status')).toContainText(
+      'Baseline Forecast and canonical data have been restored'
+    );
   });
 });

@@ -8,19 +8,35 @@ const root = process.cwd();
 const registry = JSON.parse(
   await readFile(path.join(root, 'data/interaction-registry.json'), 'utf8')
 );
-const fields = [
-  'id',
+const sourceFields = [
+  'interactionId',
   'route',
   'label',
-  'behavior',
-  'stateChange',
+  'expectedOutcome',
+  'stateMutation',
   'service',
-  'event',
-  'test',
+  'eventName',
+  'testId',
+];
+const contractFields = [
+  'interactionId',
+  'route',
+  'mode',
+  'label',
+  'controlType',
+  'expectedOutcome',
+  'stateMutation',
+  'service',
+  'eventName',
+  'testId',
 ];
 
 for (const entry of registry) {
-  assert.equal(entry.length, fields.length, `Invalid registry row: ${entry}`);
+  assert.equal(
+    entry.length,
+    sourceFields.length,
+    `Invalid registry row: ${entry}`
+  );
   entry.forEach((value) => assert.ok(value, `Empty registry value: ${entry}`));
 }
 
@@ -51,7 +67,7 @@ function interactionId(attribute) {
   return null;
 }
 
-const discovered = new Set();
+const discovered = new Map();
 const missing = [];
 for (const file of await filesUnder('components')) {
   const source = await readFile(path.join(root, file), 'utf8');
@@ -80,7 +96,12 @@ for (const file of await filesUnder('components')) {
         } else {
           const id = interactionId(attribute);
           assert.ok(id, `Interaction ID must be static or templated: ${file}`);
-          discovered.add(id);
+          const existingTag = discovered.get(id);
+          assert.ok(
+            !existingTag || existingTag === tag,
+            `Interaction ID ${id} is used by both <${existingTag}> and <${tag}>`
+          );
+          discovered.set(id, tag);
         }
       }
     }
@@ -96,7 +117,7 @@ assert.deepEqual(
 );
 const declared = new Set(registry.map(([id]) => id));
 assert.deepEqual(
-  [...discovered].filter((id) => !declared.has(id)),
+  [...discovered.keys()].filter((id) => !declared.has(id)),
   [],
   'Source interaction is missing from registry'
 );
@@ -106,8 +127,52 @@ assert.deepEqual(
   'Registry interaction is missing from source'
 );
 
-const rows = registry.map(
-  (entry) => `| ${entry.map((value) => `\`${value}\``).join(' | ')} |`
+const modeForRoute = (route) => {
+  if (route === 'presentation') return 'presentation';
+  if (route === 'demo') return 'demo';
+  if (route === 'error' || route === 'unknown') return 'error';
+  if (route === 'all') return 'all';
+  return 'customer';
+};
+const contract = registry.map(
+  ([
+    interactionId,
+    route,
+    label,
+    expectedOutcome,
+    stateMutation,
+    service,
+    eventName,
+    testId,
+  ]) => ({
+    interactionId,
+    route,
+    mode: modeForRoute(route),
+    label,
+    controlType: discovered.get(interactionId),
+    expectedOutcome,
+    stateMutation,
+    service,
+    eventName,
+    testId,
+  })
+);
+const expectedTestFiles = new Map([
+  [
+    'interaction-completeness',
+    path.join(root, 'tests/e2e/interaction-completeness.spec.ts'),
+  ],
+]);
+for (const { testId } of contract) {
+  const testFile = expectedTestFiles.get(testId);
+  assert.ok(testFile, `Unknown test reference: ${testId}`);
+  await readFile(testFile, 'utf8');
+}
+const rows = contract.map(
+  (entry) =>
+    `| ${contractFields
+      .map((field) => `\`${String(entry[field])}\``)
+      .join(' | ')} |`
 );
 const interactionContract = `# Bill Control Interaction Contract
 
@@ -115,8 +180,8 @@ Every intentional customer or demo interaction is functional. No production
 utility action is connected. Pattern IDs ending in \`*\` cover fixture-driven
 instances with the same contract.
 
-| ${fields.join(' | ')} |
-| ${fields.map(() => '---').join(' | ')} |
+| ${contractFields.join(' | ')} |
+| ${contractFields.map(() => '---').join(' | ')} |
 ${rows.join('\n')}
 `;
 await writeFile(
@@ -125,5 +190,5 @@ await writeFile(
 );
 
 console.log(
-  `Interaction contract passed: ${discovered.size} source definitions, ${registry.length} registry contracts.`
+  `Interaction contract passed: ${discovered.size} source definitions, ${contract.length} typed registry contracts.`
 );

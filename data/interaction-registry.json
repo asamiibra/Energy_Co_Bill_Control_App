@@ -40,6 +40,16 @@
     "interaction-completeness"
   ],
   [
+    "account-summary",
+    "all",
+    "Account summary",
+    "Toggle local account summary",
+    "panel",
+    "fixture service",
+    "none:disclosure",
+    "interaction-completeness"
+  ],
+  [
     "account-consent-preferences",
     "all",
     "Consent and preferences",
@@ -47,6 +57,16 @@
     "route",
     "router",
     "none:navigation",
+    "interaction-completeness"
+  ],
+  [
+    "account-help-support",
+    "all",
+    "Help and support",
+    "Open existing help panel",
+    "panel",
+    "none",
+    "none:disclosure",
     "interaction-completeness"
   ],
   [
@@ -117,16 +137,6 @@
     "preview",
     "audit ledger",
     "message_preview_opened",
-    "interaction-completeness"
-  ],
-  [
-    "forecast-back-to-demo",
-    "presentation",
-    "Back to demo overview",
-    "Return to demo landing",
-    "route",
-    "router",
-    "none:navigation",
     "interaction-completeness"
   ],
   [

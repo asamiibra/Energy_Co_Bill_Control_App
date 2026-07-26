@@ -1,31 +1,32 @@
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-type InteractionContract = [
-  id: string,
-  route: string,
-  label: string,
-  behavior: string,
-  stateChange: string,
-  service: string,
-  event: string,
-  test: string,
-];
-
-const registry = JSON.parse(
-  readFileSync(resolve(process.cwd(), 'data/interaction-registry.json'), 'utf8')
-) as InteractionContract[];
+import { interactionRegistry } from '@/domain/interaction-contract';
 
 describe('interaction registry', () => {
-  it('defines one complete contract per source interaction', () => {
-    expect(registry.length).toBeGreaterThanOrEqual(70);
-    expect(new Set(registry.map(([id]) => id)).size).toBe(registry.length);
+  it('defines one complete typed contract per source interaction', () => {
+    expect(interactionRegistry.length).toBeGreaterThanOrEqual(70);
+    expect(
+      new Set(interactionRegistry.map(({ interactionId }) => interactionId))
+        .size
+    ).toBe(interactionRegistry.length);
 
-    for (const contract of registry) {
-      expect(contract).toHaveLength(8);
-      expect(contract.every((value) => value.trim().length > 0)).toBe(true);
-      expect(contract[7]).toBe('interaction-completeness');
+    for (const contract of interactionRegistry) {
+      expect(Object.keys(contract)).toEqual([
+        'interactionId',
+        'route',
+        'mode',
+        'label',
+        'controlType',
+        'expectedOutcome',
+        'stateMutation',
+        'service',
+        'eventName',
+        'testId',
+      ]);
+      expect(
+        Object.values(contract).every((value) => value.trim().length > 0)
+      ).toBe(true);
+      expect(contract.testId).toBe('interaction-completeness');
     }
   });
 });

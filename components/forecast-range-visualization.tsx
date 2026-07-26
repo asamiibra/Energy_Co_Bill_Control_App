@@ -6,12 +6,14 @@ interface ForecastRangeVisualizationProps {
   expectedBill: number;
   range: { low: number; high: number };
   className?: string;
+  showExpectedBill?: boolean;
 }
 
 export function ForecastRangeVisualization({
   expectedBill,
   range,
   className = '',
+  showExpectedBill = true,
 }: ForecastRangeVisualizationProps) {
   const rangeWidth = range.high - range.low;
   const pointPosition = ((expectedBill - range.low) / rangeWidth) * 100;
@@ -22,9 +24,11 @@ export function ForecastRangeVisualization({
   return (
     <div className={`space-y-3 ${className}`}>
       {/* Main forecast amount */}
-      <div className="text-2xl font-bold text-gray-900">
-        {formatCurrency(expectedBill, { includeDecimals: false })}
-      </div>
+      {showExpectedBill && (
+        <div className="text-2xl font-bold text-gray-900">
+          {formatCurrency(expectedBill, { includeDecimals: false })}
+        </div>
+      )}
 
       {/* Range visualization */}
       <div className="space-y-2">

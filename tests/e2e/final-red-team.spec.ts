@@ -158,10 +158,10 @@ test.describe('final red-team interaction truthfulness', () => {
       page.getByRole('region', { name: 'Bill Control help' })
     ).toContainText('no external request is sent');
     await page.getByRole('button', { name: 'Account Menu' }).click();
-    const accountMenu = page.getByRole('region', { name: 'Account menu' });
+    const accountMenu = page.getByRole('menu', { name: 'Account menu' });
     await expect(accountMenu).toContainText('Alex Morgan');
     await accountMenu
-      .getByRole('button', { name: 'Consent and preferences' })
+      .getByRole('menuitem', { name: 'Consent and preferences' })
       .click();
     await expect(page).toHaveURL(/scenario=consent/);
   });

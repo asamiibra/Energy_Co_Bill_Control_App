@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { AppShell } from '@/components/app-shell';
 import { ScenarioErrorBoundary } from '@/components/scenario-error-boundary';
+import { DemoLandingPage } from '@/components/demo-landing-page';
 
 type HomePageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -21,6 +22,11 @@ export default async function HomePage({ searchParams }: HomePageProps) {
   const initialScreenshotMode =
     (Array.isArray(screenshotParam) ? screenshotParam[0] : screenshotParam) ===
     'true';
+
+  // If no scenario / presentation / screenshot params are provided, show the demo landing page at root.
+  if (!initialScenarioId && !initialPresentationMode && !initialScreenshotMode) {
+    return <DemoLandingPage />;
+  }
 
   return (
     <ScenarioErrorBoundary>

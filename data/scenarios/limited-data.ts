@@ -29,6 +29,10 @@ export const limitedDataScenario: DemoScenario = {
     billingPeriodStart: '2026-09-03',
     billingPeriodEnd: '2026-10-02',
     billToDate: 121.4,
+    estimatedChargesToDateRange: {
+      low: 112,
+      high: 132,
+    },
     expectedBill: 176,
     expectedRange: {
       low: 153,
@@ -72,15 +76,16 @@ export const limitedDataScenario: DemoScenario = {
   recommendations: [
     {
       recommendationId: 'rec-cooling-schedule-limited-001',
-      title: 'Review your cooling schedule for the remaining billing period',
+      title: 'Consider reviewing your cooling schedule',
       description:
-        'Adjusting your cooling schedule can help manage costs during the remaining 9 days.',
+        'A small, self-directed cooling adjustment may reduce costs during the remaining nine days, depending on household needs and weather.',
       mode: 'self_directed',
       benefit: {
         low: 5,
         high: 15,
         currency: 'USD',
-        basis: 'Directional estimate based on typical cooling adjustments',
+        basis:
+          'Directional estimate based on typical cooling adjustments without recent interval usage',
         assumptions: [
           'Schedule maintained for remaining billing period',
           'Weather remains within seasonal norms',

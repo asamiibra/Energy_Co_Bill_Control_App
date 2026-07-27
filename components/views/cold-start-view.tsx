@@ -73,11 +73,12 @@ export function ColdStartView({
             </h2>
             <p className="mb-2 text-sm text-blue-800">
               We don&apos;t yet have enough history for this home. This early
-              estimate uses similar homes, local weather, and the selected
+              estimate uses similar homes, local weather, and the current
               tariff.
             </p>
             <p className="text-sm font-medium text-blue-700">
-              The range should narrow as more billing history becomes available.
+              The range may narrow as Energy Co observes more of this
+              household’s usage history.
             </p>
           </div>
         </div>
@@ -87,7 +88,11 @@ export function ColdStartView({
       {isRefined &&
         initialScenario.forecast.expectedBill !==
           scenario.forecast.expectedBill && (
-          <div className="rounded-lg border border-green-200 bg-green-50 p-4">
+          <div
+            className="rounded-lg border border-green-200 bg-green-50 p-4"
+            role="status"
+            aria-live="polite"
+          >
             <div className="mb-2 flex items-center space-x-2">
               <div className="h-2 w-2 rounded-full bg-green-500"></div>
               <span className="font-semibold text-green-900">
@@ -95,8 +100,8 @@ export function ColdStartView({
               </span>
             </div>
             <p className="mb-3 text-sm text-green-800">
-              Your estimate has been refined based on the household details you
-              provided.
+              Estimate refined in this prototype using sample answers. No
+              account profile or consent setting was changed.
             </p>
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
@@ -117,6 +122,17 @@ export function ColdStartView({
                   )}
                 </div>
               </div>
+            </div>
+            <div className="mt-3 text-sm text-green-900">
+              <div className="font-medium">
+                Sample attributes that changed the comparison group
+              </div>
+              <ul className="mt-1 list-disc pl-5">
+                <li>Household size: 3 people</li>
+                <li>Heating type: Heat pump</li>
+                <li>Electric vehicle: Yes</li>
+                <li>Smart thermostat: Yes</li>
+              </ul>
             </div>
           </div>
         )}
@@ -142,8 +158,9 @@ export function ColdStartView({
 
               <div>
                 <div className="mb-2 text-sm text-gray-600">
-                  Expected range{' '}
-                  {!isRefined && '(will narrow with more history)'}
+                  {isRefined
+                    ? 'Refined expected range'
+                    : 'Expected range — wider because household history is limited'}
                 </div>
                 <ForecastRangeVisualization
                   expectedBill={scenario.forecast.expectedBill}
@@ -182,25 +199,25 @@ export function ColdStartView({
               </div>
               <div className="space-y-2 text-sm text-blue-800">
                 <p>
-                  <strong>Data source:</strong> Similar{' '}
-                  {scenario.household.homeType}s in your area
+                  <strong>Comparison basis:</strong> Aggregated usage patterns
+                  from similar townhomes in the same climate and tariff context.
                 </p>
                 {isRefined && (
                   <p>
-                    <strong>Refined using:</strong> 3-person households with
-                    heat pumps and EVs
+                    <strong>Refined using:</strong> 3-person townhomes with heat
+                    pumps, EVs and smart thermostats
                   </p>
                 )}
                 <p className="mt-2 border-t border-blue-200 pt-2">
-                  As you build history with Energy Co, forecasts will become
-                  more personalized.
+                  No individual neighbor’s usage is shown or used as a direct
+                  comparison.
                 </p>
               </div>
             </div>
 
             <div className="text-xs text-gray-500">
               <div>Forecast version: {scenario.forecast.forecastVersionId}</div>
-              <div>Last updated: Today at 10:30 AM</div>
+              <div>Updated Jul 15 at 10:30 AM</div>
               <div>Account age: New customer</div>
             </div>
           </div>
@@ -218,8 +235,9 @@ export function ColdStartView({
                   Help us refine your estimate
                 </h3>
                 <p className="text-sm text-gray-600">
-                  Optional: Answering a few questions can narrow your expected
-                  range. No question is required.
+                  Optional: Sample answers demonstrate how a more specific
+                  comparison group may refine the estimate. No question is
+                  required.
                 </p>
               </div>
             </div>
@@ -227,6 +245,8 @@ export function ColdStartView({
               onClick={() => setShowQuestionnaire(!showQuestionnaire)}
               data-interaction-id="cold-start-toggle-details"
               className="focus-visible flex items-center space-x-1 text-sm font-medium text-blue-600 hover:text-blue-800"
+              aria-expanded={showQuestionnaire}
+              aria-controls="cold-start-sample-questionnaire"
             >
               <span>{showQuestionnaire ? 'Hide' : 'Add details'}</span>
               <ChevronRight
@@ -237,10 +257,18 @@ export function ColdStartView({
           </div>
 
           {showQuestionnaire && (
-            <div className="mt-4 space-y-4 rounded-lg bg-gray-50 p-4">
+            <div
+              id="cold-start-sample-questionnaire"
+              className="mt-4 space-y-4 rounded-lg bg-gray-50 p-4"
+            >
               <p className="mb-4 text-sm text-gray-600">
-                Your answers stay local and are used only to select a more
-                similar comparison group.
+                In this prototype, sample answers remain in the browser and are
+                used only to demonstrate comparison-group refinement. No account
+                profile is updated.
+              </p>
+              <p className="text-sm text-gray-600">
+                Skipping these questions does not affect account service or
+                eligibility.
               </p>
 
               <div className="grid gap-4 sm:grid-cols-2">
@@ -250,9 +278,7 @@ export function ColdStartView({
                     <div className="text-sm font-medium text-gray-900">
                       Household size
                     </div>
-                    <div className="text-xs text-gray-500">
-                      Number of people
-                    </div>
+                    <div className="text-xs text-gray-500">3 people</div>
                   </div>
                 </div>
 
@@ -262,9 +288,7 @@ export function ColdStartView({
                     <div className="text-sm font-medium text-gray-900">
                       Heating type
                     </div>
-                    <div className="text-xs text-gray-500">
-                      Heat pump, electric, gas
-                    </div>
+                    <div className="text-xs text-gray-500">Heat pump</div>
                   </div>
                 </div>
 
@@ -274,9 +298,7 @@ export function ColdStartView({
                     <div className="text-sm font-medium text-gray-900">
                       Electric vehicle
                     </div>
-                    <div className="text-xs text-gray-500">
-                      Do you own an EV?
-                    </div>
+                    <div className="text-xs text-gray-500">Yes</div>
                   </div>
                 </div>
 
@@ -286,9 +308,7 @@ export function ColdStartView({
                     <div className="text-sm font-medium text-gray-900">
                       Smart thermostat
                     </div>
-                    <div className="text-xs text-gray-500">
-                      Connected device?
-                    </div>
+                    <div className="text-xs text-gray-500">Yes</div>
                   </div>
                 </div>
               </div>
@@ -325,7 +345,7 @@ export function ColdStartView({
         <h3 className="mb-4 text-lg font-semibold text-gray-900">
           {isRefined
             ? 'Updated estimate drivers'
-            : 'What&apos;s influencing your estimate'}
+            : 'What’s influencing your estimate'}
         </h3>
 
         <div className="space-y-3">
@@ -376,14 +396,14 @@ export function ColdStartView({
                 onClick={() =>
                   recordLocalAction(
                     EVENT_NAMES.REMINDER_SET,
-                    'Alert preference saved in this browser only. No account setting was changed.',
+                    'Alert preference saved in this browser only. No account setting changed and no notification will be sent.',
                     { reminder: true }
                   )
                 }
                 data-interaction-id="cold-start-save-alert"
                 className="btn-primary"
               >
-                Set alert preference
+                Save prototype alert preference
               </button>
               <button
                 onClick={() =>
@@ -419,9 +439,8 @@ export function ColdStartView({
 
           <div className="mt-4 rounded-md bg-gray-50 p-3">
             <p className="text-sm text-gray-600">
-              <strong>Note:</strong> Specific savings recommendations will
-              become available as Bill Control builds your household usage
-              history over the next few billing cycles.
+              This state is limited to forecast updates and support while
+              household history develops.
             </p>
           </div>
         </div>

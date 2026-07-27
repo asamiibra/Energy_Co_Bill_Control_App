@@ -71,6 +71,15 @@ export function AppShell({
   const scenario = getScenarioFromUrl(activeSearchParams);
   const presentationMode = activeSearchParams.get('presentation') === 'true';
   const screenshotMode = activeSearchParams.get('screenshot') === 'true';
+  const isLimitedDataScenario =
+    scenario?.scenarioId === 'limited_data_alex_monthly_read';
+  const isColdStartScenario =
+    scenario?.scenarioId === 'cold_start_taylor_new_customer' ||
+    scenario?.scenarioId === 'cold_start_taylor_refined';
+  const hasAmberStatus =
+    scenario?.scenarioId === 'alert_alex_late_summer' ||
+    isLimitedDataScenario ||
+    isColdStartScenario;
   const [messagePreviewState, setMessagePreviewState] = useState({
     scenarioId: scenario?.scenarioId,
     visible: true,
@@ -81,8 +90,10 @@ export function AppShell({
   const [showAccountSummary, setShowAccountSummary] = useState(false);
   const [resetVersion, setResetVersion] = useState(0);
   const [resetStatus, setResetStatus] = useState<string | null>(null);
+  const helpTriggerRef = useRef<HTMLButtonElement>(null);
   const accountTriggerRef = useRef<HTMLButtonElement>(null);
-  const accountPanelRef = useRef<HTMLDivElement>(null);
+  const headerPanelRef = useRef<HTMLDivElement>(null);
+  const helpCloseRef = useRef<HTMLButtonElement>(null);
   const firstAccountItemRef = useRef<HTMLButtonElement>(null);
   const skipScenarioEventForResetRef = useRef<number | null>(null);
   const showMessagePreviews =
@@ -91,6 +102,11 @@ export function AppShell({
     (messagePreviewState.scenarioId === scenario?.scenarioId
       ? messagePreviewState.visible
       : true);
+  const showResetStatus = Boolean(
+    resetStatus &&
+    activeSearchParams.get('scenario') === 'baseline' &&
+    presentationMode
+  );
 
   const clearPrototypeState = useCallback(() => {
     actionIntentService.clearAllPlans();
@@ -99,13 +115,22 @@ export function AppShell({
     resetPrototypeLocalState();
   }, []);
 
-  const closeAccountPanel = useCallback((restoreFocus = true) => {
-    setHeaderPanel(null);
-    setShowAccountSummary(false);
-    if (restoreFocus) {
-      requestAnimationFrame(() => accountTriggerRef.current?.focus());
-    }
-  }, []);
+  const closeHeaderPanel = useCallback(
+    (panel: 'help' | 'account', restoreFocus = true) => {
+      setHeaderPanel(null);
+      setShowAccountSummary(false);
+      if (restoreFocus) {
+        requestAnimationFrame(() => {
+          const trigger =
+            panel === 'help'
+              ? helpTriggerRef.current
+              : accountTriggerRef.current;
+          trigger?.focus();
+        });
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     if (!headerPanel) {
@@ -114,28 +139,23 @@ export function AppShell({
 
     if (headerPanel === 'account') {
       firstAccountItemRef.current?.focus();
+    } else {
+      helpCloseRef.current?.focus();
     }
     const handleOutsideClick = (event: MouseEvent) => {
       const target = event.target as Node;
       if (
-        !accountPanelRef.current?.contains(target) &&
-        !accountTriggerRef.current?.contains(target)
+        !headerPanelRef.current?.contains(target) &&
+        !accountTriggerRef.current?.contains(target) &&
+        !helpTriggerRef.current?.contains(target)
       ) {
-        if (headerPanel === 'account') {
-          closeAccountPanel();
-        } else {
-          setHeaderPanel(null);
-        }
+        closeHeaderPanel(headerPanel);
       }
     };
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault();
-        if (headerPanel === 'account') {
-          closeAccountPanel();
-        } else {
-          setHeaderPanel(null);
-        }
+        closeHeaderPanel(headerPanel);
       }
     };
 
@@ -145,7 +165,7 @@ export function AppShell({
       document.removeEventListener('click', handleOutsideClick);
       document.removeEventListener('keydown', handleEscape);
     };
-  }, [closeAccountPanel, headerPanel]);
+  }, [closeHeaderPanel, headerPanel]);
 
   useEffect(() => {
     const closeForRouteChange = () => {
@@ -242,9 +262,14 @@ export function AppShell({
       return nextVersion;
     });
     setResetStatus(
-      'Demo reset. Baseline Forecast and canonical data have been restored.'
+      'Demo reset. Baseline Forecast and canonical prototype data have been restored.'
     );
-    window.history.pushState(null, '', '/?scenario=baseline&presentation=true');
+    window.history.replaceState(
+      null,
+      '',
+      '/?scenario=baseline&presentation=true'
+    );
+    window.dispatchEvent(new Event('bill-control:route-change'));
     window.setTimeout(() => {
       auditLedger.clearEvents();
       resetPrototypeLocalState();
@@ -399,7 +424,13 @@ export function AppShell({
                   <span className="text-lg font-bold text-white">E</span>
                 </div>
                 <div>
-                  <div className="text-lg font-bold text-navy">Energy Co</div>
+                  <div
+                    className={`whitespace-nowrap text-lg font-bold text-navy ${
+                      isColdStartScenario ? 'hidden min-[360px]:block' : ''
+                    }`}
+                  >
+                    Energy Co
+                  </div>
                   <div className="-mt-1 hidden text-xs text-gray-500 sm:block">
                     Your Energy Partner
                   </div>
@@ -433,49 +464,192 @@ export function AppShell({
 
               <div className="flex items-center gap-1 sm:gap-2">
                 {scenario && (
-                  <div className="hidden rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800 sm:block">
-                    {scenario.forecast.dataQualityTier === 'full'
-                      ? 'Full Data'
-                      : 'Limited Data'}
+                  <div
+                    className={
+                      isColdStartScenario
+                        ? 'max-w-32 rounded-full bg-amber-200 px-1 py-1 text-center text-[0.55rem] font-medium leading-tight text-amber-900 sm:max-w-none sm:whitespace-nowrap sm:px-2 sm:text-xs'
+                        : hasAmberStatus
+                          ? 'rounded-full bg-amber-200 px-2 py-1 text-xs font-medium text-amber-900'
+                          : 'hidden rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-800 sm:block'
+                    }
+                  >
+                    {isColdStartScenario
+                      ? 'New customer · limited history'
+                      : hasAmberStatus
+                        ? 'Limited data'
+                        : scenario.forecast.dataQualityTier === 'full'
+                          ? 'Full Data'
+                          : 'Limited Data'}
                   </div>
                 )}
 
-                <button
-                  onClick={() => {
-                    setShowAccountSummary(false);
-                    setHeaderPanel((current) =>
-                      current === 'help' ? null : 'help'
-                    );
-                  }}
-                  data-interaction-id="header-help"
-                  className="focus-visible rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                  aria-label="Help and Support"
-                  aria-expanded={headerPanel === 'help'}
-                  aria-controls="header-help-panel"
-                >
-                  <HelpCircle size={20} />
-                </button>
+                <div className="relative flex items-center">
+                  <button
+                    ref={helpTriggerRef}
+                    onClick={() => {
+                      if (headerPanel === 'help') {
+                        closeHeaderPanel('help');
+                      } else {
+                        setShowAccountSummary(false);
+                        setHeaderPanel('help');
+                      }
+                    }}
+                    data-interaction-id="header-help"
+                    className="focus-visible rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                    aria-label="Help and Support"
+                    aria-haspopup="dialog"
+                    aria-expanded={headerPanel === 'help'}
+                    aria-controls="header-help-panel"
+                  >
+                    <HelpCircle size={20} />
+                  </button>
 
-                <button
-                  ref={accountTriggerRef}
-                  onClick={() => {
-                    if (headerPanel === 'account') {
-                      closeAccountPanel();
-                    } else {
-                      setShowAccountSummary(false);
-                      setHeaderPanel('account');
-                    }
-                  }}
-                  data-interaction-id="header-account-menu"
-                  className="focus-visible flex items-center space-x-1 rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
-                  aria-label="Account Menu"
-                  aria-haspopup="menu"
-                  aria-expanded={headerPanel === 'account'}
-                  aria-controls="account-menu"
-                >
-                  <User size={20} />
-                  <ChevronDown size={14} />
-                </button>
+                  <button
+                    ref={accountTriggerRef}
+                    onClick={() => {
+                      if (headerPanel === 'account') {
+                        closeHeaderPanel('account');
+                      } else {
+                        setShowAccountSummary(false);
+                        setHeaderPanel('account');
+                      }
+                    }}
+                    data-interaction-id="header-account-menu"
+                    className="focus-visible flex items-center space-x-1 rounded-md p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                    aria-label="Account Menu"
+                    aria-haspopup="menu"
+                    aria-expanded={headerPanel === 'account'}
+                    aria-controls="account-menu"
+                  >
+                    <User size={20} />
+                    <ChevronDown size={14} />
+                  </button>
+
+                  {headerPanel && (
+                    <div
+                      ref={headerPanelRef}
+                      id={
+                        headerPanel === 'account'
+                          ? 'account-menu'
+                          : 'header-help-panel'
+                      }
+                      className={`absolute top-full z-50 mt-2 max-h-[calc(100vh-5rem)] w-[min(19rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border border-gray-200 bg-white p-3 shadow-xl ${
+                        headerPanel === 'help' ? 'right-10' : 'right-0'
+                      }`}
+                      role={headerPanel === 'account' ? 'menu' : 'dialog'}
+                      aria-label={
+                        headerPanel === 'help'
+                          ? 'Bill Control help'
+                          : 'Account menu'
+                      }
+                    >
+                      {headerPanel === 'help' ? (
+                        <div className="space-y-3 text-sm text-gray-700">
+                          <div className="flex items-center justify-between gap-3">
+                            <h2 className="text-lg">Bill Control help</h2>
+                            <button
+                              ref={helpCloseRef}
+                              onClick={() => closeHeaderPanel('help')}
+                              data-interaction-id="header-panel-close"
+                              className="focus-visible rounded-md p-2 text-gray-500 hover:bg-gray-100"
+                              aria-label="Close Bill Control help"
+                            >
+                              <X size={18} aria-hidden="true" />
+                            </button>
+                          </div>
+                          <p>
+                            <strong>What it does:</strong> Shows an illustrative
+                            bill forecast, explains material changes and
+                            presents safe next-step options.
+                          </p>
+                          <p>
+                            <strong>Expected range:</strong> The lower and upper
+                            values supported by the available synthetic data and
+                            forecast assumptions. The final bill may fall
+                            outside the range.
+                          </p>
+                          <p>
+                            <strong>Prototype boundary:</strong> Uses synthetic
+                            data and deterministic fixtures. No live model,
+                            account, notification, tariff, payment or device
+                            connection is active.
+                          </p>
+                          <p>
+                            <strong>Support:</strong> Preferences may be saved
+                            in this browser for demonstration only. No external
+                            request or support case is created.
+                          </p>
+                          <p className="rounded bg-gray-100 p-2 text-xs">
+                            Synthetic, read-only prototype of the proposed Bill
+                            Control MVP experience.
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="text-sm">
+                          <div className="border-b px-2 pb-3">
+                            <div className="mb-1 text-[0.65rem] font-semibold tracking-wide text-gray-500">
+                              SYNTHETIC DEMO PROFILE
+                            </div>
+                            <div className="font-semibold text-navy">
+                              {scenario.household.customerName}
+                            </div>
+                            <div className="text-gray-600">
+                              {scenario.household.address}
+                            </div>
+                          </div>
+                          <div className="space-y-1 py-2">
+                            <button
+                              ref={firstAccountItemRef}
+                              role="menuitem"
+                              onClick={() =>
+                                setShowAccountSummary((current) => !current)
+                              }
+                              data-interaction-id="account-summary"
+                              className="focus-visible w-full rounded-md px-2 py-2 text-left text-navy hover:bg-gray-50"
+                              aria-expanded={showAccountSummary}
+                            >
+                              Prototype account summary
+                            </button>
+                            {showAccountSummary && (
+                              <div className="mx-2 rounded-md bg-gray-50 p-3 text-gray-700">
+                                <p>
+                                  Current tariff:{' '}
+                                  {scenario.household.tariffName}
+                                </p>
+                                <p className="mt-1">
+                                  Synthetic profile only. No live Energy Co
+                                  account is connected.
+                                </p>
+                              </div>
+                            )}
+                            <button
+                              role="menuitem"
+                              onClick={() => {
+                                closeHeaderPanel('account', false);
+                                navigateToScenario('consent', presentationMode);
+                              }}
+                              data-interaction-id="account-consent-preferences"
+                              className="focus-visible w-full rounded-md px-2 py-2 text-left text-navy hover:bg-gray-50"
+                            >
+                              Consent and preferences
+                            </button>
+                            <button
+                              role="menuitem"
+                              onClick={() => {
+                                setShowAccountSummary(false);
+                                setHeaderPanel('help');
+                              }}
+                              data-interaction-id="account-help-support"
+                              className="focus-visible w-full rounded-md px-2 py-2 text-left text-navy hover:bg-gray-50"
+                            >
+                              Help and support
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
 
                 <DemoSwitcher
                   key={resetVersion}
@@ -486,114 +660,6 @@ export function AppShell({
               </div>
             </div>
           </div>
-          {headerPanel && (
-            <div className="relative z-50 flex justify-end pb-3">
-              <div
-                ref={accountPanelRef}
-                id={
-                  headerPanel === 'account'
-                    ? 'account-menu'
-                    : 'header-help-panel'
-                }
-                className="w-[min(19rem,calc(100vw-2rem))] rounded-lg border border-gray-200 bg-white p-3 shadow-xl"
-                role={headerPanel === 'account' ? 'menu' : 'region'}
-                aria-label={
-                  headerPanel === 'help' ? 'Bill Control help' : 'Account menu'
-                }
-              >
-                {headerPanel === 'help' ? (
-                  <div className="space-y-3 text-sm text-gray-700">
-                    <div className="flex items-center justify-between gap-3">
-                      <h2 className="text-lg">Bill Control help</h2>
-                      <button
-                        onClick={() => setHeaderPanel(null)}
-                        data-interaction-id="header-panel-close"
-                        className="focus-visible rounded-md p-2 text-gray-500 hover:bg-gray-100"
-                        aria-label="Close Bill Control help"
-                      >
-                        <X size={18} aria-hidden="true" />
-                      </button>
-                    </div>
-                    <p>
-                      <strong>What it does:</strong> explains an illustrative
-                      bill forecast and safe next steps.
-                    </p>
-                    <p>
-                      <strong>Expected range:</strong> the lower and upper bill
-                      values currently supported by the available evidence.
-                    </p>
-                    <p>
-                      <strong>Data use:</strong> synthetic billing, weather,
-                      tariff, and consent fixtures stay inside this prototype.
-                    </p>
-                    <p>
-                      <strong>Support:</strong> advisor preferences can be saved
-                      locally; no external request is sent.
-                    </p>
-                    <p className="rounded bg-gray-100 p-2 text-xs">
-                      A synthetic, high-fidelity interactive prototype of the
-                      proposed Bill Control MVP.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="text-sm">
-                    <div className="border-b px-2 pb-3">
-                      <div className="font-semibold text-navy">
-                        {scenario.household.customerName}
-                      </div>
-                      <div className="text-gray-600">
-                        {scenario.household.address}
-                      </div>
-                    </div>
-                    <div className="space-y-1 py-2">
-                      <button
-                        ref={firstAccountItemRef}
-                        role="menuitem"
-                        onClick={() =>
-                          setShowAccountSummary((current) => !current)
-                        }
-                        data-interaction-id="account-summary"
-                        className="focus-visible w-full rounded-md px-2 py-2 text-left text-navy hover:bg-gray-50"
-                        aria-expanded={showAccountSummary}
-                      >
-                        Account summary
-                      </button>
-                      {showAccountSummary && (
-                        <div className="mx-2 rounded-md bg-gray-50 p-3 text-gray-700">
-                          <p>Current plan: {scenario.household.tariffName}</p>
-                          <p className="mt-1">
-                            This local summary is illustrative and read-only.
-                          </p>
-                        </div>
-                      )}
-                      <button
-                        role="menuitem"
-                        onClick={() => {
-                          closeAccountPanel(false);
-                          navigateToScenario('consent', presentationMode);
-                        }}
-                        data-interaction-id="account-consent-preferences"
-                        className="focus-visible w-full rounded-md px-2 py-2 text-left text-navy hover:bg-gray-50"
-                      >
-                        Consent and preferences
-                      </button>
-                      <button
-                        role="menuitem"
-                        onClick={() => {
-                          setShowAccountSummary(false);
-                          setHeaderPanel('help');
-                        }}
-                        data-interaction-id="account-help-support"
-                        className="focus-visible w-full rounded-md px-2 py-2 text-left text-navy hover:bg-gray-50"
-                      >
-                        Help and support
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </header>
 
@@ -607,7 +673,7 @@ export function AppShell({
       {/* Main Content */}
       <main className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <SyntheticDataNotice />
-        {resetStatus && (
+        {showResetStatus && (
           <p
             className="mt-4 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm font-medium text-blue-900"
             role="status"
@@ -681,6 +747,66 @@ export function AppShell({
                         <dt className="font-medium">Scenario</dt>
                         <dd>{scenario.scenarioName}</dd>
                       </div>
+                      {scenario.scenarioId === 'baseline_alex_summer' && (
+                        <>
+                          <div>
+                            <dt className="font-medium">Data-quality tier</dt>
+                            <dd>Full</dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium">
+                              Live device telemetry
+                            </dt>
+                            <dd>Not connected</dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium">Action execution</dt>
+                            <dd>None</dd>
+                          </div>
+                        </>
+                      )}
+                      {scenario.scenarioId === 'safety_jordan_winter' && (
+                        <>
+                          <div>
+                            <dt className="font-medium">Policy result</dt>
+                            <dd>Essential-use protection active</dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium">
+                              Recommendation status
+                            </dt>
+                            <dd>Suppressed</dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium">Action execution</dt>
+                            <dd>None</dd>
+                          </div>
+                        </>
+                      )}
+                      {isLimitedDataScenario && (
+                        <>
+                          <div>
+                            <dt className="font-medium">Data-quality tier</dt>
+                            <dd>Limited</dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium">
+                              Recommendation class
+                            </dt>
+                            <dd>General low-risk option</dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium">
+                              Personalization status
+                            </dt>
+                            <dd>Reduced</dd>
+                          </div>
+                          <div>
+                            <dt className="font-medium">Action execution</dt>
+                            <dd>None</dd>
+                          </div>
+                        </>
+                      )}
                     </dl>
                   </details>
                 )}
@@ -697,7 +823,15 @@ export function AppShell({
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
               <div className="flex items-center space-x-1">
                 <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                <span>Data updated: Today at 8:00 AM</span>
+                <span>
+                  {scenario.scenarioId === 'baseline_alex_summer'
+                    ? 'Updated Jul 25 at 8:00 AM'
+                    : isLimitedDataScenario
+                      ? 'Updated Sep 18 at 8:00 AM'
+                      : isColdStartScenario
+                        ? 'Updated Jul 15 at 10:30 AM'
+                        : 'Data updated: Today at 8:00 AM'}
+                </span>
               </div>
               <span className="hidden sm:inline">•</span>
               <button

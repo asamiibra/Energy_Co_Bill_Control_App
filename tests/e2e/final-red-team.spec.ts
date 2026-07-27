@@ -52,7 +52,7 @@ test.describe('final red-team routing and storage', () => {
     });
     await page.goto('/?scenario=safety&presentation=true');
     await expect(
-      page.getByText('Essential-use protection active')
+      page.getByRole('heading', { name: 'Essential-use protection active' })
     ).toBeVisible();
   });
 
@@ -68,7 +68,7 @@ test.describe('final red-team routing and storage', () => {
     await page.keyboard.press('3');
     await expect(page).toHaveURL(/scenario=safety/);
     await expect(
-      page.getByText('Essential-use protection active')
+      page.getByRole('heading', { name: 'Essential-use protection active' })
     ).toBeVisible();
     await expect(
       page.getByText('Reduce essential heating overnight')
@@ -85,7 +85,9 @@ test.describe('final red-team interaction truthfulness', () => {
   }) => {
     await page.goto('/?scenario=baseline&presentation=true');
     await page.getByRole('button', { name: 'Set reminder' }).click();
-    await expect(page.getByRole('status')).toContainText('browser only');
+    await expect(page.getByRole('status')).toHaveText(
+      'Reminder saved in this prototype. No notification will be sent.'
+    );
     await page.getByRole('button', { name: 'Not now' }).click();
     await expect(page.getByRole('status')).toContainText('No action');
     await page.getByRole('button', { name: 'Talk with an advisor' }).click();
@@ -103,14 +105,16 @@ test.describe('final red-team interaction truthfulness', () => {
       .click();
     await expect(page.getByRole('dialog')).toBeVisible();
     await page.getByRole('button', { name: 'Save my interest' }).click();
-    await expect(page.getByRole('status')).toContainText(
-      'No application was submitted'
+    await expect(page.getByRole('status')).toHaveText(
+      'Interest saved in this prototype. No application, enrollment or support case was submitted.'
     );
-    await page.getByRole('button', { name: /Speak with an advisor/ }).click();
+    await page.getByRole('button', { name: 'Explore advisor support' }).click();
     await page.getByLabel('Message me').check();
-    await page.getByRole('button', { name: 'Save preference' }).click();
-    await expect(page.getByRole('status')).toContainText(
-      'No external request was sent'
+    await page
+      .getByRole('button', { name: 'Save prototype preference' })
+      .click();
+    await expect(page.getByRole('status')).toHaveText(
+      'Support preference saved in this prototype. No call, message or support case was created.'
     );
     await expect(
       page.getByText('Reduce essential heating overnight')
@@ -121,7 +125,9 @@ test.describe('final red-team interaction truthfulness', () => {
     page,
   }) => {
     await page.goto('/?scenario=cold-start&presentation=true');
-    await page.getByRole('button', { name: 'Set alert preference' }).click();
+    await page
+      .getByRole('button', { name: 'Save prototype alert preference' })
+      .click();
     await expect(page.getByRole('status')).toContainText('browser only');
 
     await page.goto('/?scenario=forecast-miss&presentation=true');
@@ -155,8 +161,8 @@ test.describe('final red-team interaction truthfulness', () => {
     await page.goto('/?scenario=baseline');
     await page.getByRole('button', { name: 'Help and Support' }).click();
     await expect(
-      page.getByRole('region', { name: 'Bill Control help' })
-    ).toContainText('no external request is sent');
+      page.getByRole('dialog', { name: 'Bill Control help' })
+    ).toContainText('No external request or support case is created.');
     await page.getByRole('button', { name: 'Account Menu' }).click();
     const accountMenu = page.getByRole('menu', { name: 'Account menu' });
     await expect(accountMenu).toContainText('Alex Morgan');

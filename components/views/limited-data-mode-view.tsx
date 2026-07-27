@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Calendar, Clock, AlertCircle, Info, TrendingUp } from 'lucide-react';
 
-import { formatCurrency, formatCurrencyRange } from '@/lib/format-currency';
+import { formatCurrencyRange } from '@/lib/format-currency';
 import { formatDate } from '@/lib/format-date';
 import { evaluateForecastUsefulness } from '@/services/policy-service';
 import { ForecastRangeVisualization } from '../forecast-range-visualization';
@@ -42,8 +42,9 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
               Limited-Data Estimate
             </h2>
             <p className="text-sm text-yellow-800">
-              This estimate uses billing history, weather, and your tariff
-              because interval-meter data is not available.
+              Recent interval-meter data is unavailable. Bill Control is using
+              prior billing history, current weather and your tariff, so the
+              expected range is wider and recommendations are less personalized.
             </p>
           </div>
         </div>
@@ -60,10 +61,17 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
 
             <div className="space-y-4">
               <div>
-                <div className="mb-1 text-sm text-gray-600">Bill to date</div>
-                <div className="text-lg font-semibold text-gray-900">
-                  {formatCurrency(scenario.forecast.billToDate)}
+                <div className="mb-1 text-sm text-gray-600">
+                  Estimated charges to date
                 </div>
+                {scenario.forecast.estimatedChargesToDateRange && (
+                  <div className="text-lg font-semibold text-gray-900">
+                    {formatCurrencyRange(
+                      scenario.forecast.estimatedChargesToDateRange.low,
+                      scenario.forecast.estimatedChargesToDateRange.high
+                    )}
+                  </div>
+                )}
               </div>
 
               <div>
@@ -122,7 +130,7 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
 
             <div className="text-xs text-gray-500">
               <div>Forecast version: {scenario.forecast.forecastVersionId}</div>
-              <div>Last updated: Today at 8:00 AM</div>
+              <div>Updated Sep 18 at 8:00 AM</div>
               <div>Data quality tier: {scenario.forecast.dataQualityTier}</div>
             </div>
           </div>
@@ -138,10 +146,11 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
               Why the range is wider
             </h3>
             <p className="text-sm text-gray-600">
-              Without detailed interval-meter data, Bill Control uses your
-              billing history and typical patterns for similar periods. This
-              creates a wider expected range to reflect the increased
-              uncertainty.
+              Without recent interval-meter data, Bill Control cannot observe
+              current daily or hourly usage patterns. The forecast therefore
+              relies more heavily on this household’s prior comparable billing
+              periods, weather and tariff information. This creates a wider
+              expected range to reflect the increased uncertainty.
             </p>
           </div>
         </div>
@@ -193,6 +202,8 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
                 }}
                 data-interaction-id={`limited-driver-${driver.id}`}
                 className="focus-visible w-full p-4 text-left transition-colors hover:bg-gray-50"
+                aria-expanded={expandedDriver === driver.id}
+                aria-controls={`limited-driver-panel-${driver.id}`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
@@ -220,7 +231,10 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
               </button>
 
               {expandedDriver === driver.id && (
-                <div className="border-t border-gray-100 px-4 pb-4 pt-3 text-sm text-gray-600">
+                <div
+                  id={`limited-driver-panel-${driver.id}`}
+                  className="border-t border-gray-100 px-4 pb-4 pt-3 text-sm text-gray-600"
+                >
                   {driver.explanation}
                   <div className="mt-2 text-xs text-gray-500">
                     Source: {driver.source}
@@ -240,8 +254,9 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
               What you can do
             </h3>
             <p className="mb-4 text-sm text-gray-600">
-              Based on available data, here&apos;s a low-risk action you can
-              take:
+              Because recent usage detail is unavailable, Bill Control is
+              showing a general low-risk option rather than a personalized
+              recommendation.
             </p>
 
             {availableRecommendations.map((recommendation) => (
@@ -266,7 +281,7 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
                 {recommendation.benefit && (
                   <div className="mb-4 space-y-2">
                     <div className="text-sm text-gray-900">
-                      <strong>Estimated benefit:</strong>{' '}
+                      <strong>Directional estimated bill reduction:</strong>{' '}
                       {formatCurrencyRange(
                         recommendation.benefit.low,
                         recommendation.benefit.high
@@ -285,9 +300,8 @@ export function LimitedDataModeView({ scenario }: LimitedDataModeViewProps) {
                     </div>
 
                     <div className="mt-2 rounded bg-yellow-50 p-2 text-xs text-yellow-700">
-                      <strong>Note:</strong> This is a directional estimate
-                      based on limited data. More precise estimates require
-                      interval-meter data.
+                      This estimate is directional because recent interval usage
+                      is unavailable. Actual impact is not guaranteed.
                     </div>
                   </div>
                 )}

@@ -42,7 +42,7 @@
   [
     "account-summary",
     "all",
-    "Account summary",
+    "Prototype account summary",
     "Toggle local account summary",
     "panel",
     "fixture service",
@@ -462,7 +462,7 @@
   [
     "safety-open-advisor",
     "safety",
-    "Speak with an advisor",
+    "Explore advisor support",
     "Open advisor preference dialog",
     "dialog",
     "local support intent",
@@ -482,7 +482,7 @@
   [
     "safety-save-*",
     "safety",
-    "Save my interest",
+    "Save support preference or interest",
     "Save local support intent",
     "local storage",
     "local support intent",
@@ -622,7 +622,7 @@
   [
     "cold-start-save-alert",
     "cold-start",
-    "Set alert preference",
+    "Save prototype alert preference",
     "Save local alert preference",
     "local storage",
     "local action",

@@ -47,7 +47,7 @@ export const coldStartScenario: DemoScenario = {
       title: 'Similar homes',
       direction: 'neutral',
       explanation:
-        'Estimate based on similar townhomes in your area during July.',
+        'Estimate based on aggregated July usage patterns for a sufficiently sized comparison group with similar dwelling, climate and tariff characteristics.',
       source: 'cohort-analysis',
       asOf: '2026-07-10T10:30:00Z',
     },
@@ -61,10 +61,10 @@ export const coldStartScenario: DemoScenario = {
     },
     {
       id: 'driver-tariff-new-001',
-      title: 'Selected tariff',
+      title: 'Current tariff',
       direction: 'neutral',
       explanation:
-        'Standard Residential tariff rates applied to cohort usage patterns.',
+        'Taylor’s current Standard Residential tariff is applied to the comparison-group usage pattern.',
       source: 'tariff',
       asOf: '2026-07-10T10:30:00Z',
     },
@@ -75,7 +75,7 @@ export const coldStartScenario: DemoScenario = {
       title:
         'Set a bill-alert preference while Bill Control learns your household pattern',
       description:
-        'Get notified when your estimate changes significantly as we learn more about your usage.',
+        'Save a browser-local preference to demonstrate how bill-change alerts could be configured.',
       mode: 'self_directed',
       // No savings estimate for cold-start state
       effort: 'low',
@@ -157,7 +157,7 @@ export const coldStartRefinedScenario: DemoScenario = {
       title: 'Similar homes',
       direction: 'neutral',
       explanation:
-        'Estimate refined using 3-person households with heat pumps and EVs.',
+        'Estimate refined using aggregated July usage patterns for 3-person townhomes with heat pumps, EVs and smart thermostats in the same climate and tariff context.',
       source: 'refined-cohort-analysis',
       asOf: '2026-07-15T10:45:00Z',
     },

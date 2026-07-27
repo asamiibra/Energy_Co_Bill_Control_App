@@ -23,6 +23,12 @@ export const ForecastSnapshotSchema = z
     billingPeriodStart: z.string(),
     billingPeriodEnd: z.string(),
     billToDate: z.number(),
+    estimatedChargesToDateRange: z
+      .object({
+        low: z.number(),
+        high: z.number(),
+      })
+      .optional(),
     expectedBill: z.number(),
     expectedRange: z.object({
       low: z.number(),
@@ -66,6 +72,16 @@ export const ForecastSnapshotSchema = z
       data.expectedBill <= data.expectedRange.high,
     {
       message: 'Expected bill must fall within the expected range',
+    }
+  )
+  .refine(
+    (data) =>
+      !data.estimatedChargesToDateRange ||
+      (data.billToDate >= data.estimatedChargesToDateRange.low &&
+        data.billToDate <= data.estimatedChargesToDateRange.high),
+    {
+      message:
+        'Bill-to-date estimate must fall within the estimated charges-to-date range',
     }
   );
 
